@@ -1,5 +1,7 @@
 #include "CubeRotation.h"
 
+// TODO: verify
+
 Face CubeRotation::apply(const Face &face) const {
     switch (face) {
         case U:
@@ -18,12 +20,12 @@ Face CubeRotation::apply(const Face &face) const {
 }
 
 CubeRotation CubeRotation::inv() const {
-
+    return {apply(U), apply(F)};
 }
 
 CubeRotation CubeRotation::operator*(const CubeRotation &other) const {
-    // TODO
-    return {};
+    CubeRotation inverse = inv();
+    return {inverse.apply(other.newTop), inverse.apply(other.newFront)};
 }
 
 CubeOrientation CubeRotation::operator*(const CubeOrientation &cubeOrientation) const {

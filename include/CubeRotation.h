@@ -6,12 +6,12 @@
 #include <string>
 
 struct CubeRotation {
-    Face newTop;
-    Face newFront;
+    Face newTop; // the face that will end up on top after the rotation
+    Face newFront; // the face that will end up in the front after the rotation
 
     [[nodiscard]] Face apply(const Face &face) const;
 
-    CubeRotation inv() const;
+    [[nodiscard]] CubeRotation inv() const;
 
     CubeRotation operator*(const CubeRotation &other) const;
 
