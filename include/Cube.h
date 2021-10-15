@@ -10,6 +10,7 @@
 #include "Algorithm.h"
 #include <array>
 #include <vector>
+#include <string>
 
 class Cube {
 public:
@@ -72,6 +73,14 @@ public:
     void apply(const Algorithm &algorithm);
 
     void scramble();
+
+    [[nodiscard]] bool edgesSolved() const;
+
+    [[nodiscard]] bool cornersSolved() const;
+
+    [[nodiscard]] bool isSolved() const;
+
+    [[nodiscard]] std::string toNetString() const;
 
 private:
     [[nodiscard]] EdgePiece getEdge(const EdgeLocation &edgeLocation) const;

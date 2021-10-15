@@ -214,3 +214,41 @@ void Cube::scramble() {
     if (lastRotation == 2) corners[7] = corners[7].rotateClockwise(); // need another 1 to get to 3
     else if (lastRotation == 1) corners[7] = corners[7].rotateCounterclockwise(); // need another 2 to get to 3
 }
+
+bool Cube::edgesSolved() const {
+    // TODO: account for different CubeOrientation
+    return edges == STARTING_EDGE_PIECES;
+}
+
+bool Cube::cornersSolved() const {
+    // TODO: account for different CubeOrientation
+    return corners == STARTING_CORNER_PIECES;
+}
+
+bool Cube::isSolved() const {
+    return edgesSolved() && cornersSolved();
+}
+
+std::string Cube::toNetString() const {
+    //  B
+    // LURD
+    //  F
+    return "    " + toStr(corners[7].second) + toStr(edges[10].second) + toStr(corners[6].third) +
+           "\n    " + toStr(edges[6].first) + "B" + toStr(edges[5].second) +
+           "\n    " + toStr(corners[0].third) + toStr(edges[0].second) + toStr(corners[1].second) +
+           "\n" + toStr(corners[7].third) + toStr(edges[6].second) + toStr(corners[0].second) +
+           " " + toStr(corners[0].first) + toStr(edges[0].first) + toStr(corners[1].first) +
+           " " + toStr(corners[1].third) + toStr(edges[5].first) + toStr(corners[6].second) +
+           " " + toStr(corners[6].first) + toStr(edges[10].first) + toStr(corners[7].first) +
+           "\n" + toStr(edges[11].second) + "O" + toStr(edges[3].second) +
+            " " + toStr(edges[3].first) + "W" + toStr(edges[1].first) +
+            " " + toStr(edges[1].second) + "R" + toStr(edges[9].second) +
+            " " + toStr(edges[9].first) + "Y" + toStr(edges[11].first) +
+           "\n" + toStr(corners[4].second) + toStr(edges[7].first) + toStr(corners[3].third) +
+            " " + toStr(corners[3].first) + toStr(edges[2].first) + toStr(corners[2].first) +
+            " " + toStr(corners[2].second) + toStr(edges[4].second) + toStr(corners[5].third) +
+            " " + toStr(corners[5].first) + toStr(edges[8].first) + toStr(corners[4].first) +
+           "\n    " + toStr(corners[3].second) + toStr(edges[2].second) + toStr(corners[2].third) +
+           "\n    " + toStr(edges[7].second) + "G" + toStr(edges[4].first) +
+           "\n    " + toStr(corners[4].third) + toStr(edges[8].second) + toStr(corners[5].second);
+}
