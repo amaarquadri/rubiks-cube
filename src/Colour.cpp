@@ -16,3 +16,20 @@ Colour getOpposite(const Colour &colour) {
             return WHITE;
     }
 }
+
+std::string toStr(const Colour &colour) {
+    switch (colour) {
+        case WHITE:
+            return "W";
+        case GREEN:
+            return "G";
+        case RED:
+            return "R";
+        case BLUE:
+            return "B";
+        case ORANGE:
+            return "O";
+        case YELLOW:
+            return "Y";
+    }
+}
