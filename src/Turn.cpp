@@ -5,3 +5,11 @@ std::string Turn::toStr() const {
     // Not sure why this is needed since the functions have different signatures
     return ::toStr(face) + ::toStr(rotationAmount);
 }
+
+std::pair<int, Turn> Turn::parse(const std::string &str) {
+    auto [consumed_for_face, face] = parseFace(str);
+    if (consumed_for_face == 0) return {0, {}}; // not possible to parse
+    std::string remaining = str.substr(consumed_for_face, str.size() - consumed_for_face);
+    auto [consumed_for_rotation_amount, rotation_amount] = parseRotationAmount(remaining);
+    return {consumed_for_face + consumed_for_rotation_amount, {face, rotation_amount}};
+}

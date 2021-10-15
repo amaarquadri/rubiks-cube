@@ -11,8 +11,16 @@ std::string Algorithm::toStr() const {
 }
 
 Algorithm Algorithm::parse(const std::string &alg) {
-    // TODO
-    return {};
+    // TODO : allow for parsing CubeRotations
+    int total_consumed = 0;
+    std::vector<Move> moves;
+    while (total_consumed < alg.size()) {
+        auto [consumed, turn] = Turn::parse(alg.substr(total_consumed, alg.size() - total_consumed));
+        if (consumed == 0) break;
+        moves.insert(moves.end(), 1, {true, turn});
+        total_consumed += consumed;
+    }
+    return {moves};
 }
 
 static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeRotation>> &previousTurns) {
