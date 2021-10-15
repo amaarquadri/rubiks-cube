@@ -12,6 +12,8 @@ struct Algorithm {
             Turn turn;
             CubeRotation cubeRotation;
         };
+
+        [[nodiscard]] Move inv() const;
     };
 
     std::vector<Move> moves;
@@ -21,4 +23,6 @@ struct Algorithm {
     void cancelMoves();
 
     static Algorithm parse(const std::string &alg);
+
+    [[nodiscard]] Algorithm inv() const;
 };

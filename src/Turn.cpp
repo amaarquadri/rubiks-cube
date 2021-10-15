@@ -1,5 +1,9 @@
 #include "Turn.h"
 
+Turn Turn::inv() const {
+    return Turn{face, ::inv(rotationAmount)};
+}
+
 std::string Turn::toStr() const {
     // This syntax tells C++ to use the functions in the global namespace instead of recursion
     // Not sure why this is needed since the functions have different signatures

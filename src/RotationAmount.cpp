@@ -1,5 +1,18 @@
 #include "RotationAmount.h"
 
+RotationAmount inv(const RotationAmount &rotationAmount) {
+    switch (rotationAmount) {
+        case NONE:
+            return NONE;
+        case CLOCKWISE:
+            return COUNTERCLOCKWISE;
+        case HALF_TURN:
+            return HALF_TURN;
+        case COUNTERCLOCKWISE:
+            return CLOCKWISE;
+    }
+}
+
 std::string toStr(const RotationAmount &rotationAmount) {
     switch (rotationAmount) {
         case NONE:

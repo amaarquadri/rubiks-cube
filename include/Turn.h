@@ -9,6 +9,8 @@ struct Turn {
     Face face;
     RotationAmount rotationAmount;
 
+    [[nodiscard]] Turn inv() const;
+
     [[nodiscard]] std::string toStr() const;
 
     // returns the number of characters consumed and the parsed Turn

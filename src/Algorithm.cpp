@@ -1,6 +1,13 @@
 #include "Algorithm.h"
 #include "Face.h"
 
+Algorithm::Move Algorithm::Move::inv() const {
+    Move inverse_move{isTurn};
+    if (isTurn) inverse_move.turn = turn.inv();
+    else inverse_move.cubeRotation = cubeRotation.inv();
+    return inverse_move;
+}
+
 std::string Algorithm::toStr() const {
     std::string result;
     for (auto move = moves.begin(); move < moves.end(); move++) {
@@ -8,19 +15,6 @@ std::string Algorithm::toStr() const {
         else result += move->cubeRotation.toStr();
     }
     return result;
-}
-
-Algorithm Algorithm::parse(const std::string &alg) {
-    // TODO : allow for parsing CubeRotations
-    int total_consumed = 0;
-    std::vector<Move> moves;
-    while (total_consumed < alg.size()) {
-        auto [consumed, turn] = Turn::parse(alg.substr(total_consumed, alg.size() - total_consumed));
-        if (consumed == 0) break;
-        moves.insert(moves.end(), 1, {true, turn});
-        total_consumed += consumed;
-    }
-    return {moves};
 }
 
 static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeRotation>> &previousTurns) {
@@ -90,4 +84,24 @@ void Algorithm::cancelMoves() {
             currentRotation = currentRotation * move.cubeRotation;
         }
     }
+}
+
+Algorithm Algorithm::parse(const std::string &alg) {
+    // TODO : allow for parsing CubeRotations
+    int total_consumed = 0;
+    std::vector<Move> moves;
+    while (total_consumed < alg.size()) {
+        auto [consumed, turn] = Turn::parse(alg.substr(total_consumed, alg.size() - total_consumed));
+        if (consumed == 0) break;
+        moves.insert(moves.end(), 1, {true, turn});
+        total_consumed += consumed;
+    }
+    return {moves};
+}
+
+Algorithm Algorithm::inv() const {
+    std::vector<Move> inverse_moves;
+    for (auto it = moves.end() - 1; it >= moves.begin(); it--)
+        inverse_moves.insert(inverse_moves.end(), 1, it->inv());
+    return {inverse_moves};
 }
