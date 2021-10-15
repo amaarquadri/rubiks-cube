@@ -3,9 +3,9 @@
 #include "Face.h"
 
 struct CornerLocation {
-    Face second;
     // must be defined in clockwise order
     Face first;
+    Face second;
     Face third;
 
     bool operator==(const CornerLocation &other) const;
