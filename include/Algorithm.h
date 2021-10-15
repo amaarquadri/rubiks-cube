@@ -18,5 +18,7 @@ struct Algorithm {
 
     [[nodiscard]] std::string toStr() const;
 
+    void cancelMoves();
+
     static Algorithm parse(const std::string &alg);
 };
