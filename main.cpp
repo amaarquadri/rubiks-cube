@@ -1,7 +1,12 @@
 #include <iostream>
+#include "PLL.h"
 #include "Cube.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    Cube cube{};
+    cube.apply(Ua_PERM);
+    std::cout << cube.isSolved() << std::endl;
+    cube.apply(Ub_PERM);
+    std::cout << cube.isSolved() << std::endl;
     return 0;
 }
