@@ -44,6 +44,8 @@ void Cube::setCorner(const CornerPiece &cornerPiece, const CornerLocation &corne
 
 
 void Cube::apply(const Turn &turn) {
+    if (turn.rotationAmount == NONE) return;
+
     std::array<EdgeLocation, 4> edgeCycle{};
     std::array<CornerLocation, 4> cornerCycle{};
 

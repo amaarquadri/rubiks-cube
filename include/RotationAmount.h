@@ -4,7 +4,9 @@
 #include <string>
 
 enum RotationAmount : uint8_t {
-    CLOCKWISE, COUNTERCLOCKWISE, HALF_TURN
+    NONE, CLOCKWISE, HALF_TURN, COUNTERCLOCKWISE
 };
 
 std::string toStr(const RotationAmount &rotationAmount);
+
+RotationAmount operator+(const RotationAmount &first, const RotationAmount &second);
