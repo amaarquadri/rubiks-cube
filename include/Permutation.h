@@ -15,13 +15,14 @@ private:
     explicit Permutation(std::array<uint8_t, n> values) : values(std::move(values)) {}
 
 public:
-    static Permutation<n> randomPermutation(const std::mt19937 &mersenne_twister) {
+    template<typename URNG>
+    static Permutation<n> randomPermutation(URNG &&g) {
         if (n < 2) {
             throw std::invalid_argument("Error");
         }
         std::array<uint8_t, n> values;
         for (int i = 0; i < n; i++) values[i] = i;
-        std::shuffle(values.begin(), values.end(), mersenne_twister);
+        std::shuffle(values.begin(), values.end(), g);
         return Permutation{values};
     }
 

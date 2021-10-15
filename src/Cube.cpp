@@ -1,8 +1,10 @@
 #include "Cube.h"
 #include "Permutation.h"
+#include <chrono>
+#include <random>
 
-static std::random_device random_device; // NOLINT(cert-err58-cpp)
-static std::mt19937 mersenne_twister(random_device()); // NOLINT(cert-err58-cpp)
+static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count(); // NOLINT(cert-err58-cpp)
+static auto random_engine = std::default_random_engine(seed); // NOLINT(cert-err58-cpp)
 static std::uniform_int_distribution<uint8_t> bool_distribution(0, 1); // NOLINT(cert-err58-cpp)
 static std::uniform_int_distribution<uint8_t> three_distribution(0, 2); // NOLINT(cert-err58-cpp)
 
@@ -185,8 +187,8 @@ void Cube::cycleCorners(const std::vector<CornerLocation> &cornerLocations) {
 }
 
 void Cube::scramble() {
-    Permutation<12> edge_permutation = Permutation<12>::randomPermutation(mersenne_twister);
-    Permutation<8> corner_permutation = Permutation<8>::randomPermutation(mersenne_twister);
+    Permutation<12> edge_permutation = Permutation<12>::randomPermutation(random_engine);
+    Permutation<8> corner_permutation = Permutation<8>::randomPermutation(random_engine);
     if (edge_permutation.isOdd() != corner_permutation.isOdd()) corner_permutation.flipParity();
 
     edges = edge_permutation.apply(STARTING_EDGE_PIECES);
@@ -194,7 +196,7 @@ void Cube::scramble() {
 
     bool edgeFlipParity = false;
     for (int i = 0; i < 11; i++) {
-        if (bool_distribution(mersenne_twister) == 1) {
+        if (bool_distribution(random_engine) == 1) {
             edges[i] = edges[i].flip();
             edgeFlipParity = !edgeFlipParity;
         }
@@ -203,7 +205,7 @@ void Cube::scramble() {
 
     uint8_t cornerRotationParity = 0;
     for (int i = 0; i < 7; i++) {
-        uint8_t rotation = three_distribution(mersenne_twister);
+        uint8_t rotation = three_distribution(random_engine);
         if (rotation == 1) corners[i] = corners[i].rotateClockwise();
         else if (rotation == 2) corners[i] = corners[i].rotateCounterclockwise();
         cornerRotationParity += rotation;
