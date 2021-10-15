@@ -13,6 +13,8 @@ struct CubeRotation {
 
     [[nodiscard]] CubeRotation inv() const;
 
+    static CubeRotation identity();
+
     CubeRotation operator*(const CubeRotation &other) const;
 
     CubeOrientation operator*(const CubeOrientation &cubeOrientation) const;

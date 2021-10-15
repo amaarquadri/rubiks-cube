@@ -23,6 +23,10 @@ CubeRotation CubeRotation::inv() const {
     return {apply(U), apply(F)};
 }
 
+CubeRotation CubeRotation::identity() {
+    return CubeRotation{U, F};
+}
+
 CubeRotation CubeRotation::operator*(const CubeRotation &other) const {
     CubeRotation inverse = inv();
     return {inverse.apply(other.newTop), inverse.apply(other.newFront)};
