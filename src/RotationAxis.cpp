@@ -1,8 +1,8 @@
 #include "RotationAxis.h"
 
 
-std::string toStr(const Face &face) {
-    switch (face) {
+std::string toStr(const RotationAxis &rotationAxis) {
+    switch (rotationAxis) {
         case X:
             return "X";
         case Y:
