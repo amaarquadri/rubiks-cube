@@ -9,4 +9,8 @@ enum Colour : uint8_t {
 
 Colour getOpposite(const Colour &colour);
 
+Colour getLeft(const Colour &top, const Colour &front);
+
+Colour getRight(const Colour &top, const Colour &front);
+
 std::string toStr(const Colour &colour);
