@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 enum RotationAxis : uint8_t {
     X, Y, Z
