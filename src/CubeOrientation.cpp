@@ -68,3 +68,13 @@ Face CubeOrientation::apply(const Face &face) const {
 std::pair<Slice, bool> CubeOrientation::apply(const Slice &slice) const {
     return fromRotationFace(apply(asRotationFace(slice)));
 }
+
+Turn CubeOrientation::apply(const Turn &turn) const {
+    if (turn.is_slice_turn) {
+        auto [new_slice, reversed] = apply(turn.slice);
+        return Turn{new_slice, reversed ? inv(turn.rotationAmount) : turn.rotationAmount};
+    }
+    else {
+        return Turn{apply(turn.face), turn.rotationAmount};
+    }
+}

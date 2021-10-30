@@ -3,6 +3,7 @@
 #include "Face.h"
 #include "Slice.h"
 #include "CubeRotation.h"
+#include "Turn.h"
 #include <utility>
 
 struct CubeOrientation {
@@ -36,4 +37,9 @@ struct CubeOrientation {
      * If the bool is true, then the Slice is reversed
      */
     [[nodiscard]] std::pair<Slice, bool> apply(const Slice &slice) const;
+
+    /**
+     * @brief Converts the given Turn in this CubeOrientation to the equivalent Turn in the identity CubeOrientation
+     */
+    [[nodiscard]] Turn apply(const Turn &turn) const;
 };
