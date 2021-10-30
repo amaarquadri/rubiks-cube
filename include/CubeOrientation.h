@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Colour.h"
+#include "CubeRotation.h"
 
 struct CubeOrientation {
     Colour top;
@@ -15,4 +16,9 @@ struct CubeOrientation {
     [[nodiscard]] Colour getLeftFaceColour() const;
 
     [[nodiscard]] Colour getBottomFaceColour() const;
+
+    /**
+     * @brief Applies the given CubeRotation to this CubeOrientation and returns the resulting CubeOrientation
+     */
+    [[nodiscard]] CubeOrientation operator*(const CubeRotation &cubeRotation);
 };
