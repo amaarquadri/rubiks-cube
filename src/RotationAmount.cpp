@@ -1,4 +1,5 @@
 #include "RotationAmount.h"
+#include <stdexcept>
 
 RotationAmount inv(const RotationAmount &rotationAmount) {
     switch (rotationAmount) {
@@ -31,9 +32,32 @@ RotationAmount operator+(const RotationAmount &first, const RotationAmount &seco
 }
 
 std::pair<int, RotationAmount> parseRotationAmount(const std::string &str) {
-    if (str.empty()) return {0, CLOCKWISE};
-    std::string first_char = str.substr(0, 1);
-    if (first_char == "2") return {1, HALF_TURN};
-    else if (first_char == "'") return {1, COUNTERCLOCKWISE};
-    else return {0, CLOCKWISE};
+    int rotationAmount = 0;
+    int consumed = 0;
+    for (char chr : str) {
+        if (chr >= '0' && chr <= '9') {
+            int digit = chr - '0';
+            rotationAmount = (2 * rotationAmount + digit) % 4;
+            consumed++;
+        }
+        else if (chr == '\'') {
+            rotationAmount = 4 - rotationAmount;
+            consumed++;
+            break;
+        }
+        else break;
+    }
+
+    switch (rotationAmount) {
+        case 0:
+            return {consumed, consumed == 0 ? CLOCKWISE : NONE};
+        case 1:
+            return {consumed, CLOCKWISE};
+        case 2:
+            return {consumed, HALF_TURN};
+        case 3:
+            return {consumed, COUNTERCLOCKWISE};
+        default:
+            throw std::runtime_error("Impossible result mod 4!");
+    }
 }
