@@ -1,48 +1,17 @@
 #include "CubeRotation.h"
 
-// TODO: verify
-
-Face CubeRotation::apply(const Face &face) const {
-    switch (face) {
-        case U:
-            return newTop;
-        case F:
-            return newFront;
-        case R:
-            getRight(newTop, newFront);
-        case B:
-            return getOpposite(newFront);
-        case L:
-            return getLeft(newTop, newFront);
-        case D:
-            return getOpposite(newTop);
-    }
-}
-
 CubeRotation CubeRotation::inv() const {
-    return {apply(U), apply(F)};
-}
-
-CubeRotation CubeRotation::identity() {
-    return CubeRotation{U, F};
-}
-
-CubeRotation CubeRotation::operator*(const CubeRotation &other) const {
-    CubeRotation inverse = inv();
-    return {inverse.apply(other.newTop), inverse.apply(other.newFront)};
-}
-
-CubeOrientation CubeRotation::operator*(const CubeOrientation &cubeOrientation) const {
-    // TODO
-    return cubeOrientation;
-}
-
-Turn CubeRotation::operator*(const Turn &turn) const {
-    // TODO
-    return turn;
+    return {rotationAxis, ::inv(rotationAmount)};
 }
 
 std::string CubeRotation::toStr() const {
-    // TODO
-    return "";
+    return ::toStr(rotationAxis) + ::toStr(rotationAmount);
+}
+
+std::pair<int, CubeRotation> parse(const std::string &str) {
+    auto [consumed_for_rotation_axis, rotationAxis] = parseRotationAxis(str);
+    if (consumed_for_rotation_axis == 0) return {0, {}}; // not possible to parse
+    std::string remaining = str.substr(consumed_for_rotation_axis, str.size() - consumed_for_rotation_axis);
+    auto [consumed_for_rotation_amount, rotation_amount] = parseRotationAmount(remaining);
+    return {consumed_for_rotation_axis + consumed_for_rotation_amount, {rotationAxis, rotation_amount}};
 }
