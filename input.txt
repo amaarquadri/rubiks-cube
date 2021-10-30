@@ -1,0 +1,7 @@
+z R' R D' R' R2' B' R2 U' F U F' U2' B U B' U' B U B' U' B U F R2' B' L' R3' F D2' F' R2 F' R B U2' B U B2 U' B U L2' R' M' U' L2' U B U R2' U' B2' R16' D L D2' L' B2' D // Cross
+L' U2 L U2' L' U L // F2L Slot 1
+U L U' L' U2 L U' L' // F2L Slot 2
+U2' R B' R' B R U R' // F2L Slot 3
+U' R' U R U R' U R2 B' R' B // F2L Slot 4
+R' F2 L F L' F' L F L' F R // OLL
+U3' R' U' R B2 D L' U L U' L D' B2' // PLL
