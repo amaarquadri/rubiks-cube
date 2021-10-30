@@ -1,13 +1,22 @@
 #pragma once
 
 #include "Face.h"
+#include "Slice.h"
 #include "RotationAmount.h"
 #include <string>
 #include <utility>
 
 struct Turn {
-    Face face;
+    bool is_slice_turn;
+    union {
+        Face face;
+        Slice slice;
+    };
     RotationAmount rotationAmount;
+
+    Turn(Face face, RotationAmount rotationAmount) : is_slice_turn(false), face(face), rotationAmount(rotationAmount) {}
+
+    Turn(Slice slice, RotationAmount rotationAmount) : is_slice_turn(true), slice(slice), rotationAmount(rotationAmount) {}
 
     [[nodiscard]] Turn inv() const;
 
