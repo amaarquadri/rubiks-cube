@@ -4,40 +4,67 @@ bool CubeOrientation::operator==(const CubeOrientation &other) const {
     return top == other.top && front == other.front;
 }
 
-Colour CubeOrientation::getRightFaceColour() const {
+Face CubeOrientation::getRightFace() const {
     return getRight(top, front);
 }
 
-Colour CubeOrientation::getBackFaceColour() const {
+Face CubeOrientation::getBackFace() const {
     return getOpposite(front);
 }
 
-Colour CubeOrientation::getLeftFaceColour() const {
+Face CubeOrientation::getLeftFace() const {
     return getLeft(top, front);
 }
 
-Colour CubeOrientation::getBottomFaceColour() const {
+Face CubeOrientation::getBottomFace() const {
     return getOpposite(top);
 }
 
-CubeOrientation CubeOrientation::operator*(const CubeRotation &cubeRotation) {
+
+
+CubeOrientation CubeOrientation::identity() {
+    return {U, F};
+}
+
+CubeOrientation CubeOrientation::operator*(const CubeRotation &cubeRotation) const {
     CubeOrientation product{top, front};
     for (int i = 0; i < static_cast<uint8_t>(cubeRotation.rotationAmount); i++) {
         switch (cubeRotation.rotationAxis) {
             case X: {
-                Colour new_top = product.front;
-                Colour new_front = product.getBottomFaceColour();
+                Face new_top = product.front;
+                Face new_front = product.getBottomFace();
                 product.top = new_top;
                 product.front = new_front;
                 break;
             }
             case Y:
-                product.front = product.getRightFaceColour();
+                product.front = product.getRightFace();
                 break;
             case Z:
-                product.top = product.getLeftFaceColour();
+                product.top = product.getLeftFace();
                 break;
         }
     }
     return product;
+}
+
+Face CubeOrientation::apply(const Face &face) const {
+    switch (face) {
+        case U:
+            return top;
+        case F:
+            return front;
+        case R:
+            return getRightFace();
+        case B:
+            return getBackFace();
+        case L:
+            return getLeftFace();
+        case D:
+            return getRightFace();
+    }
+}
+
+std::pair<Slice, bool> CubeOrientation::apply(const Slice &slice) const {
+    return fromRotationFace(apply(asRotationFace(slice)));
 }

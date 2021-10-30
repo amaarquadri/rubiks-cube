@@ -1,24 +1,39 @@
 #pragma once
 
-#include "Colour.h"
+#include "Face.h"
+#include "Slice.h"
 #include "CubeRotation.h"
+#include <utility>
 
 struct CubeOrientation {
-    Colour top;
-    Colour front;
+    Face top; // the face that is now on top
+    Face front; // the face that is now in the front
 
     bool operator==(const CubeOrientation &other) const;
 
-    [[nodiscard]] Colour getRightFaceColour() const;
+    [[nodiscard]] Face getRightFace() const;
 
-    [[nodiscard]] Colour getBackFaceColour() const;
+    [[nodiscard]] Face getBackFace() const;
 
-    [[nodiscard]] Colour getLeftFaceColour() const;
+    [[nodiscard]] Face getLeftFace() const;
 
-    [[nodiscard]] Colour getBottomFaceColour() const;
+    [[nodiscard]] Face getBottomFace() const;
+
+    static CubeOrientation identity();
 
     /**
      * @brief Applies the given CubeRotation to this CubeOrientation and returns the resulting CubeOrientation
      */
-    [[nodiscard]] CubeOrientation operator*(const CubeRotation &cubeRotation);
+    [[nodiscard]] CubeOrientation operator*(const CubeRotation &cubeRotation) const;
+
+    /**
+     * @brief Converts the given Face in this CubeOrientation to the equivalent Face in the identity CubeOrientation
+     */
+    [[nodiscard]] Face apply(const Face &face) const;
+
+    /**
+     * @brief Converts the given Slice in this CubeOrientation to the equivalent Slice in the identity CubeOrientation
+     * If the bool is true, then the Slice is reversed
+     */
+    [[nodiscard]] std::pair<Slice, bool> apply(const Slice &slice) const;
 };
