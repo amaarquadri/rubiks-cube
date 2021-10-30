@@ -8,7 +8,7 @@ std::string CubeRotation::toStr() const {
     return ::toStr(rotationAxis) + ::toStr(rotationAmount);
 }
 
-std::pair<int, CubeRotation> parse(const std::string &str) {
+std::pair<int, CubeRotation> CubeRotation::parse(const std::string &str) {
     auto [consumed_for_rotation_axis, rotationAxis] = parseRotationAxis(str);
     if (consumed_for_rotation_axis == 0) return {0, {}}; // not possible to parse
     std::string remaining = str.substr(consumed_for_rotation_axis, str.size() - consumed_for_rotation_axis);
