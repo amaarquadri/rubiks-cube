@@ -1,10 +1,22 @@
 #pragma once
 
 #include <cstdint>
+#include <utility>
 
 enum Slice : uint8_t {
     M, E, S
 };
+
+/**
+ * @return The face that has the same rotation direction as the given Slice
+ */
+Face asRotationFace(const Slice &slice);
+
+/**
+ * @breif Computes the slice that has the same rotation direction as the given Face
+ * If the bool is true, then the slice is the opposite direction
+ */
+std::pair<Slice, bool> fromRotationFace(const Face &face);
 
 std::string toStr(const Slice &face);
 
