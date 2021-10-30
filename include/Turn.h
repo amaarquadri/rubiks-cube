@@ -14,9 +14,11 @@ struct Turn {
     };
     RotationAmount rotationAmount;
 
-    Turn(Face face, RotationAmount rotationAmount) : is_slice_turn(false), face(face), rotationAmount(rotationAmount) {}
+    Turn(const Face &face, const RotationAmount &rotationAmount) :
+            is_slice_turn(false), face(face), rotationAmount(rotationAmount) {}
 
-    Turn(Slice slice, RotationAmount rotationAmount) : is_slice_turn(true), slice(slice), rotationAmount(rotationAmount) {}
+    Turn(const Slice &slice, const RotationAmount &rotationAmount) :
+            is_slice_turn(true), slice(slice), rotationAmount(rotationAmount) {}
 
     [[nodiscard]] Turn inv() const;
 
