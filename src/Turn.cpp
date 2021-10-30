@@ -1,4 +1,5 @@
 #include "Turn.h"
+#include <tuple>
 
 Turn Turn::inv() const {
     return is_slice_turn ? Turn{slice, ::inv(rotationAmount)} : Turn{face, ::inv(rotationAmount)};
@@ -11,9 +12,20 @@ std::string Turn::toStr() const {
 }
 
 std::pair<int, Turn> Turn::parse(const std::string &str) {
-    auto [consumed_for_face, face] = parseFace(str);
-    if (consumed_for_face == 0) return {0, {}}; // not possible to parse
-    std::string remaining = str.substr(consumed_for_face, str.size() - consumed_for_face);
+    bool is_slice_turn = false;
+    auto [consumed, face] = parseFace(str);
+    Slice slice;
+    if (consumed == 0) {
+        // cannot parse a Face, try parsing a Slice instead
+        std::tie(consumed, slice) = parseSlice(str);
+        if (consumed == 0) {
+            // not possible to parse
+            return {0, Turn{Face{}, {}}};
+        }
+        is_slice_turn = true;
+    }
+    std::string remaining = str.substr(consumed, str.size() - consumed);
     auto [consumed_for_rotation_amount, rotation_amount] = parseRotationAmount(remaining);
-    return {consumed_for_face + consumed_for_rotation_amount, {face, rotation_amount}};
+    return {consumed + consumed_for_rotation_amount,
+            is_slice_turn ? Turn{slice, rotation_amount} : Turn{face, rotation_amount}};
 }
