@@ -1,6 +1,7 @@
 #include "Face.h"
 #include "CornerLocation.h"
 #include "Cube.h"
+#include <stdexcept>
 
 Face getOpposite(const Face &face) {
     switch (face) {
@@ -23,6 +24,7 @@ Face getLeft(const Face &top, const Face &front) {
     for (CornerLocation corner : Cube::CORNER_LOCATION_ORDER) {
         if (top == corner.first && front == corner.second) return corner.third;
     }
+    throw std::invalid_argument("Provided top and front faces are inconsistent!");
 }
 
 Face getRight(const Face &top, const Face &front) {
