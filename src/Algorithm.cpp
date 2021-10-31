@@ -12,6 +12,10 @@ Algorithm::Move Algorithm::Move::inv() const {
     }
 }
 
+size_t Algorithm::length() const {
+    return moves.size();
+}
+
 std::string Algorithm::toStr() const {
     std::string result;
     for (auto move = moves.begin(); move < moves.end(); move++) {

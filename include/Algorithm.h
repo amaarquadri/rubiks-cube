@@ -22,6 +22,8 @@ struct Algorithm {
 
     std::vector<Move> moves;
 
+    [[nodiscard]] size_t length() const;
+
     [[nodiscard]] std::string toStr() const;
 
     void cancelMoves();
