@@ -2,10 +2,12 @@
 #include "Face.h"
 
 Algorithm::Move Algorithm::Move::inv() const {
-    Move inverse_move{isTurn};
-    if (isTurn) inverse_move.turn = turn.inv();
-    else inverse_move.cubeRotation = cubeRotation.inv();
-    return inverse_move;
+    if (isTurn) {
+        return Move{turn.inv()};
+    }
+    else {
+        return Move{cubeRotation.inv()};
+    }
 }
 
 std::string Algorithm::toStr() const {
