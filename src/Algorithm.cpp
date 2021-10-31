@@ -16,6 +16,7 @@ std::string Algorithm::toStr() const {
     for (auto move = moves.begin(); move < moves.end(); move++) {
         if (move->isTurn) result += move->turn.toStr();
         else result += move->cubeRotation.toStr();
+        result += " ";
     }
     return result;
 }
