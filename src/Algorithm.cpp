@@ -1,5 +1,6 @@
 #include "Algorithm.h"
 #include "Face.h"
+#include <algorithm>
 
 Algorithm::Move Algorithm::Move::inv() const {
     if (isTurn) {
@@ -131,8 +132,8 @@ Algorithm Algorithm::parse(const std::string &alg) {
 }
 
 Algorithm Algorithm::inv() const {
-    std::vector<Move> inverse_moves;
-    for (auto it = moves.end() - 1; it >= moves.begin(); it--)
-        inverse_moves.insert(inverse_moves.end(), 1, it->inv());
-    return {inverse_moves};
+    std::vector<Move> inverse_moves(moves.size());
+    std::transform(moves.rbegin(), moves.rend(), inverse_moves.begin(),
+                   [](const Move &move) { return move.inv(); });
+    return Algorithm{inverse_moves};
 }
