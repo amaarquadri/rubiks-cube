@@ -51,10 +51,18 @@ void Cube::setCorner(const CornerPiece &cornerPiece, const CornerLocation &corne
 void Cube::apply(const Turn &turn) {
     if (turn.rotationAmount == NONE) return;
 
+    if (turn.is_slice_turn) {
+        apply(Turn{getRotationFace(turn.slice), inv(turn.rotationAmount)});
+        apply(Turn{getOpposite(getRotationFace(turn.slice)), turn.rotationAmount});
+        auto [rotationAxis, reverse] = getRotationAxis(turn.slice);
+        apply(CubeRotation{rotationAxis, reverse ? inv(turn.rotationAmount) : turn.rotationAmount});
+        return;
+    }
+
     std::array<EdgeLocation, 4> edgeCycle{};
     std::array<CornerLocation, 4> cornerCycle{};
 
-    switch (turn.face) {
+    switch (orientation.apply(turn.face)) {
         case U:
             edgeCycle = {{
                                  {U, B}, {U, R},
