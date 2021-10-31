@@ -29,4 +29,10 @@ struct Algorithm {
     static Algorithm parse(const std::string &alg);
 
     [[nodiscard]] Algorithm inv() const;
+
+    [[nodiscard]] Algorithm operator+(const Algorithm &other) const;
+
+    [[nodiscard]] Algorithm operator*(const int &times) const;
+
+    [[nodiscard]] Algorithm withSetup(const std::string &setup_alg_string) const;
 };

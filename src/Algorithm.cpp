@@ -139,3 +139,24 @@ Algorithm Algorithm::inv() const {
                    [](const Move &move) { return move.inv(); });
     return Algorithm{inverse_moves};
 }
+
+Algorithm Algorithm::operator+(const Algorithm &other) const {
+    std::vector<Move> sum_moves(moves.size() + other.moves.size());
+    auto it = std::copy(moves.begin(), moves.end(), sum_moves.begin());
+    std::copy(other.moves.begin(), other.moves.end(), it);
+    return {sum_moves};
+}
+
+Algorithm Algorithm::operator*(const int &times) const {
+    std::vector<Move> repeated_moves(moves.size() * times);
+    auto it = repeated_moves.begin();
+    for (int i = 0; i < times; i++) {
+        it = std::copy(moves.begin(), moves.end(), it);
+    }
+    return Algorithm{repeated_moves};
+}
+
+Algorithm Algorithm::withSetup(const std::string &setup_alg_string) const {
+    Algorithm setup_alg = Algorithm::parse(setup_alg_string);
+    return setup_alg + (*this) + setup_alg.inv();
+}
