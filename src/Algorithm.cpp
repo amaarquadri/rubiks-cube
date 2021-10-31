@@ -140,6 +140,12 @@ Algorithm Algorithm::inv() const {
     return Algorithm{inverse_moves};
 }
 
+Algorithm Algorithm::subAlgorithm(const size_t &start, const size_t &length) const {
+    std::vector<Move> sub_moves(length);
+    std::copy(moves.begin() + start, moves.begin() + start + length, sub_moves);
+    return Algorithm{sub_moves};
+}
+
 Algorithm Algorithm::operator+(const Algorithm &other) const {
     std::vector<Move> sum_moves(moves.size() + other.moves.size());
     auto it = std::copy(moves.begin(), moves.end(), sum_moves.begin());
