@@ -48,6 +48,12 @@ CubeOrientation CubeOrientation::operator*(const CubeRotation &cubeRotation) con
     return product;
 }
 
+void CubeOrientation::operator*=(const CubeRotation &cubeRotation) {
+    CubeOrientation product = (*this) * cubeRotation;
+    top = product.top;
+    front = product.front;
+}
+
 Face CubeOrientation::apply(const Face &face) const {
     switch (face) {
         case U:

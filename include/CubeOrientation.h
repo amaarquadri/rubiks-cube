@@ -27,6 +27,8 @@ struct CubeOrientation {
      */
     [[nodiscard]] CubeOrientation operator*(const CubeRotation &cubeRotation) const;
 
+    void operator*=(const CubeRotation &cubeRotation);
+
     /**
      * @brief Converts the given Face in this CubeOrientation to the equivalent Face in the identity CubeOrientation
      */
