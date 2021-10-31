@@ -74,6 +74,8 @@ public:
 
     void scramble();
 
+    void setSolved();
+
     [[nodiscard]] bool edgesSolved() const;
 
     [[nodiscard]] bool cornersSolved() const;

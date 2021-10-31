@@ -155,6 +155,7 @@ void Cube::apply(const Turn &turn) {
 }
 
 void Cube::apply(const CubeRotation &cubeRotation) {
+    // don't actually move any pieces, just track the net orientation
     orientation *= cubeRotation;
 }
 
@@ -228,13 +229,16 @@ void Cube::scramble() {
     else if (lastRotation == 1) corners[7] = corners[7].rotateCounterclockwise(); // need another 2 to get to 3
 }
 
+void Cube::setSolved() {
+    edges = STARTING_EDGE_PIECES;
+    corners = STARTING_CORNER_PIECES;
+}
+
 bool Cube::edgesSolved() const {
-    // TODO: account for different CubeOrientation
     return edges == STARTING_EDGE_PIECES;
 }
 
 bool Cube::cornersSolved() const {
-    // TODO: account for different CubeOrientation
     return corners == STARTING_CORNER_PIECES;
 }
 
