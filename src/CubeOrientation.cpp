@@ -20,10 +20,17 @@ Face CubeOrientation::getBottomFace() const {
     return getOpposite(top);
 }
 
-
-
 CubeOrientation CubeOrientation::identity() {
     return {U, F};
+}
+
+CubeOrientation CubeOrientation::inv() const {
+    Face inv_top, inv_front;
+    for (Face face : {U, F, R, B, L, D}) {
+        if (apply(face) == U) inv_top = face;
+        else if (apply(face) == F) inv_front = face;
+    }
+    return CubeOrientation{inv_top, inv_front};
 }
 
 CubeOrientation CubeOrientation::operator*(const CubeRotation &cubeRotation) const {

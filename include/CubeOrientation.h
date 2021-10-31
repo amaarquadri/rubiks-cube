@@ -22,6 +22,8 @@ struct CubeOrientation {
 
     static CubeOrientation identity();
 
+    [[nodiscard]] CubeOrientation inv() const;
+
     /**
      * @brief Applies the given CubeRotation to this CubeOrientation and returns the resulting CubeOrientation
      */
