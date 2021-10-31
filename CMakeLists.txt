@@ -8,14 +8,16 @@ include_directories(./include)
 add_executable(rubiks_cube
         src/Colour.cpp
         src/Face.cpp
+        src/Slice.cpp
+        src/RotationAxis.cpp
+        src/RotationAmount.cpp
         src/EdgePiece.cpp
         src/CornerPiece.cpp
         src/EdgeLocation.cpp
         src/CornerLocation.cpp
-        src/RotationAmount.cpp
         src/Turn.cpp
-        src/CubeOrientation.cpp
         src/CubeRotation.cpp
+        src/CubeOrientation.cpp
         src/Algorithm.cpp
         src/Cube.cpp
         main.cpp)
