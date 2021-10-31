@@ -246,6 +246,10 @@ bool Cube::isSolved() const {
     return edgesSolved() && cornersSolved();
 }
 
+bool Cube::operator==(const Cube &other) const {
+    return edges == other.edges && corners == other.corners;
+}
+
 std::string Cube::toNetString() const {
     //  B
     // LURD

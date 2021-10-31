@@ -82,6 +82,12 @@ public:
 
     [[nodiscard]] bool isSolved() const;
 
+    /**
+     * @brief Compares the edges and corners for equality
+     * The CubeOrientations are not compared.
+     */
+    [[nodiscard]] bool operator==(const Cube &other) const;
+
     [[nodiscard]] std::string toNetString() const;
 
 private:
