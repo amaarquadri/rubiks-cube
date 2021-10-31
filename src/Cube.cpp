@@ -2,6 +2,7 @@
 #include "Permutation.h"
 #include <chrono>
 #include <random>
+#include <stdexcept>
 
 static unsigned seed = std::chrono::system_clock::now().time_since_epoch().count(); // NOLINT(cert-err58-cpp)
 static auto random_engine = std::default_random_engine(seed); // NOLINT(cert-err58-cpp)
@@ -14,6 +15,7 @@ EdgePiece Cube::getEdge(const EdgeLocation &edgeLocation) const {
         if (EDGE_LOCATION_ORDER[i] == edgeLocation) return edges[i];
         if (EDGE_LOCATION_ORDER[i] == flippedLocation) return edges[i].flip();
     }
+    throw std::invalid_argument("EdgeLocation not found!");
 }
 
 void Cube::setEdge(const EdgePiece &edgePiece, const EdgeLocation &edgeLocation) {
@@ -32,6 +34,7 @@ CornerPiece Cube::getCorner(const CornerLocation &cornerLocation) const {
         if (CORNER_LOCATION_ORDER[i] == clockwiseLocation) return corners[i].rotateCounterclockwise();
         if (CORNER_LOCATION_ORDER[i] == counterclockwiseLocation) return corners[i].rotateClockwise();
     }
+    throw std::invalid_argument("CornerLocation not found!");
 }
 
 void Cube::setCorner(const CornerPiece &cornerPiece, const CornerLocation &cornerLocation) {
