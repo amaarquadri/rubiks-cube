@@ -1,5 +1,6 @@
 #include "Algorithm.h"
 #include "Face.h"
+#include "CubeOrientation.h"
 #include <algorithm>
 
 Algorithm::Move Algorithm::Move::inv() const {
@@ -21,15 +22,15 @@ std::string Algorithm::toStr() const {
     return result;
 }
 
-static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeRotation>> &previousTurns) {
+static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeOrientation>> &previousTurns) {
     // merges any turns resulting from the last element in previousTurns, and updates both vectors
     // returns the number of moves that were cancelled
     if (previousTurns.size() < 2) return 0;
 
-    std::pair<int, CubeRotation> last_pair = previousTurns[previousTurns.size() - 1];
-    std::pair<int, CubeRotation> second_last_pair = previousTurns[previousTurns.size() - 2];
-    Turn original_last_turn = last_pair.second.inv() * moves[last_pair.first].turn; // equivalent last turn from original CubeRotation
-    Turn original_second_last_turn = second_last_pair.second.inv() * moves[second_last_pair.first].turn; // equivalent second last turn from original CubeRotation
+    std::pair<int, CubeOrientation> last_pair = previousTurns[previousTurns.size() - 1];
+    std::pair<int, CubeOrientation> second_last_pair = previousTurns[previousTurns.size() - 2];
+    Turn original_last_turn = last_pair.second.apply(moves[last_pair.first].turn); // equivalent last turn from original CubeRotation
+    Turn original_second_last_turn = second_last_pair.second.apply(moves[second_last_pair.first].turn); // equivalent second last turn from original CubeRotation
 
     if (original_last_turn.face == original_second_last_turn.face) {
         RotationAmount new_rotation_amount = original_second_last_turn.rotationAmount + original_last_turn.rotationAmount;
@@ -51,14 +52,14 @@ static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair
         }
     }
     else if (getOpposite(original_last_turn.face) == original_second_last_turn.face && previousTurns.size() >= 3) {
-        std::pair<int, CubeRotation> third_last_pair = previousTurns[previousTurns.size() - 3];
-        Turn original_third_last_turn = third_last_pair.second.inv() * moves[third_last_pair.first].turn; // equivalent third last turn from original CubeRotation
+        std::pair<int, CubeOrientation> third_last_pair = previousTurns[previousTurns.size() - 3];
+        Turn original_third_last_turn = third_last_pair.second.apply(moves[third_last_pair.first].turn); // equivalent third last turn from original CubeRotation
         if (original_last_turn.face == original_third_last_turn.face) {
             // temporarily remove second_last_pair, recurse to combine the last and 3rd last pairs, then add it back
             previousTurns.erase(previousTurns.end() - 2);
-            mergeTurns(moves, previousTurns);
-            previousTurns.insert(previousTurns.end(), 1, second_last_pair);
-            return 1;
+            int merged_turns = mergeTurns(moves, previousTurns);
+            previousTurns.push_back(second_last_pair);
+            return merged_turns;
         }
     }
     return 0;
@@ -67,25 +68,25 @@ static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair
 void Algorithm::cancelMoves() {
     if (moves.empty()) return;
 
-    // first pass, combine any adjacent CubeRotations
+    // first pass, combine any adjacent CubeRotations with the same RotationAxis
     for (auto it = moves.begin() + 1; it < moves.end();) {
-        if (!(it - 1)->isTurn && !it->isTurn) {
-            (it - 1)->cubeRotation = (it - 1)->cubeRotation * it->cubeRotation;
+        if (!(it - 1)->isTurn && !it->isTurn && (it - 1)->cubeRotation.rotationAxis == it->cubeRotation.rotationAxis) {
+            (it - 1)->cubeRotation.rotationAmount = (it - 1)->cubeRotation.rotationAmount + it->cubeRotation.rotationAmount;
             it = moves.erase(it);
         }
         else it++;
     }
 
-    std::vector<std::pair<int, CubeRotation>> previousTurns; // index, net CubeRotation at index
-    CubeRotation currentRotation = CubeRotation::identity(); // rotation from original CubeOrientation to CubeOrientation at index
+    std::vector<std::pair<int, CubeOrientation>> previousTurns; // index, CubeOrientation at index
+    CubeOrientation orientation = CubeOrientation::identity();
     for (int index = 0; index < moves.size(); index++) {
         Move move = moves[index];
         if (move.isTurn) {
-            previousTurns.insert(previousTurns.end(), 1, {index, currentRotation});
+            previousTurns.emplace_back(index, orientation);
             index -= mergeTurns(moves, previousTurns);
         }
         else {
-            currentRotation = currentRotation * move.cubeRotation;
+            orientation *= move.cubeRotation;
         }
     }
 }
