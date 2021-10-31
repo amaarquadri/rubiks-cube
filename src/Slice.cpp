@@ -1,6 +1,6 @@
 #include "Slice.h"
 
-Face asRotationFace(const Slice &slice) {
+Face getRotationFace(const Slice &slice) {
     switch (slice) {
         case M:
             return L;
@@ -8,6 +8,17 @@ Face asRotationFace(const Slice &slice) {
             return D;
         case S:
             return F;
+    }
+}
+
+std::pair<RotationAxis, bool> getRotationAxis(const Slice &slice) {
+    switch (slice) {
+        case M:
+            return {X, true};
+        case E:
+            return {Y, true};
+        case S:
+            return {Z, false};
     }
 }
 

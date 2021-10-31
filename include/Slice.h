@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CubeRotation.h"
 #include <cstdint>
 #include <utility>
 
@@ -8,9 +9,15 @@ enum Slice : uint8_t {
 };
 
 /**
- * @return The face that has the same rotation direction as the given Slice
+ * @return The face that has the same rotation axis and direction as the given Slice
  */
-Face asRotationFace(const Slice &slice);
+Face getRotationFace(const Slice &slice);
+
+/**
+ * @brief Computes the RotationAxis that results from applying this Slice with a RotationAmount of CLOCKWISE
+ * If the bool is true, then the RotationAxis is in the opposite direction
+ */
+std::pair<RotationAxis, bool> getRotationAxis(const Slice &slice);
 
 /**
  * @breif Computes the slice that has the same rotation direction as the given Face
