@@ -58,7 +58,7 @@ public:
                                                                                      {YELLOW, GREEN, RED},
                                                                                      {YELLOW, RED, BLUE},
                                                                                      {YELLOW, BLUE, ORANGE}}};
-    constexpr static const CubeOrientation STARTING_ORIENTATION{WHITE, GREEN};
+    constexpr static const CubeOrientation STARTING_ORIENTATION{U, F};
 private:
     std::array<EdgePiece, 12> edges;
     std::array<CornerPiece, 8> corners;

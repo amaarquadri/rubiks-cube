@@ -145,7 +145,7 @@ void Cube::apply(const Turn &turn) {
 }
 
 void Cube::apply(const CubeRotation &cubeRotation) {
-
+    orientation *= cubeRotation;
 }
 
 void Cube::apply(const Algorithm &algorithm) {
