@@ -160,3 +160,9 @@ Algorithm Algorithm::withSetup(const std::string &setup_alg_string) const {
     Algorithm setup_alg = Algorithm::parse(setup_alg_string);
     return setup_alg + (*this) + setup_alg.inv();
 }
+
+Algorithm Algorithm::commutator(const std::string &first_alg_str, const std::string &second_alg_str) {
+    Algorithm first_alg = Algorithm::parse(first_alg_str);
+    Algorithm second_alg = Algorithm::parse(second_alg_str);
+    return first_alg + second_alg + first_alg.inv() + second_alg.inv();
+}

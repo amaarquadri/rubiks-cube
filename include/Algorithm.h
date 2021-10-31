@@ -35,4 +35,6 @@ struct Algorithm {
     [[nodiscard]] Algorithm operator*(const int &times) const;
 
     [[nodiscard]] Algorithm withSetup(const std::string &setup_alg_string) const;
+
+    static Algorithm commutator(const std::string &first_alg_str, const std::string &second_alg_str);
 };
