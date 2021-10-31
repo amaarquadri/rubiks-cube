@@ -149,6 +149,8 @@ void Cube::apply(const Turn &turn) {
             cycleCorners({cornerCycle[0], cornerCycle[2]});
             cycleCorners({cornerCycle[1], cornerCycle[3]});
             break;
+        case NONE:
+            throw std::logic_error("turn.rotationAmount became NONE!");
     }
 }
 

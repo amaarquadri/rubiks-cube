@@ -8,5 +8,5 @@ struct EdgePiece {
 
     bool operator==(const EdgePiece &other) const;
 
-    EdgePiece flip() const;
+    [[nodiscard]] EdgePiece flip() const;
 };
