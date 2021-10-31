@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CubeRotation.h"
+#include "Face.h"
 #include <cstdint>
 #include <utility>
 
