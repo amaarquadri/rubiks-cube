@@ -79,7 +79,7 @@ Face CubeOrientation::apply(const Face &face) const {
 }
 
 std::pair<Slice, bool> CubeOrientation::apply(const Slice &slice) const {
-    return fromRotationFace(apply(asRotationFace(slice)));
+    return fromRotationFace(apply(getRotationFace(slice)));
 }
 
 Turn CubeOrientation::apply(const Turn &turn) const {
