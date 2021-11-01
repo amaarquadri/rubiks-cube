@@ -10,3 +10,12 @@ struct EdgeLocation {
 
     [[nodiscard]] EdgeLocation flip() const;
 };
+
+namespace std {
+    template<>
+    struct hash<EdgeLocation> {
+        size_t operator()(const EdgeLocation &edgeLocation) const {
+            return 6 * static_cast<size_t>(edgeLocation.first) + static_cast<size_t>(edgeLocation.second);
+        }
+    };
+}

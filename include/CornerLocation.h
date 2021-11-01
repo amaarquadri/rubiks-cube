@@ -14,3 +14,13 @@ struct CornerLocation {
 
     [[nodiscard]] CornerLocation rotateCounterClockwise() const;
 };
+
+namespace std {
+    template<>
+    struct hash<CornerLocation> {
+        size_t operator()(const CornerLocation &cornerLocation) const {
+            return 36 * static_cast<size_t>(cornerLocation.first) + 6 * static_cast<size_t>(cornerLocation.second) +
+            static_cast<size_t>(cornerLocation.third);
+        }
+    };
+}
