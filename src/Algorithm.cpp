@@ -3,6 +3,13 @@
 #include "CubeOrientation.h"
 #include <algorithm>
 
+Algorithm::Move &Algorithm::Move::operator=(const Algorithm::Move &other) {
+    isTurn = other.isTurn;
+    if (isTurn) turn = other.turn;
+    else cubeRotation = other.cubeRotation;
+    return *this;
+}
+
 Algorithm::Move Algorithm::Move::inv() const {
     if (isTurn) {
         return Move{turn.inv()};

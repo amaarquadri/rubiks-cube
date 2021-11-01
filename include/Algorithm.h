@@ -19,6 +19,8 @@ struct Algorithm {
 
         explicit Move(const CubeRotation &cubeRotation) : isTurn(false), cubeRotation(cubeRotation) {}
 
+        Move& operator=(const Move &other);
+
         [[nodiscard]] Move inv() const;
     };
 
