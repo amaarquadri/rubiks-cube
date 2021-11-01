@@ -54,12 +54,12 @@ std::string toStr(const Face &face) {
 
 std::pair<int, Face> parseFace(const std::string &str) {
     if (str.empty()) return {0, {}};
-    std::string first_char = str.substr(0, 1);
-    if (first_char == "U") return {1, U};
-    else if (first_char == "F") return {1, F};
-    else if (first_char == "R") return {1, R};
-    else if (first_char == "B") return {1, B};
-    else if (first_char == "L") return {1, L};
-    else if (first_char == "D") return {1, D};
+    char first_char = str[0];
+    if (first_char == 'U') return {1, U};
+    else if (first_char == 'F') return {1, F};
+    else if (first_char == 'R') return {1, R};
+    else if (first_char == 'B') return {1, B};
+    else if (first_char == 'L') return {1, L};
+    else if (first_char == 'D') return {1, D};
     else return {0, {}};
 }
