@@ -1,0 +1,8 @@
+U2 R' B U2 R2 L' D2 B' U' F' U2 B2 D' F2 D' B2 D2 L2 F2 B2 U R2 // Scramble
+L' F' D' B' D' F D' L // Cross
+L' U' L U' F U F' // F2L Slot 1
+B U2' B' U2 B U' B' // F2L Slot 2
+R U2' R' U R U' R' // F2L Slot 3
+L U L' U' L U L' // F2L Slot 4
+U B U L U' L' B' // OLL
+U' L' U2' L U L' U2' R U' L U R' U // PLL
