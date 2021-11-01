@@ -14,9 +14,9 @@ std::string toStr(const RotationAxis &rotationAxis) {
 
 std::pair<int, RotationAxis> parseRotationAxis(const std::string &str) {
     if (str.empty()) return {0, {}};
-    std::string first_char = str.substr(0, 1);
-    if (first_char == "X") return {1, X};
-    else if (first_char == "Y") return {1, Y};
-    else if (first_char == "Z") return {1, Z};
+    char first_char = str[0];
+    if (first_char == 'X' || first_char == 'x') return {1, X};
+    else if (first_char == 'Y' || first_char == 'y') return {1, Y};
+    else if (first_char == 'Z' || first_char == 'z') return {1, Z};
     else return {0, {}};
 }
