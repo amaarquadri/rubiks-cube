@@ -1,5 +1,6 @@
 #include "Colour.h"
 #include "Cube.h"
+#include <stdexcept>
 
 Colour getOpposite(const Colour &colour) {
     switch (colour) {
@@ -15,6 +16,8 @@ Colour getOpposite(const Colour &colour) {
             return RED;
         case YELLOW:
             return WHITE;
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
@@ -43,5 +46,7 @@ std::string toStr(const Colour &colour) {
             return "O";
         case YELLOW:
             return "Y";
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }

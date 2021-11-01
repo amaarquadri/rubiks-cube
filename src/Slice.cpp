@@ -1,4 +1,5 @@
 #include "Slice.h"
+#include <stdexcept>
 
 Face getRotationFace(const Slice &slice) {
     switch (slice) {
@@ -8,6 +9,8 @@ Face getRotationFace(const Slice &slice) {
             return D;
         case S:
             return F;
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
@@ -19,6 +22,8 @@ std::pair<RotationAxis, bool> getRotationAxis(const Slice &slice) {
             return {Y, true};
         case S:
             return {Z, false};
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
@@ -36,6 +41,8 @@ std::pair<Slice, bool> fromRotationFace(const Face &face) {
             return {S, false};
         case B:
             return {S, true};
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
@@ -47,6 +54,8 @@ std::string toStr(const Slice &face) {
             return "E";
         case S:
             return "S";
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 

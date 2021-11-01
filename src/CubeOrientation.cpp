@@ -1,4 +1,5 @@
 #include "CubeOrientation.h"
+#include <stdexcept>
 
 bool CubeOrientation::operator==(const CubeOrientation &other) const {
     return top == other.top && front == other.front;
@@ -75,6 +76,8 @@ Face CubeOrientation::apply(const Face &face) const {
             return getLeftFace();
         case D:
             return getRightFace();
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 

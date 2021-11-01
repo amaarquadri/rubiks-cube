@@ -17,6 +17,8 @@ Face getOpposite(const Face &face) {
             return R;
         case D:
             return U;
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
@@ -45,6 +47,8 @@ std::string toStr(const Face &face) {
             return "L";
         case D:
             return "D";
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
