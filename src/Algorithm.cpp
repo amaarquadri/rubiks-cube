@@ -153,7 +153,9 @@ Algorithm Algorithm::inv() const {
 
 Algorithm Algorithm::subAlgorithm(const size_t &start, const size_t &length) const {
     std::vector<Move> sub_moves(length);
-    std::copy(moves.begin() + start, moves.begin() + start + length, sub_moves);
+    for (int i = 0; i < length; i++) {
+        sub_moves[i] = moves[start + i];
+    }
     return Algorithm{sub_moves};
 }
 
