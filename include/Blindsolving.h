@@ -3,12 +3,13 @@
 #include "Algorithm.h"
 #include "EdgeLocation.h"
 #include "CornerLocation.h"
+#include <unordered_map>
 #include <map>
 #include <utility>
 
 class Blindsolving {
-    static const std::map<EdgeLocation, char> EDGE_LETTERING;
-    static const std::map<CornerLocation, char> CORNER_LETTERING;
+    static const std::unordered_map<EdgeLocation, char> EDGE_LETTERING;
+    static const std::unordered_map<CornerLocation, char> CORNER_LETTERING;
     static const std::map<char, Algorithm> EDGE_ALGS;
     static const std::map<char, Algorithm> CORNER_ALGS;
     static const Algorithm PARITY_ALG;

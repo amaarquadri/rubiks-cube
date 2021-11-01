@@ -2,34 +2,34 @@
 #include "Cube.h"
 #include "PLL.h"
 
-static std::map<EdgeLocation, char> getEdgeLettering() {
-    std::map<EdgeLocation, char> edge_lettering;
+static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
+    std::unordered_map<EdgeLocation, char> edge_lettering;
     std::string edge_labels = "ABCDFJNRUVWZ";
     std::string flipped_edge_labels = "MIEQLPTHGKOS";
     for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
         EdgeLocation location = Cube::EDGE_LOCATION_ORDER[i];
-        edge_lettering[location] = edge_labels[i];
-        edge_lettering[location.flip()] = flipped_edge_labels[i];
+        edge_lettering.insert({location, edge_labels[i]});
+        edge_lettering.insert({location.flip(), flipped_edge_labels[i]});
     }
     return edge_lettering;
 }
 
-static std::map<CornerLocation, char> getCornerLettering() {
-    std::map<CornerLocation, char> corner_lettering;
+static std::unordered_map<CornerLocation, char> getCornerLettering() {
+    std::unordered_map<CornerLocation, char> corner_lettering;
     std::string corner_labels = "ABCDUVWZ";
     std::string clockwise_corner_labels = "QMIESGKO";
     std::string counterclockwise_corner_labels = "NJFRHLPT";
     for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
         CornerLocation location = Cube::CORNER_LOCATION_ORDER[i];
-        corner_lettering[location] = corner_labels[i];
-        corner_lettering[location.rotateClockwise()] = clockwise_corner_labels[i];
-        corner_lettering[location.rotateCounterClockwise()] = counterclockwise_corner_labels[i];
+        corner_lettering.insert({location, corner_labels[i]});
+        corner_lettering.insert({location.rotateClockwise(), clockwise_corner_labels[i]});
+        corner_lettering.insert({location.rotateCounterClockwise(), counterclockwise_corner_labels[i]});
     }
     return corner_lettering;
 }
 
-const std::map<EdgeLocation, char> Blindsolving::EDGE_LETTERING = getEdgeLettering(); // NOLINT(cert-err58-cpp)
-const std::map<CornerLocation, char> Blindsolving::CORNER_LETTERING = getCornerLettering(); // NOLINT(cert-err58-cpp)
+const std::unordered_map<EdgeLocation, char> Blindsolving::EDGE_LETTERING = getEdgeLettering(); // NOLINT(cert-err58-cpp)
+const std::unordered_map<CornerLocation, char> Blindsolving::CORNER_LETTERING = getCornerLettering(); // NOLINT(cert-err58-cpp)
 
 static const Algorithm A_ALG = Algorithm::parse("M2"); // NOLINT(cert-err58-cpp)
 static const Algorithm C_ALG = Algorithm::parse("U2 M' U2 M'"); // NOLINT(cert-err58-cpp)
