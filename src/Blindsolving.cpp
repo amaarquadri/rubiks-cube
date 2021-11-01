@@ -85,14 +85,15 @@ const std::map<char, Algorithm> Blindsolving::CORNER_ALGS = { // NOLINT(cert-err
 
 const Algorithm Blindsolving::PARITY_ALG = A_ALG.withSetup("D' L2 D"); // NOLINT(cert-err58-cpp)
 
-std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &scramble, Algorithm moves) {
+std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &scramble, const Algorithm &moves) {
     std::vector<Blindsolving::SolveData> solve;
     Cube cube{};
     cube.apply(scramble);
 
+    int consumed = 0;
     while (moves.length() > 0) {
-        for (int i = 0; i < moves.length(); i++) {
-            Algorithm some_moves = moves.subAlgorithm(i, moves.length() - i);
+        for (int i = consumed + 1; i < moves.length(); i++) {
+            Algorithm some_moves = moves.subAlgorithm(consumed, i);
         }
     }
     return solve;
