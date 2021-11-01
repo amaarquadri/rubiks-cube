@@ -4,8 +4,8 @@
 
 struct CornerPiece {
     // must be defined in clockwise order
-    Colour second;
     Colour first;
+    Colour second;
     Colour third;
 
     bool operator==(const CornerPiece &other) const;
