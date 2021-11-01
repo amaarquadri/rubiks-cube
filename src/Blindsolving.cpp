@@ -92,7 +92,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
 
     while (moves.length() > 0) {
         for (int i = 0; i < moves.length(); i++) {
-            Algorithm some_moves = mo
+            Algorithm some_moves = moves.subAlgorithm(i, moves.length() - i);
         }
     }
     return solve;
