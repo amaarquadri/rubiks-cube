@@ -151,9 +151,9 @@ Algorithm Algorithm::inv() const {
     return Algorithm{inverse_moves};
 }
 
-Algorithm Algorithm::subAlgorithm(const size_t &start, const size_t &length) const {
-    std::vector<Move> sub_moves(length);
-    for (int i = 0; i < length; i++) {
+Algorithm Algorithm::subAlgorithm(const size_t &start, const size_t &end) const {
+    std::vector<Move> sub_moves(end - start);
+    for (int i = 0; i < sub_moves.size(); i++) {
         sub_moves[i] = moves[start + i];
     }
     return Algorithm{sub_moves};

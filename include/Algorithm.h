@@ -36,7 +36,7 @@ struct Algorithm {
 
     [[nodiscard]] Algorithm inv() const;
 
-    [[nodiscard]] Algorithm subAlgorithm(const size_t &start, const size_t &length) const;
+    [[nodiscard]] Algorithm subAlgorithm(const size_t &start, const size_t &end) const;
 
     [[nodiscard]] Algorithm operator+(const Algorithm &other) const;
 
