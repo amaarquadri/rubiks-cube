@@ -24,6 +24,8 @@ Colour getOpposite(const Colour &colour) {
 Colour getLeft(const Colour &top, const Colour &front) {
     for (CornerPiece corner : Cube::STARTING_CORNER_PIECES) {
         if (top == corner.first && front == corner.second) return corner.third;
+        if (top == corner.second && front == corner.third) return corner.first;
+        if (top == corner.third && front == corner.first) return corner.second;
     }
     throw std::invalid_argument("Provided top and front colours are inconsistent!");
 }
