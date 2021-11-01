@@ -13,6 +13,8 @@ struct Algorithm {
             CubeRotation cubeRotation;
         };
 
+        Move() : isTurn(false), turn(Turn{}) {}
+
         explicit Move(const Turn &turn) : isTurn(true), turn(turn) {}
 
         explicit Move(const CubeRotation &cubeRotation) : isTurn(false), cubeRotation(cubeRotation) {}
