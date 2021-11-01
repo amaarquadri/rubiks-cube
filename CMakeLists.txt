@@ -20,4 +20,5 @@ add_executable(rubiks_cube
         src/CubeOrientation.cpp
         src/Algorithm.cpp
         src/Cube.cpp
+        src/Blindsolving.cpp
         main.cpp)
