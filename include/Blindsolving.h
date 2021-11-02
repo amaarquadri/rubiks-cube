@@ -14,6 +14,7 @@ class Blindsolving {
     static const std::map<char, Algorithm> CORNER_ALGS;
     static const Algorithm PARITY_ALG;
 
+public:
     struct SolveData {
         bool is_parsed;
         union {
@@ -40,5 +41,5 @@ class Blindsolving {
         ~SolveData() {};
     };
 
-    static std::vector<SolveData> parseSolveAttempt(const Algorithm &scramble, const Algorithm &moves);
+    static std::vector<SolveData> parseSolveAttempt(const Algorithm &moves);
 };

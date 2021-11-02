@@ -104,10 +104,8 @@ Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
     }
 }
 
-std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &scramble, const Algorithm &moves) {
+std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &moves) {
     std::vector<Blindsolving::SolveData> solve;
-    Cube cube{};
-    cube.apply(scramble);
 
     int consumed = 0;
     while (consumed < moves.length()) {
