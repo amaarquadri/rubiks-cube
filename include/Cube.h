@@ -70,6 +70,8 @@ public:
 
     void apply(const CubeRotation &cubeRotation);
 
+    void apply(const Algorithm::Move &move);
+
     void apply(const Algorithm &algorithm);
 
     void scramble();

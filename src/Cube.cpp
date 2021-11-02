@@ -159,10 +159,14 @@ void Cube::apply(const CubeRotation &cubeRotation) {
     orientation *= cubeRotation;
 }
 
+void Cube::apply(const Algorithm::Move &move) {
+    if (move.isTurn) apply(move.turn);
+    else apply(move.cubeRotation);
+}
+
 void Cube::apply(const Algorithm &algorithm) {
     for (Algorithm::Move move: algorithm.moves) {
-        if (move.isTurn) apply(move.turn);
-        else apply(move.cubeRotation);
+        apply(move);
     }
 }
 
