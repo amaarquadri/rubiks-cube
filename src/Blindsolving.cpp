@@ -110,12 +110,11 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
     cube.apply(scramble);
 
     int consumed = 0;
-    while (moves.length() > 0) {
-        bool found_alg = false;
+    while (consumed < moves.length()) {
+        bool found_match = false;
+        SolveData solve_data{};
         for (int i = consumed + 1; i < moves.length(); i++) {
             Algorithm some_moves = moves.subAlgorithm(consumed, i);
-            bool found_match = false;
-            SolveData solve_data{};
             for (auto [chr, alg] : EDGE_ALGS) {
                 if (alg == some_moves) {
                     found_match = true;
@@ -143,11 +142,10 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
             if (found_match) {
                 solve.push_back(solve_data);
                 consumed = i;
-                found_alg = true;
                 break;
             }
         }
-        if (!found_alg) {
+        if (!found_match) {
             if (solve.empty() || solve[solve.size() - 1].is_parsed) {
                 solve.emplace_back(Algorithm{});
             }
