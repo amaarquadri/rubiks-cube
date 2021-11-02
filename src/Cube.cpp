@@ -255,7 +255,7 @@ bool Cube::isStandardOrientation() const {
 }
 
 bool Cube::operator==(const Cube &other) const {
-    return edges == other.edges && corners == other.corners;
+    return edges == other.edges && corners == other.corners && orientation == other.orientation;
 }
 
 std::string Cube::toNetString() const {

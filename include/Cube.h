@@ -87,8 +87,7 @@ public:
     [[nodiscard]] bool isStandardOrientation() const;
 
     /**
-     * @brief Compares the edges and corners for equality
-     * The CubeOrientations are not compared.
+     * @brief Compares the edges, corners, and orientation for equality
      */
     [[nodiscard]] bool operator==(const Cube &other) const;
 
