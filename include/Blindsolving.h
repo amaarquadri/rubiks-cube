@@ -33,6 +33,8 @@ class Blindsolving {
         explicit SolveData(Algorithm unknown_moves) :
                 is_parsed(false), unknown_moves(std::move(unknown_moves)) {}
 
+        explicit SolveData(const SolveData &other);
+
         SolveData& operator=(const SolveData &other);
 
         ~SolveData() {};
