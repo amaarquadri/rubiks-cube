@@ -5,7 +5,7 @@
 #include <sstream>
 
 Algorithm loadInput() {
-    std::ifstream file(R"(C:\Users\Amaar\Documents\ProgrammingProjects\ClionProjects\rubiks-cube\tests\no_rotations.txt)");
+    std::ifstream file("tests/no_rotations.txt");
     std::stringstream buffer;
     buffer << file.rdbuf();
     Algorithm moves = Algorithm::parse(buffer.str());
