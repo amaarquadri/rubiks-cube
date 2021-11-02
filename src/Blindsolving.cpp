@@ -107,14 +107,33 @@ Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
 std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &moves) {
     std::vector<Blindsolving::SolveData> solve;
 
+    std::map<char, Cube> edge_alg_transformations;
+    for (auto [chr, alg] : EDGE_ALGS) {
+        Cube cube{};
+        cube.apply(alg);
+        edge_alg_transformations.insert({chr, cube});
+    }
+
+    std::map<char, Cube> corner_alg_transformations;
+    for (auto [chr, alg] : CORNER_ALGS) {
+        Cube cube{};
+        cube.apply(alg);
+        edge_alg_transformations.insert({chr, cube});
+    }
+
+    Cube parity_alg_transformation{};
+    parity_alg_transformation.apply(PARITY_ALG);
+
     int consumed = 0;
     while (consumed < moves.length()) {
         bool found_match = false;
         SolveData solve_data{};
-        for (int i = consumed + 1; i < moves.length(); i++) {
-            Algorithm some_moves = moves.subAlgorithm(consumed, i);
-            for (auto [chr, alg] : EDGE_ALGS) {
-                if (alg == some_moves) {
+        Cube test_transformation{};
+        for (int i = consumed; i < moves.length(); i++) {
+            test_transformation.apply(moves[i]);
+
+            for (auto [chr, transformation] : edge_alg_transformations) {
+                if (test_transformation == transformation) {
                     found_match = true;
                     solve_data.is_parsed = true;
                     solve_data.is_parity = false;
@@ -123,8 +142,8 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
                     break;
                 }
             }
-            for (auto [chr, alg] : CORNER_ALGS) {
-                if (alg == some_moves) {
+            for (auto [chr, transformation] : corner_alg_transformations) {
+                if (test_transformation == transformation) {
                     found_match = true;
                     solve_data.is_parsed = true;
                     solve_data.is_parity = false;
@@ -133,13 +152,13 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
                     break;
                 }
             }
-            if (PARITY_ALG == some_moves) {
+            if (test_transformation == parity_alg_transformation) {
                 found_match = true;
                 // solve_data is initialized to parity anyways, so no need to update here
             }
             if (found_match) {
                 solve.push_back(solve_data);
-                consumed = i;
+                consumed = i + 1; // we consumed [0, i] which has a length of (i + 1)
                 break;
             }
         }
