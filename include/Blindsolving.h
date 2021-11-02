@@ -16,23 +16,18 @@ class Blindsolving {
 
 public:
     struct SolveData {
+        Algorithm moves;
         bool is_parsed;
-        union {
-            struct { // only valid if is_parsed
-                bool is_parity;
-                bool is_edge; // only valid if !is_parity
-                char alg; // only valid if !is_parity
-            };
-            Algorithm unknown_moves; // only valid if !is_parsed
-        };
+        bool is_parity; // only valid if is_parsed
+        bool is_edge; // only valid if is_parsed && !is_parity
+        char alg; // only valid if !is_parity
 
         SolveData() : is_parsed(true), is_parity(true) {}
 
         explicit SolveData(const bool &is_edge, const char &alg) :
                 is_parsed(true), is_parity(false), is_edge(is_edge), alg(alg) {}
 
-        explicit SolveData(Algorithm unknown_moves) :
-                is_parsed(false), unknown_moves(std::move(unknown_moves)) {}
+        explicit SolveData(Algorithm moves) : is_parsed(false), moves(std::move(moves)) {}
 
         explicit SolveData(const SolveData &other);
 

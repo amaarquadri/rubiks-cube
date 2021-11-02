@@ -88,7 +88,7 @@ const Algorithm Blindsolving::PARITY_ALG = A_ALG.withSetup("D' L2 D"); // NOLINT
 Blindsolving::SolveData& Blindsolving::SolveData::operator=(const Blindsolving::SolveData &other) {
     is_parsed = other.is_parsed;
     if (is_parsed) alg = other.alg;
-    else unknown_moves = other.unknown_moves;
+    else moves = other.moves;
     return *this;
 }
 
@@ -100,7 +100,7 @@ Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
         alg = other.alg;
     }
     else {
-        unknown_moves = other.unknown_moves;
+        moves = other.moves;
     }
 }
 
@@ -135,6 +135,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
             for (auto [chr, transformation] : edge_alg_transformations) {
                 if (test_transformation == transformation) {
                     found_match = true;
+                    solve_data.moves = moves.subAlgorithm(consumed, i + 1);
                     solve_data.is_parsed = true;
                     solve_data.is_parity = false;
                     solve_data.is_edge = true;
@@ -145,6 +146,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
             for (auto [chr, transformation] : corner_alg_transformations) {
                 if (test_transformation == transformation) {
                     found_match = true;
+                    solve_data.moves = moves.subAlgorithm(consumed, i + 1);
                     solve_data.is_parsed = true;
                     solve_data.is_parity = false;
                     solve_data.is_edge = false;
@@ -154,6 +156,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
             }
             if (test_transformation == parity_alg_transformation) {
                 found_match = true;
+                solve_data.moves = moves.subAlgorithm(consumed, i + 1);
                 // solve_data is initialized to parity anyways, so no need to update here
             }
             if (found_match) {
@@ -166,7 +169,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
             if (solve.empty() || solve[solve.size() - 1].is_parsed) {
                 solve.emplace_back(Algorithm{});
             }
-            solve[solve.size() - 1].unknown_moves.moves.push_back(moves[consumed]);
+            solve[solve.size() - 1].moves.moves.push_back(moves[consumed]);
             consumed++;
         }
     }
