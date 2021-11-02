@@ -111,16 +111,49 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
 
     int consumed = 0;
     while (moves.length() > 0) {
+        bool found_alg = false;
         for (int i = consumed + 1; i < moves.length(); i++) {
             Algorithm some_moves = moves.subAlgorithm(consumed, i);
+            bool found_match = false;
+            SolveData solve_data{};
+            for (auto [chr, alg] : EDGE_ALGS) {
+                if (alg == some_moves) {
+                    found_match = true;
+                    solve_data.is_parsed = true;
+                    solve_data.is_parity = false;
+                    solve_data.is_edge = true;
+                    solve_data.alg = chr;
+                    break;
+                }
+            }
+            for (auto [chr, alg] : CORNER_ALGS) {
+                if (alg == some_moves) {
+                    found_match = true;
+                    solve_data.is_parsed = true;
+                    solve_data.is_parity = false;
+                    solve_data.is_edge = false;
+                    solve_data.alg = chr;
+                    break;
+                }
+            }
+            if (PARITY_ALG == some_moves) {
+                found_match = true;
+                // solve_data is initialized to parity anyways, so no need to update here
+            }
+            if (found_match) {
+                solve.push_back(solve_data);
+                consumed = i;
+                found_alg = true;
+                break;
+            }
+        }
+        if (!found_alg) {
+            if (solve.empty() || solve[solve.size() - 1].is_parsed) {
+                solve.emplace_back(Algorithm{});
+            }
+            solve[solve.size() - 1].unknown_moves.moves.push_back(moves[consumed]);
+            consumed++;
         }
     }
     return solve;
-}
-
-Blindsolving::SolveData& Blindsolving::SolveData::operator=(const Blindsolving::SolveData &other) {
-    is_parsed = other.is_parsed;
-    if (is_parsed) alg = other.alg;
-    else unknown_moves = other.unknown_moves;
-    return *this;
 }
