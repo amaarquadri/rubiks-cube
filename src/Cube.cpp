@@ -246,6 +246,10 @@ bool Cube::isSolved() const {
     return edgesSolved() && cornersSolved();
 }
 
+bool Cube::isStandardOrientation() const {
+    return orientation == CubeOrientation::identity();
+}
+
 bool Cube::operator==(const Cube &other) const {
     return edges == other.edges && corners == other.corners;
 }

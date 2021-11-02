@@ -82,6 +82,8 @@ public:
 
     [[nodiscard]] bool isSolved() const;
 
+    [[nodiscard]] bool isStandardOrientation() const;
+
     /**
      * @brief Compares the edges and corners for equality
      * The CubeOrientations are not compared.
