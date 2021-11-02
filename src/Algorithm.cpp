@@ -1,6 +1,7 @@
 #include "Algorithm.h"
 #include "Face.h"
 #include "CubeOrientation.h"
+#include "Cube.h"
 #include <algorithm>
 
 Algorithm::Move &Algorithm::Move::operator=(const Algorithm::Move &other) {
@@ -31,6 +32,17 @@ std::string Algorithm::toStr() const {
         result += " ";
     }
     return result;
+}
+
+bool Algorithm::operator==(const Algorithm &other) const {
+    Cube test_cube{};
+    test_cube.apply(*this);
+    test_cube.apply(other.inv());
+    return test_cube.isSolved() && test_cube.isStandardOrientation();
+}
+
+Algorithm::Move Algorithm::operator[](const size_t &index) const {
+    return moves[index];
 }
 
 static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeOrientation>> &previousTurns) {

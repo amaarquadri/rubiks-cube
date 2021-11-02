@@ -30,6 +30,14 @@ struct Algorithm {
 
     [[nodiscard]] std::string toStr() const;
 
+    /**
+     * @return True if applying this Algorithm, and then the inverse of the provided Algorithm on a solved Cube
+     * results in a solved cube in the standard orientation.
+     */
+    [[nodiscard]] bool operator==(const Algorithm &other) const;
+
+    [[nodiscard]] Move operator[](const size_t &index) const;
+
     void cancelMoves();
 
     static Algorithm parse(const std::string &alg);
