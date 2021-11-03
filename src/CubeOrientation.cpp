@@ -94,3 +94,7 @@ Turn CubeOrientation::apply(const Turn &turn) const {
         return Turn{apply(turn.face), turn.rotationAmount};
     }
 }
+
+CubeRotation CubeOrientation::apply(const CubeRotation &cubeRotation) const {
+    return CubeRotation();
+}

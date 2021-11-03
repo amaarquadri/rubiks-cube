@@ -46,4 +46,6 @@ struct CubeOrientation {
      * @brief Converts the given Turn in this CubeOrientation to the equivalent Turn in the identity CubeOrientation
      */
     [[nodiscard]] Turn apply(const Turn &turn) const;
+
+    [[nodiscard]] CubeRotation apply(const CubeRotation &cubeRotation) const;
 };
