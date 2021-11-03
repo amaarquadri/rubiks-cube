@@ -105,32 +105,43 @@ Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
 }
 
 std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &moves) {
-    std::vector<Blindsolving::SolveData> solve;
+    int consumed = 0;
 
+    // extract all initial CubeRotations
+    CubeOrientation orientation = CubeOrientation::identity();
+    while (!moves[consumed].isTurn) {
+        orientation *= moves[consumed].cubeRotation;
+        consumed++;
+    }
+    for (size_t i = consumed + 1; i < moves.length(); i++) {
+        if (!moves[i].isTurn) {
+            throw std::invalid_argument("CubeRotations can only be at the start!");
+        }
+    }
+
+    // set up transformations
     std::map<char, Cube> edge_alg_transformations;
     for (auto [chr, alg] : EDGE_ALGS) {
         Cube cube{};
         cube.apply(alg);
         edge_alg_transformations.insert({chr, cube});
     }
-
     std::map<char, Cube> corner_alg_transformations;
     for (auto [chr, alg] : CORNER_ALGS) {
         Cube cube{};
         cube.apply(alg);
         edge_alg_transformations.insert({chr, cube});
     }
-
     Cube parity_alg_transformation{};
     parity_alg_transformation.apply(PARITY_ALG);
 
-    int consumed = 0;
+    std::vector<Blindsolving::SolveData> solve;
     while (consumed < moves.length()) {
         bool found_match = false;
         SolveData solve_data{};
         Cube test_transformation{};
         for (int i = consumed; i < moves.length(); i++) {
-            test_transformation.apply(moves[i]);
+            test_transformation.apply(orientation.apply(moves[i].turn));
 
             for (auto [chr, transformation] : edge_alg_transformations) {
                 if (test_transformation == transformation) {
