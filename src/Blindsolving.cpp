@@ -130,7 +130,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
     for (auto [chr, alg] : CORNER_ALGS) {
         Cube cube{};
         cube.apply(alg);
-        edge_alg_transformations.insert({chr, cube});
+        corner_alg_transformations.insert({chr, cube});
     }
     Cube parity_alg_transformation{};
     parity_alg_transformation.apply(PARITY_ALG);
