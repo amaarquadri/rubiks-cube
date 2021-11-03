@@ -49,6 +49,10 @@ Algorithm::Move &Algorithm::operator[](const size_t &index) {
     return moves[index];
 }
 
+void Algorithm::push_back(const Algorithm::Move &move) {
+    moves.push_back(move);
+}
+
 static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeOrientation>> &previousTurns) {
     // merges any turns resulting from the last element in previousTurns, and updates both vectors
     // returns the number of moves that were cancelled

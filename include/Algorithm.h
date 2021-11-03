@@ -40,6 +40,8 @@ struct Algorithm {
 
     [[nodiscard]] Move& operator[](const size_t &index);
 
+    void push_back(const Move &move);
+
     void cancelMoves();
 
     static Algorithm parse(const std::string &alg);

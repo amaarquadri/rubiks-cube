@@ -180,7 +180,7 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
             if (solve.empty() || solve[solve.size() - 1].is_parsed) {
                 solve.emplace_back(Algorithm{});
             }
-            solve[solve.size() - 1].moves.moves.push_back(moves[consumed]);
+            solve[solve.size() - 1].moves.push_back(moves[consumed]);
             consumed++;
         }
     }
