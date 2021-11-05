@@ -4,6 +4,10 @@
 #include "Cube.h"
 #include <algorithm>
 
+Algorithm::Move::Move(const Algorithm::Move &other) {
+    *this = other;
+}
+
 Algorithm::Move &Algorithm::Move::operator=(const Algorithm::Move &other) {
     isTurn = other.isTurn;
     if (isTurn) turn = other.turn;
@@ -18,6 +22,16 @@ Algorithm::Move Algorithm::Move::inv() const {
     else {
         return Move{cubeRotation.inv()};
     }
+}
+
+Algorithm::Algorithm(const Algorithm &other) {
+    *this = other;
+}
+
+Algorithm &Algorithm::operator=(const Algorithm &other) {
+    moves.resize(other.length());
+    std::copy(other.moves.begin(), other.moves.end(), moves.begin());
+    return *this;
 }
 
 size_t Algorithm::length() const {
@@ -161,7 +175,7 @@ Algorithm Algorithm::parse(const std::string &alg) {
             total_consumed += consumed_for_turn;
         }
     }
-    return {moves};
+    return Algorithm{moves};
 }
 
 std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(const std::string &alg) {
@@ -195,7 +209,7 @@ Algorithm Algorithm::operator+(const Algorithm &other) const {
     std::vector<Move> sum_moves(moves.size() + other.moves.size());
     auto it = std::copy(moves.begin(), moves.end(), sum_moves.begin());
     std::copy(other.moves.begin(), other.moves.end(), it);
-    return {sum_moves};
+    return Algorithm{sum_moves};
 }
 
 Algorithm Algorithm::operator*(const int &times) const {

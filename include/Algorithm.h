@@ -2,6 +2,7 @@
 
 #include "Turn.h"
 #include "CubeRotation.h"
+#include <utility>
 #include <vector>
 #include <string>
 
@@ -15,6 +16,8 @@ struct Algorithm {
 
         Move() : isTurn(false), turn(Turn{}) {}
 
+        Move(const Move &other);
+
         explicit Move(const Turn &turn) : isTurn(true), turn(turn) {}
 
         explicit Move(const CubeRotation &cubeRotation) : isTurn(false), cubeRotation(cubeRotation) {}
@@ -25,6 +28,14 @@ struct Algorithm {
     };
 
     std::vector<Move> moves;
+
+    Algorithm() = default;
+
+    Algorithm(const Algorithm &other);
+
+    explicit Algorithm(std::vector<Move> moves) : moves(std::move(moves)) {}
+
+    Algorithm& operator=(const Algorithm &other);
 
     [[nodiscard]] size_t length() const;
 
