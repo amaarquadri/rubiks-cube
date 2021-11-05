@@ -46,6 +46,12 @@ struct Algorithm {
 
     static Algorithm parse(const std::string &alg);
 
+    /**
+     * @brief Parses the given string into a scramble (which must be on the first line)
+     * and the solve (which must be on subsequent lines).
+     */
+    static std::pair<Algorithm, Algorithm> parseScrambleSolve(const std::string &alg);
+
     [[nodiscard]] Algorithm inv() const;
 
     [[nodiscard]] Algorithm subAlgorithm(const size_t &start, const size_t &end) const;

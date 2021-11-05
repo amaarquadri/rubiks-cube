@@ -164,6 +164,18 @@ Algorithm Algorithm::parse(const std::string &alg) {
     return {moves};
 }
 
+std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(const std::string &alg) {
+    int scramble_length = 0;
+    while (scramble_length < alg.size() && alg[scramble_length] != '\n') scramble_length++;
+
+    if (scramble_length == alg.size()) {
+        throw std::invalid_argument("No new line characters! Cannot distinguish scramble from solve");
+    }
+
+    return {parse(alg.substr(0, scramble_length + 1)),
+            parse(alg.substr(scramble_length + 1, alg.size() - scramble_length - 1))};
+}
+
 Algorithm Algorithm::inv() const {
     std::vector<Move> inverse_moves(moves.size());
     std::transform(moves.rbegin(), moves.rend(), inverse_moves.begin(),

@@ -1,25 +1,20 @@
 #include "Algorithm.h"
+#include "Blindsolving.h"
 #include "Cube.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
-Algorithm loadInput() {
-    std::ifstream file("tests/no_rotations.txt");
+std::pair<Algorithm, Algorithm> loadInput() {
+    std::ifstream file("tests/blindsolve1.txt");
     std::stringstream buffer;
     buffer << file.rdbuf();
-    Algorithm moves = Algorithm::parse(buffer.str());
-    if (moves.length() == 0) {
-        std::cout << "Warning no moves read from file! Check that the path is correct." << std::endl;
-    }
-    else {
-        std::cout << "Loaded moves: " << moves.toStr() << std::endl;
-    }
-    return moves;
+    return Algorithm::parseScrambleSolve(buffer.str());
 }
 
 int main() {
-    Algorithm moves = loadInput();
+    auto [scramble, solve] = loadInput();
+    std::vector<Blindsolving::SolveData> solve_data = Blindsolving::parseSolveAttempt(solve);
     Cube cube{};
     cube.apply(moves);
     std::cout << cube.isSolved() << std::endl;
