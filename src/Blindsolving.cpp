@@ -98,6 +98,16 @@ Blindsolving::SolveData& Blindsolving::SolveData::operator=(const Blindsolving::
     return *this;
 }
 
+std::string Blindsolving::SolveData::toStr() const {
+    if (is_parsed) {
+        if (is_parity) return "Parity";
+        else return (is_edge ? "Edge: " : "Corner: ") + std::string(1, alg);
+    }
+    else {
+        return "Unknown Moves: " + moves.toStr();
+    }
+}
+
 std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &moves) {
     int consumed = 0;
 

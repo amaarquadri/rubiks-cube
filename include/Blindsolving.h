@@ -32,6 +32,8 @@ public:
 
         SolveData& operator=(const SolveData &other);
 
+        [[nodiscard]] std::string toStr() const;
+
         ~SolveData() {};
     };
 
