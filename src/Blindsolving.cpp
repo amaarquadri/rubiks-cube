@@ -89,15 +89,6 @@ Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
     *this = other;
 }
 
-Blindsolving::SolveData& Blindsolving::SolveData::operator=(const Blindsolving::SolveData &other) {
-    moves = other.moves;
-    is_parsed = other.is_parsed;
-    is_parity = other.is_parity;
-    is_edge = other.is_edge;
-    alg = other.alg;
-    return *this;
-}
-
 std::string Blindsolving::SolveData::toStr() const {
     if (is_parsed) {
         if (is_parity) return "Parity";

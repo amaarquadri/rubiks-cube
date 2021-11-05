@@ -30,7 +30,7 @@ public:
 
         explicit SolveData(const SolveData &other);
 
-        SolveData& operator=(const SolveData &other);
+        SolveData& operator=(const SolveData &other) = default;
 
         [[nodiscard]] std::string toStr() const;
 
