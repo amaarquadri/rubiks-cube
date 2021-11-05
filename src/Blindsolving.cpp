@@ -85,23 +85,17 @@ const std::map<char, Algorithm> Blindsolving::CORNER_ALGS = { // NOLINT(cert-err
 
 const Algorithm Blindsolving::PARITY_ALG = A_ALG.withSetup("D' L2 D"); // NOLINT(cert-err58-cpp)
 
-Blindsolving::SolveData& Blindsolving::SolveData::operator=(const Blindsolving::SolveData &other) {
-    is_parsed = other.is_parsed;
-    if (is_parsed) alg = other.alg;
-    else moves = other.moves;
-    return *this;
+Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
+    *this = other;
 }
 
-Blindsolving::SolveData::SolveData(const Blindsolving::SolveData &other) {
+Blindsolving::SolveData& Blindsolving::SolveData::operator=(const Blindsolving::SolveData &other) {
+    moves = other.moves;
     is_parsed = other.is_parsed;
-    if (is_parsed) {
-        is_parity = other.is_parity;
-        is_edge = other.is_edge;
-        alg = other.alg;
-    }
-    else {
-        moves = other.moves;
-    }
+    is_parity = other.is_parity;
+    is_edge = other.is_edge;
+    alg = other.alg;
+    return *this;
 }
 
 std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algorithm &moves) {

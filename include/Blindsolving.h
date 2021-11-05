@@ -5,7 +5,6 @@
 #include "CornerLocation.h"
 #include <unordered_map>
 #include <map>
-#include <utility>
 
 class Blindsolving {
     static const std::unordered_map<EdgeLocation, char> EDGE_LETTERING;
@@ -27,7 +26,7 @@ public:
         explicit SolveData(const bool &is_edge, const char &alg) :
                 is_parsed(true), is_parity(false), is_edge(is_edge), alg(alg) {}
 
-        explicit SolveData(Algorithm moves) : is_parsed(false), moves(std::move(moves)) {}
+        explicit SolveData(const Algorithm &moves) : is_parsed(false), moves(moves) {}
 
         explicit SolveData(const SolveData &other);
 
