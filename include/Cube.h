@@ -14,6 +14,7 @@
 
 class Cube {
 public:
+    friend class Blindsolving;
     constexpr static const std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{{
                                                                                     {U, B},
                                                                                     {U, R},
