@@ -181,3 +181,56 @@ std::vector<Blindsolving::SolveData> Blindsolving::parseSolveAttempt(const Algor
     }
     return solve;
 }
+
+constexpr static const std::array<EdgePiece, 12> PARITY_EDGE_PIECES{{
+                                                                            Cube::STARTING_EDGE_PIECES[3],
+                                                                            Cube::STARTING_EDGE_PIECES[1],
+                                                                            Cube::STARTING_EDGE_PIECES[2],
+                                                                            Cube::STARTING_EDGE_PIECES[0],
+                                                                            Cube::STARTING_EDGE_PIECES[4],
+                                                                            Cube::STARTING_EDGE_PIECES[5],
+                                                                            Cube::STARTING_EDGE_PIECES[6],
+                                                                            Cube::STARTING_EDGE_PIECES[7],
+                                                                            Cube::STARTING_EDGE_PIECES[8],
+                                                                            Cube::STARTING_EDGE_PIECES[9],
+                                                                            Cube::STARTING_EDGE_PIECES[10],
+                                                                            Cube::STARTING_EDGE_PIECES[11]}};
+
+bool Blindsolving::edgesSolvedUpToParity(const Cube &cube) {
+    return cube.edges == PARITY_EDGE_PIECES;
+}
+
+EdgeLocation Blindsolving::getLocation(const EdgePiece &edge_piece) {
+    EdgePiece flipped_piece = edge_piece.flip();
+    for (int i = 0; i < 12; i++) {
+        if (edge_piece == Cube::STARTING_EDGE_PIECES[i]) {
+            return Cube::EDGE_LOCATION_ORDER[i];
+        }
+        else if (flipped_piece == Cube::STARTING_EDGE_PIECES[i]) {
+            return Cube::EDGE_LOCATION_ORDER[i].flip();
+        }
+    }
+    throw std::invalid_argument("Could not find where the provided EdgePiece goes! It must be invalid.");
+}
+
+constexpr static const EdgeLocation EDGE_BUFFER = {D, F};
+
+std::vector<std::vector<Blindsolving::SolveData>> Blindsolving::getAllBlindsolves(const Algorithm &scramble) {
+    std::vector<std::vector<SolveData>> possible_solves;
+    possible_solves.push_back({SolveData{Algorithm{}}});
+    for (std::vector<SolveData> &solve: possible_solves) {
+        // set up test cube
+        Cube cube{};
+        cube.apply(scramble);
+        for (SolveData &solve_data: solve) cube.apply(solve_data.moves);
+
+        EdgePiece buffer_piece = cube.getEdge(EDGE_BUFFER);
+        if (buffer_piece != Cube::STARTING_EDGE_PIECES[8]) {
+            // edge buffer_piece is not solved
+            EdgeLocation first_target = getLocation(buffer_piece);
+            EdgePiece next_piece = cube.getEdge(first_target);
+//            if
+        }
+    }
+    return possible_solves;
+}

@@ -3,6 +3,7 @@
 #include "Algorithm.h"
 #include "EdgeLocation.h"
 #include "CornerLocation.h"
+#include "Cube.h"
 #include <unordered_map>
 #include <map>
 
@@ -38,4 +39,10 @@ public:
     };
 
     static std::vector<SolveData> parseSolveAttempt(const Algorithm &moves);
+
+    static bool edgesSolvedUpToParity(const Cube &cube);
+
+    static EdgeLocation getLocation(const EdgePiece &edge_piece);
+
+    static std::vector<std::vector<SolveData>> getAllBlindsolves(const Algorithm &scramble);
 };
