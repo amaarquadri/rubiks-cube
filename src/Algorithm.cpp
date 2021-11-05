@@ -145,10 +145,10 @@ static int consumeSeparators(const std::string &alg) {
                 consumed++;
                 break;
             case '/':
-                while (alg[consumed] != '\n') {
+                while (consumed != alg.size() && alg[consumed] != '\n') {
                     consumed++;
                 }
-                consumed++; // consume the new line character too
+                if (consumed != alg.size()) consumed++; // consume the new line character too, if we found it
                 break;
             default:
                 return consumed;
@@ -186,7 +186,7 @@ std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(const std::string 
         throw std::invalid_argument("No new line characters! Cannot distinguish scramble from solve");
     }
 
-    return {parse(alg.substr(0, scramble_length + 1)),
+    return {parse(alg.substr(0, scramble_length)),
             parse(alg.substr(scramble_length + 1, alg.size() - scramble_length - 1))};
 }
 
