@@ -11,6 +11,8 @@ RotationAmount inv(const RotationAmount &rotationAmount) {
             return HALF_TURN;
         case COUNTERCLOCKWISE:
             return CLOCKWISE;
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
@@ -23,6 +25,8 @@ std::string toStr(const RotationAmount &rotationAmount) {
             return "2";
         case COUNTERCLOCKWISE:
             return "'";
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 

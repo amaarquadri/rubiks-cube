@@ -1,5 +1,5 @@
 #include "RotationAxis.h"
-
+#include <stdexcept>
 
 std::string toStr(const RotationAxis &rotationAxis) {
     switch (rotationAxis) {
@@ -9,6 +9,8 @@ std::string toStr(const RotationAxis &rotationAxis) {
             return "Y";
         case Z:
             return "Z";
+        default:
+            throw std::logic_error("Unknown enum value!");
     }
 }
 
