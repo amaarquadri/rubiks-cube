@@ -4,26 +4,6 @@
 #include "Cube.h"
 #include <algorithm>
 
-Algorithm::Move::Move(const Algorithm::Move &other) {
-    *this = other;
-}
-
-Algorithm::Move &Algorithm::Move::operator=(const Algorithm::Move &other) {
-    isTurn = other.isTurn;
-    if (isTurn) turn = other.turn;
-    else cubeRotation = other.cubeRotation;
-    return *this;
-}
-
-Algorithm::Move Algorithm::Move::inv() const {
-    if (isTurn) {
-        return Move{turn.inv()};
-    }
-    else {
-        return Move{cubeRotation.inv()};
-    }
-}
-
 Algorithm::Algorithm(const Algorithm &other) {
     *this = other;
 }
@@ -55,19 +35,19 @@ bool Algorithm::operator==(const Algorithm &other) const {
     return test_cube.isSolved() && test_cube.isStandardOrientation();
 }
 
-Algorithm::Move Algorithm::operator[](const size_t &index) const {
+Move Algorithm::operator[](const size_t &index) const {
     return moves[index];
 }
 
-Algorithm::Move &Algorithm::operator[](const size_t &index) {
+Move &Algorithm::operator[](const size_t &index) {
     return moves[index];
 }
 
-void Algorithm::push_back(const Algorithm::Move &move) {
+void Algorithm::push_back(const Move &move) {
     moves.push_back(move);
 }
 
-static int mergeTurns(std::vector<Algorithm::Move> &moves, std::vector<std::pair<int, CubeOrientation>> &previousTurns) {
+static int mergeTurns(std::vector<Move> &moves, std::vector<std::pair<int, CubeOrientation>> &previousTurns) {
     // merges any turns resulting from the last element in previousTurns, and updates both vectors
     // returns the number of moves that were cancelled
     if (previousTurns.size() < 2) return 0;

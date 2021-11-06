@@ -1,32 +1,11 @@
 #pragma once
 
-#include "Turn.h"
-#include "CubeRotation.h"
+#include "Move.h"
 #include <utility>
 #include <vector>
 #include <string>
 
 struct Algorithm {
-    struct Move {
-        bool isTurn;
-        union {
-            Turn turn;
-            CubeRotation cubeRotation;
-        };
-
-        Move() : isTurn(false), turn(Turn{}) {}
-
-        Move(const Move &other);
-
-        explicit Move(const Turn &turn) : isTurn(true), turn(turn) {}
-
-        explicit Move(const CubeRotation &cubeRotation) : isTurn(false), cubeRotation(cubeRotation) {}
-
-        Move& operator=(const Move &other);
-
-        [[nodiscard]] Move inv() const;
-    };
-
     std::vector<Move> moves;
 
     Algorithm() = default;

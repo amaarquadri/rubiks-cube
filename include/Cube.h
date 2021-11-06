@@ -7,6 +7,7 @@
 #include "CubeOrientation.h"
 #include "Turn.h"
 #include "CubeRotation.h"
+#include "Move.h"
 #include "Algorithm.h"
 #include <array>
 #include <vector>
@@ -71,7 +72,7 @@ public:
 
     void apply(const CubeRotation &cubeRotation);
 
-    void apply(const Algorithm::Move &move);
+    void apply(const Move &move);
 
     void apply(const Algorithm &algorithm);
 
