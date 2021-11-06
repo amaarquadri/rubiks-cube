@@ -17,6 +17,7 @@ add_executable(rubiks_cube
         src/CornerLocation.cpp
         src/Turn.cpp
         src/CubeRotation.cpp
+        src/Move.cpp
         src/CubeOrientation.cpp
         src/Algorithm.cpp
         src/Cube.cpp
