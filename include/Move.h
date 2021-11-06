@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Turn.h"
 #include "CubeRotation.h"
 
