@@ -32,6 +32,8 @@ namespace blindsolving {
 
         SolveData& operator=(const SolveData &other) = default;
 
+        [[nodiscard]] bool operator==(const SolveData &other) const;
+
         [[nodiscard]] std::string toStr() const;
 
         ~SolveData() {};
