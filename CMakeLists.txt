@@ -4,6 +4,7 @@ project(rubiks_cube)
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(./include)
+include_directories(./include/utility)
 include_directories(./include/blindsolving)
 
 add_executable(rubiks_cube
