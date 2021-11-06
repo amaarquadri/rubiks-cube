@@ -10,6 +10,8 @@ struct CornerPiece {
 
     bool operator==(const CornerPiece &other) const;
 
+    bool operator!=(const CornerPiece &other) const;
+
     [[nodiscard]] CornerPiece rotateClockwise() const;
 
     [[nodiscard]] CornerPiece rotateCounterclockwise() const;
