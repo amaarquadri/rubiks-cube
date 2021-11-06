@@ -86,36 +86,7 @@ namespace blindsolving {
 
     const Algorithm PARITY_ALG = A_ALG.withSetup("D' L2 D"); // NOLINT(cert-err58-cpp)
 
-
-    SolveData::SolveData(const SolveData &other) {
-        *this = other;
-    }
-
-    bool SolveData::operator==(const SolveData &other) const {
-        if (is_parsed != other.is_parsed) return false;
-        if (!is_parsed) return moves == other.moves;
-        // otherwise, both must be parsed
-
-        if (is_parity != other.is_parity) return false;
-        if (is_parity) return true;
-        // otherwise, neither are parity
-
-        if (is_edge != other.is_edge) return false;
-        // otherwise, both must be the same piece type
-
-        return alg == other.alg;
-    }
-
-    std::string SolveData::toStr() const {
-        if (is_parsed) {
-            if (is_parity) return "Parity";
-            else return (is_edge ? "Edge: " : "Corner: ") + std::string(1, alg);
-        } else {
-            return "Unknown Moves: " + moves.toStr();
-        }
-    }
-
-    std::vector<SolveData> parseSolveAttempt(const Algorithm &moves) {
+    Reconstruction parseSolveAttempt(const Algorithm &moves) {
         int consumed = 0;
 
         // extract all initial CubeRotations
@@ -146,7 +117,7 @@ namespace blindsolving {
         Cube parity_alg_transformation{};
         parity_alg_transformation.apply(PARITY_ALG);
 
-        std::vector<SolveData> solve;
+        Reconstruction reconstruction;
         while (consumed < moves.length()) {
             bool found_match = false;
             SolveData solve_data{};
@@ -182,20 +153,20 @@ namespace blindsolving {
                     // solve_data is initialized to parity anyways, so no need to update here
                 }
                 if (found_match) {
-                    solve.push_back(solve_data);
+                    reconstruction.solve_data.push_back(solve_data);
                     consumed = i + 1; // we consumed [0, i] which has a length of (i + 1)
                     break;
                 }
             }
             if (!found_match) {
-                if (solve.empty() || solve[solve.size() - 1].is_parsed) {
-                    solve.emplace_back(Algorithm{});
+                if (reconstruction.solve_data.empty() || reconstruction[reconstruction.length() - 1].is_parsed) {
+                    reconstruction.solve_data.emplace_back(Algorithm{});
                 }
-                solve[solve.size() - 1].moves.push_back(moves[consumed]);
+                reconstruction[reconstruction.length() - 1].moves.push_back(moves[consumed]);
                 consumed++;
             }
         }
-        return solve;
+        return reconstruction;
     }
 
     constexpr static const std::array<EdgePiece, 12> PARITY_EDGE_PIECES{{
@@ -230,14 +201,14 @@ namespace blindsolving {
 
     constexpr static const EdgeLocation EDGE_BUFFER = {D, F};
 
-    std::vector<std::vector<SolveData>> getAllBlindsolves(const Algorithm &scramble) {
-        std::vector<std::vector<SolveData>> possible_solves;
-        possible_solves.push_back({SolveData{Algorithm{}}});
-        for (std::vector<SolveData> &solve: possible_solves) {
+    std::vector<Reconstruction> getAllBlindsolves(const Algorithm &scramble) {
+        std::vector<Reconstruction> possible_solves;
+        possible_solves.push_back(Reconstruction{{SolveData{Algorithm{}}}});
+        for (Reconstruction &reconstruction: possible_solves) {
             // set up test cube
             Cube cube{};
             cube.apply(scramble);
-            for (SolveData &solve_data: solve) cube.apply(solve_data.moves);
+            for (SolveData &solve_data: reconstruction.solve_data) cube.apply(solve_data.moves);
 
             EdgePiece buffer_piece = cube.getEdge(EDGE_BUFFER);
             if (buffer_piece != Cube::STARTING_EDGE_PIECES[8]) {

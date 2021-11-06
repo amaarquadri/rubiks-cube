@@ -17,14 +17,15 @@ class Cube;
 
 namespace blindsolving {
     class SolveData;
+    class Reconstruction;
     bool edgesSolvedUpToParity(const Cube &cube);
-    std::vector<std::vector<SolveData>> getAllBlindsolves(const Algorithm &scramble);
+    std::vector<Reconstruction> getAllBlindsolves(const Algorithm &scramble);
 }
 
 class Cube {
 public:
     friend bool blindsolving::edgesSolvedUpToParity(const Cube &cube);
-    friend std::vector<std::vector<blindsolving::SolveData>> blindsolving::getAllBlindsolves(const Algorithm &scramble);
+    friend std::vector<blindsolving::Reconstruction> blindsolving::getAllBlindsolves(const Algorithm &scramble);
 
     constexpr static const std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{{
                                                                                     {U, B},

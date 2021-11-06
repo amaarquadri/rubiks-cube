@@ -14,8 +14,8 @@ std::pair<Algorithm, Algorithm> loadInput() {
 
 int main() {
     auto [scramble, solve] = loadInput();
-    std::vector<blindsolving::SolveData> solve_data = blindsolving::parseSolveAttempt(solve);
-    for (blindsolving::SolveData &i: solve_data) std::cout << i.toStr() << std::endl;
+    blindsolving::Reconstruction reconstruction = blindsolving::parseSolveAttempt(solve);
+    for (blindsolving::SolveData &i: reconstruction.solve_data) std::cout << i.toStr() << std::endl;
 
 //    Cube cube{};
 //    cube.apply(Algorithm::parse("U R U' M2 U R' U'"));

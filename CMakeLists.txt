@@ -4,6 +4,7 @@ project(rubiks_cube)
 set(CMAKE_CXX_STANDARD 20)
 
 include_directories(./include)
+include_directories(./include/blindsolving)
 
 add_executable(rubiks_cube
         src/Colour.cpp
@@ -21,5 +22,7 @@ add_executable(rubiks_cube
         src/CubeOrientation.cpp
         src/Algorithm.cpp
         src/Cube.cpp
-        src/Blindsolving.cpp
+        src/blindsolving/SolveData.cpp
+        src/blindsolving/Reconstruction.cpp
+        src/blindsolving/Blindsolving.cpp
         main.cpp)
