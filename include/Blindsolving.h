@@ -7,14 +7,13 @@
 #include <unordered_map>
 #include <map>
 
-class Blindsolving {
-    static const std::unordered_map<EdgeLocation, char> EDGE_LETTERING;
-    static const std::unordered_map<CornerLocation, char> CORNER_LETTERING;
-    static const std::map<char, Algorithm> EDGE_ALGS;
-    static const std::map<char, Algorithm> CORNER_ALGS;
-    static const Algorithm PARITY_ALG;
+namespace blindsolving {
+    extern const std::unordered_map<EdgeLocation, char> EDGE_LETTERING;
+    extern const std::unordered_map<CornerLocation, char> CORNER_LETTERING;
+    extern const std::map<char, Algorithm> EDGE_ALGS;
+    extern const std::map<char, Algorithm> CORNER_ALGS;
+    extern const Algorithm PARITY_ALG;
 
-public:
     struct SolveData {
         Algorithm moves;
         bool is_parsed;
@@ -38,11 +37,11 @@ public:
         ~SolveData() {};
     };
 
-    static std::vector<SolveData> parseSolveAttempt(const Algorithm &moves);
+    std::vector<SolveData> parseSolveAttempt(const Algorithm &moves);
 
-    static bool edgesSolvedUpToParity(const Cube &cube);
+    bool edgesSolvedUpToParity(const Cube &cube);
 
-    static EdgeLocation getLocation(const EdgePiece &edge_piece);
+    EdgeLocation getLocation(const EdgePiece &edge_piece);
 
-    static std::vector<std::vector<SolveData>> getAllBlindsolves(const Algorithm &scramble);
-};
+    std::vector<std::vector<SolveData>> getAllBlindsolves(const Algorithm &scramble);
+}
