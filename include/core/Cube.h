@@ -16,16 +16,17 @@
 class Cube;
 
 namespace blindsolving {
-    class SolveData;
     class Reconstruction;
-    bool edgesSolvedUpToParity(const Cube &cube);
-    std::vector<Reconstruction> getAllBlindsolves(const Algorithm &scramble);
+    std::vector<EdgeLocation> getUnsolvedEdges(const Cube &cube);
+    std::vector<CornerLocation> getUnsolvedCorners(const Cube &cube);
+    std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &corner_location);
 }
 
 class Cube {
 public:
-    friend bool blindsolving::edgesSolvedUpToParity(const Cube &cube);
-    friend std::vector<blindsolving::Reconstruction> blindsolving::getAllBlindsolves(const Algorithm &scramble);
+    friend std::vector<blindsolving::Reconstruction> blindsolving::getPossibleReconstructions(const Algorithm &corner_location);
+    friend std::vector<EdgeLocation> blindsolving::getUnsolvedEdges(const Cube &cube);
+    friend std::vector<CornerLocation> blindsolving::getUnsolvedCorners(const Cube &cube);
 
     constexpr static const std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{{
                                                                                     {U, B},

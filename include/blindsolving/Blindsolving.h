@@ -17,9 +17,7 @@ namespace blindsolving {
 
     Reconstruction parseSolveAttempt(const Algorithm &moves);
 
-    bool edgesSolvedUpToParity(const Cube &cube);
+    std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &corner_location);
 
-    EdgeLocation getLocation(const EdgePiece &edge_piece);
-
-    std::vector<Reconstruction> getAllBlindsolves(const Algorithm &scramble);
+    std::vector<unsigned int> sortBestReconstructions(const Reconstruction &solve, std::vector<Reconstruction> &possible_reconstructions);
 }
