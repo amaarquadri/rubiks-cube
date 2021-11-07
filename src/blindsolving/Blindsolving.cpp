@@ -67,7 +67,7 @@ namespace blindsolving {
             {'C', Y_PERM},
             {'D', Ja_PERM.withSetup("U2")},
             {'E', L_ALG.withSetup("F' D")},
-            {'F', L_ALG.withSetup("R U'")},
+            {'F', Jb_PERM.withSetup("R U'")},
             {'G', Y_PERM.withSetup("R")},
             {'H', L_ALG.withSetup("D")},
             {'I', L_ALG.withSetup("R'")},
