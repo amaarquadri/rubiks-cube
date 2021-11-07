@@ -17,7 +17,7 @@ namespace blindsolving {
 
     Reconstruction parseSolveAttempt(const Algorithm &moves);
 
-    std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &corner_location);
+    std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &scramble);
 
     std::vector<unsigned int> sortBestReconstructions(const Reconstruction &solve, std::vector<Reconstruction> &possible_reconstructions);
 }
