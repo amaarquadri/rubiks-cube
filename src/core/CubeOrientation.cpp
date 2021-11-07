@@ -75,7 +75,7 @@ Face CubeOrientation::apply(const Face &face) const {
         case L:
             return getLeftFace();
         case D:
-            return getRightFace();
+            return getBottomFace();
         default:
             throw std::logic_error("Unknown enum value!");
     }
