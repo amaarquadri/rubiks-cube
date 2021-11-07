@@ -27,6 +27,7 @@ public:
     friend std::vector<blindsolving::Reconstruction> blindsolving::getPossibleReconstructions(const Algorithm &corner_location);
     friend std::vector<EdgeLocation> blindsolving::getUnsolvedEdges(const Cube &cube);
     friend std::vector<CornerLocation> blindsolving::getUnsolvedCorners(const Cube &cube);
+    friend struct std::hash<Cube>;
 
     constexpr static const std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{{
                                                                                     {U, B},
@@ -120,3 +121,19 @@ private:
 
     void cycleCorners(const std::vector<CornerLocation> &cornerLocations);
 };
+
+namespace std {
+    template<>
+    struct hash<Cube> {
+        size_t operator()(const Cube &cube) const {
+            size_t hash = std::hash<CubeOrientation>{}(cube.orientation);
+            for (EdgePiece edge_piece : cube.edges) {
+                hash = 31 * hash + std::hash<EdgePiece>{}(edge_piece);
+            }
+            for (CornerPiece corner_piece : cube.corners) {
+                hash = 31 * hash + std::hash<CornerPiece>{}(corner_piece);
+            }
+            return hash;
+        }
+    };
+}

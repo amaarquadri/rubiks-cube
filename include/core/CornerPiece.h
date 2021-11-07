@@ -16,3 +16,14 @@ struct CornerPiece {
 
     [[nodiscard]] CornerPiece rotateCounterclockwise() const;
 };
+
+namespace std {
+    template<>
+    struct hash<CornerPiece> {
+        size_t operator()(const CornerPiece &corner_location) const {
+            return 31 * 31 * std::hash<Colour>{}(corner_location.first) +
+                   31 * std::hash<Colour>{}(corner_location.second) +
+                   std::hash<Colour>{}(corner_location.third);
+        }
+    };
+}
