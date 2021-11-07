@@ -8,7 +8,9 @@ struct CornerLocation {
     Face second;
     Face third;
 
-    bool operator==(const CornerLocation &other) const;
+    [[nodiscard]] bool operator==(const CornerLocation &other) const;
+
+    [[nodiscard]] bool operator!=(const CornerLocation &other) const;
 
     [[nodiscard]] CornerLocation rotateClockwise() const;
 
