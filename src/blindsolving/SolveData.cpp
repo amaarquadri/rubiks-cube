@@ -20,6 +20,10 @@ namespace blindsolving {
         return alg == other.alg;
     }
 
+    bool SolveData::operator!=(const SolveData &other) const {
+        return !(*this == other);
+    }
+
     std::string SolveData::toStr() const {
         if (is_parsed) {
             if (is_parity) return "Parity";
