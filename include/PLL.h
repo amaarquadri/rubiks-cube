@@ -9,7 +9,7 @@ const Algorithm Ub_PERM = Ua_PERM.inv(); // NOLINT(cert-err58-cpp)
 
 // TODO: check which one is which
 const Algorithm Ja_PERM = Algorithm::parse("R U R' F' R U R' U' R' F R2 U' R' U'"); // NOLINT(cert-err58-cpp)
-const Algorithm Jb_PERM = Algorithm::parse("L' U2 L' U L' U2 R U' L U R'"); // NOLINT(cert-err58-cpp)
+const Algorithm Jb_PERM = Algorithm::parse("L' U2 L U L' U2 R U' L U R'"); // NOLINT(cert-err58-cpp)
 
 // TODO: check which one is which
 const Algorithm Aa_PERM = Algorithm::parse("R' F R' B2 R F' R' B2 R2"); // NOLINT(cert-err58-cpp)
