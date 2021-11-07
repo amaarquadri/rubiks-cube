@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SolveData.h"
+#include <string>
 
 namespace blindsolving {
     struct Reconstruction {
@@ -15,6 +16,8 @@ namespace blindsolving {
         Reconstruction& operator=(const Reconstruction &other);
 
         [[nodiscard]] size_t length() const;
+
+        [[nodiscard]] std::string toStr() const;
 
         [[nodiscard]] SolveData operator[](const size_t &index) const;
 
