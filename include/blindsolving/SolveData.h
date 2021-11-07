@@ -12,8 +12,8 @@ namespace blindsolving {
 
         SolveData() : is_parsed(true), is_parity(true) {}
 
-        explicit SolveData(const bool &is_edge, const char &alg) :
-                is_parsed(true), is_parity(false), is_edge(is_edge), alg(alg) {}
+        explicit SolveData(const Algorithm &moves, const bool &is_edge, const char &alg) :
+                moves(moves), is_parsed(true), is_parity(false), is_edge(is_edge), alg(alg) {}
 
         explicit SolveData(const Algorithm &moves) : is_parsed(false), moves(moves) {}
 
