@@ -3,6 +3,7 @@
 #include "CubeOrientation.h"
 #include "Cube.h"
 #include <algorithm>
+#include <tuple>
 
 Algorithm::Algorithm(const Algorithm &other) {
     *this = other;
@@ -158,6 +159,73 @@ Algorithm Algorithm::parse(const std::string &alg) {
     return Algorithm{moves};
 }
 
+/**
+ * @return Tuple of (number of characters consumed, whether the rotation amount is clockwise, number of rotations)
+ */
+static std::tuple<int, bool, unsigned int> parseExpandedRotationAmount(const std::string &str) {
+    bool clockwise = true;
+    unsigned int rotation_amount = 0;
+    int consumed = 0;
+    for (char chr : str) {
+        if (chr >= '0' && chr <= '9') {
+            int digit = chr - '0';
+            rotation_amount = 10 * rotation_amount + digit;
+            consumed++;
+        }
+        else if (chr == '\'') {
+            clockwise = false;
+            consumed++;
+            break;
+        }
+        else break;
+    }
+    return {consumed, clockwise, rotation_amount == 0 ? 1 : rotation_amount};
+}
+
+/**
+ * @return Tuple of (number of characters consumed, the turn, the number of times the turn should be repeated)
+ */
+static std::tuple<int, Turn, int> parseExpandedTurns(const std::string &str) {
+    Turn turn{};
+    int consumed;
+    std::tie(consumed, turn.face) = parseFace(str);
+    if (consumed == 0) {
+        // cannot parse a Face, try parsing a Slice instead
+        std::tie(consumed, turn.slice) = parseSlice(str);
+        if (consumed == 0) {
+            // not possible to parse
+            return {0, turn, 0};
+        }
+        turn.is_slice_turn = true;
+    }
+    std::string remaining = str.substr(consumed, str.size() - consumed);
+    auto [consumed_for_rotation_amount, clockwise, rotation_amount] = parseExpandedRotationAmount(remaining);
+    turn.rotationAmount = clockwise ? CLOCKWISE : COUNTERCLOCKWISE;
+    return {consumed + consumed_for_rotation_amount, turn, rotation_amount};
+}
+
+Algorithm Algorithm::parseExpanded(const std::string &alg) {
+    // TODO: reduce code duplication for the parseExpanded functions
+    int total_consumed = 0;
+    std::vector<Move> moves;
+    while (total_consumed < alg.size()) {
+        total_consumed += consumeSeparators(alg.substr(total_consumed, alg.size() - total_consumed));
+        auto [consumed_for_turn, turn, rotation_amount] = parseExpandedTurns(alg.substr(total_consumed, alg.size() - total_consumed));
+        if (consumed_for_turn == 0) {
+            // couldn't parse a Turn, try parsing a CubeRotation instead
+            auto [consumed_for_cube_rotation, cubeRotation] =
+            CubeRotation::parse(alg.substr(total_consumed, alg.size() - total_consumed));
+            if (consumed_for_cube_rotation == 0) break;
+            moves.emplace_back(cubeRotation);
+            total_consumed += consumed_for_cube_rotation;
+        } else {
+            for (int i = 0; i < rotation_amount; i++) moves.emplace_back(turn);
+            total_consumed += consumed_for_turn;
+        }
+    }
+    return Algorithm{moves};
+}
+
 std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(const std::string &alg) {
     int scramble_length = 0;
     while (scramble_length < alg.size() && alg[scramble_length] != '\n') scramble_length++;
@@ -167,7 +235,7 @@ std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(const std::string 
     }
 
     return {parse(alg.substr(0, scramble_length)),
-            parse(alg.substr(scramble_length + 1, alg.size() - scramble_length - 1))};
+            parseExpanded(alg.substr(scramble_length + 1, alg.size() - scramble_length - 1))};
 }
 
 Algorithm Algorithm::inv() const {

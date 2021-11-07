@@ -37,6 +37,11 @@ struct Algorithm {
     static Algorithm parse(const std::string &alg);
 
     /**
+     * @brief Parses the provided string, breaking apart all moves into half turns.
+     */
+    static Algorithm parseExpanded(const std::string &alg);
+
+    /**
      * @brief Parses the given string into a scramble (which must be on the first line)
      * and the solve (which must be on subsequent lines).
      */
