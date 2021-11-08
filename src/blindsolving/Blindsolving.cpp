@@ -255,10 +255,17 @@ namespace blindsolving {
         }
     }
 
+    std::unordered_map<Cube, std::vector<Reconstruction>> cache;
     std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &scramble) {
         // set up test cube
         Cube cube{};
-        cube.apply(scramble);
+        cube.apply(scramble); // TODO: avoid re-scrambling every time
+
+        // check the cache to see if we have calculated this scramble already
+        auto it = cache.find(cube);
+        if (it != cache.end()) {
+            return it->second;
+        }
 
         EdgePiece edge_buffer_piece = cube.getEdge(EDGE_BUFFER);
         if (getLocation(edge_buffer_piece) != EDGE_BUFFER && getLocation(edge_buffer_piece) != EDGE_BUFFER.flip()) {
@@ -281,6 +288,7 @@ namespace blindsolving {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                 }
+                cache.insert({cube, possible_reconstructions});
                 return possible_reconstructions;
             }
 
@@ -303,6 +311,7 @@ namespace blindsolving {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                 }
+                cache.insert({cube, possible_reconstructions});
                 return possible_reconstructions;
             }
             // letter, new cycle
@@ -326,6 +335,7 @@ namespace blindsolving {
                     possible_reconstructions.push_back(reconstruction);
                 }
             }
+            cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
         }
 
@@ -359,6 +369,7 @@ namespace blindsolving {
                     possible_reconstructions.push_back(reconstruction);
                 }
             }
+            cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
         }
 
@@ -387,6 +398,7 @@ namespace blindsolving {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                 }
+                cache.insert({cube, possible_reconstructions});
                 return possible_reconstructions;
             }
 
@@ -404,6 +416,7 @@ namespace blindsolving {
                 // no second letter in this pair
                 std::vector<Reconstruction> possible_reconstructions(1);
                 possible_reconstructions[0].solve_data.push_back(first);
+                cache.insert({cube, possible_reconstructions});
                 return possible_reconstructions;
             }
 
@@ -436,6 +449,7 @@ namespace blindsolving {
                     possible_reconstructions.push_back(reconstruction);
                 }
             }
+            cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
         }
 
@@ -478,11 +492,14 @@ namespace blindsolving {
                     possible_reconstructions.push_back(reconstruction);
                 }
             }
+            cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
         }
 
         // cube is already solved
-        return std::vector<Reconstruction>{1};
+        std::vector<Reconstruction> possible_reconstructions(1);
+        cache.insert({cube, possible_reconstructions});
+        return possible_reconstructions;
     }
 
     /***
