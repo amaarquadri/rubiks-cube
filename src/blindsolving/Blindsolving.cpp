@@ -19,8 +19,8 @@ namespace blindsolving {
     static std::unordered_map<CornerLocation, char> getCornerLettering() {
         std::unordered_map<CornerLocation, char> corner_lettering;
         std::string corner_labels = "ABCDUVWZ";
-        std::string clockwise_corner_labels = "QMIESGKO";
-        std::string counterclockwise_corner_labels = "NJFRHLPT";
+        std::string clockwise_corner_labels = "NJFRHLPT";
+        std::string counterclockwise_corner_labels = "QMIESGKO";
         for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
             CornerLocation location = Cube::CORNER_LOCATION_ORDER[i];
             corner_lettering.insert({location, corner_labels[i]});
@@ -92,7 +92,7 @@ namespace blindsolving {
 
         // extract all initial CubeRotations
         CubeOrientation orientation = CubeOrientation::identity();
-        while (!moves[consumed].isTurn) {
+        while (consumed < moves.length() && !moves[consumed].isTurn) {
             orientation *= moves[consumed].cubeRotation;
             consumed++;
         }
