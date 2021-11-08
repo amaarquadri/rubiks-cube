@@ -261,8 +261,8 @@ namespace blindsolving {
         cube.apply(scramble);
 
         EdgePiece edge_buffer_piece = cube.getEdge(EDGE_BUFFER);
-        if (getLocation(edge_buffer_piece) != EDGE_BUFFER) {
-            // edge_buffer_piece is not solved
+        if (getLocation(edge_buffer_piece) != EDGE_BUFFER && getLocation(edge_buffer_piece) != EDGE_BUFFER.flip()) {
+            // edge_buffer_piece is not solved, nor flipped in the correct location
             EdgeLocation first_target = getLocation(edge_buffer_piece);
             EdgePiece next_piece = cube.getEdge(first_target);
             EdgeLocation second_target = getLocation(next_piece);
@@ -270,9 +270,9 @@ namespace blindsolving {
             char first_alg = EDGE_LETTERING.at(first_target);
             SolveData first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
 
-            if (second_target != EDGE_BUFFER) {
+            if (second_target != EDGE_BUFFER && second_target.flip() != EDGE_BUFFER) {
                 // normal letter pair
-                char second_alg = EDGE_LETTERING.at(second_target);
+                char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
                 SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
 
                 std::vector<Reconstruction> possible_reconstructions = getPossibleReconstructions(
@@ -284,12 +284,12 @@ namespace blindsolving {
                 return possible_reconstructions;
             }
 
-            // second target is buffer, so we need to break into a new cycle
+            // second target is buffer (or flipped buffer), so we need to break into a new cycle
             std::vector<EdgeLocation> unsolved_edges = getUnsolvedEdges(cube);
             unsolved_edges.erase(std::remove_if(unsolved_edges.begin(), unsolved_edges.end(),
                                                 [&](const EdgeLocation &edge_location) {
-                                                    return edge_location == EDGE_BUFFER ||
-                                                           edge_location == first_target;
+                                                    return edge_location == first_target ||
+                                                           edge_location == first_target.flip();
                                                 }),
                                  unsolved_edges.end());
             if (unsolved_edges.empty()) {
@@ -310,7 +310,7 @@ namespace blindsolving {
             possible_reconstructions.reserve(2 * unsolved_edges.size());
             for (EdgeLocation &edge_location: unsolved_edges) {
                 // we can have the edge_location as the second target
-                char second_alg = EDGE_LETTERING.at(edge_location);
+                char second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location));
                 SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
                 for (Reconstruction reconstruction: getPossibleReconstructions(scramble + first.moves + second.moves)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
@@ -318,7 +318,7 @@ namespace blindsolving {
                     possible_reconstructions.push_back(reconstruction);
                 }
                 // or we can have the flipped side of the edge_location as the second target
-                second_alg = EDGE_LETTERING.at(edge_location.flip());
+                second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location.flip()));
                 second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
                 for (Reconstruction reconstruction: getPossibleReconstructions(scramble + first.moves + second.moves)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
@@ -329,7 +329,7 @@ namespace blindsolving {
             return possible_reconstructions;
         }
 
-        // edge buffer piece is already solved
+        // edge buffer piece is already solved, or in the correct location but flipped
         std::vector<EdgeLocation> unsolved_edges = getUnsolvedEdges(cube);
         if (!unsolved_edges.empty() &&
             !(unsolved_edges.size() == 2 && unsolved_edges[0] == Cube::EDGE_LOCATION_ORDER[0] &&
@@ -340,7 +340,7 @@ namespace blindsolving {
                 char first_alg = EDGE_LETTERING.at(edge_location);
                 SolveData first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
                 EdgeLocation second_target = getLocation(cube.getEdge(edge_location));
-                char second_alg = EDGE_LETTERING.at(second_target);
+                char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
                 SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
                 for (Reconstruction reconstruction : getPossibleReconstructions(scramble + first.moves + second.moves)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
@@ -351,7 +351,7 @@ namespace blindsolving {
                 first_alg = EDGE_LETTERING.at(edge_location.flip());
                 first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
                 second_target = second_target.flip();
-                second_alg = EDGE_LETTERING.at(second_target);
+                second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
                 second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
                 for (Reconstruction reconstruction : getPossibleReconstructions(scramble + first.moves + second.moves)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
@@ -364,16 +364,19 @@ namespace blindsolving {
 
         // edges are fully solved, or solved up to parity
         CornerPiece corner_buffer_piece = cube.getCorner(CORNER_BUFFER);
-        if (getLocation(corner_buffer_piece) != CORNER_BUFFER) {
-            // corner_buffer_piece is not solved
+        if (getLocation(corner_buffer_piece) != CORNER_BUFFER &&
+            getLocation(corner_buffer_piece) != CORNER_BUFFER.rotateClockwise() &&
+            getLocation(corner_buffer_piece) != CORNER_BUFFER.rotateCounterClockwise()) {
+            // corner_buffer_piece is not solved, nor rotated in place
             CornerLocation first_target = getLocation(corner_buffer_piece);
             CornerPiece next_piece = cube.getCorner(first_target);
             CornerLocation second_target = getLocation(next_piece);
 
             char first_alg = CORNER_LETTERING.at(first_target);
-            SolveData first = SolveData{EDGE_ALGS.at(first_alg), false, first_alg};
+            SolveData first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
 
-            if (second_target != CORNER_BUFFER) {
+            if (second_target != CORNER_BUFFER && second_target.rotateClockwise() != CORNER_BUFFER &&
+                                                  second_target.rotateCounterClockwise() != CORNER_BUFFER) {
                 // normal letter pair
                 char second_alg = CORNER_LETTERING.at(second_target);
                 SolveData second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
@@ -387,12 +390,13 @@ namespace blindsolving {
                 return possible_reconstructions;
             }
 
-            // second target is buffer, so we need to break into a new cycle
+            // second target is buffer (or one of its rotations), so we need to break into a new cycle
             std::vector<CornerLocation> unsolved_corners = getUnsolvedCorners(cube);
             unsolved_corners.erase(std::remove_if(unsolved_corners.begin(), unsolved_corners.end(),
                                                 [&](const CornerLocation &corner_location) {
-                                                    return corner_location == CORNER_BUFFER ||
-                                                           corner_location == first_target;
+                                                    return corner_location == first_target ||
+                                                           corner_location == first_target.rotateClockwise() ||
+                                                           corner_location == first_target.rotateCounterClockwise();
                                                 }),
                                  unsolved_corners.end());
 
@@ -576,4 +580,3 @@ namespace blindsolving {
         return sorted_edit_distances;
     }
 }
-
