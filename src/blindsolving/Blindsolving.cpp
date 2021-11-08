@@ -215,9 +215,13 @@ namespace blindsolving {
         throw std::invalid_argument("Could not find where the provided CornerPiece goes! It must be invalid.");
     }
 
+    constexpr static const EdgeLocation EDGE_BUFFER = {D, F};
+    constexpr static const CornerLocation CORNER_BUFFER = {U, L, B};
+
     std::vector<EdgeLocation> getUnsolvedEdges(const Cube &cube) {
         std::vector<EdgeLocation> unsolved_edge_locations;
         for (size_t i = 0; i < 12; i++) {
+            if (Cube::EDGE_LOCATION_ORDER[i] == EDGE_BUFFER) continue; // skip the buffer piece itself
             if (cube.getEdge(Cube::EDGE_LOCATION_ORDER[i]) != Cube::STARTING_EDGE_PIECES[i]) {
                 unsolved_edge_locations.push_back(Cube::EDGE_LOCATION_ORDER[i]);
             }
@@ -228,6 +232,7 @@ namespace blindsolving {
     std::vector<CornerLocation> getUnsolvedCorners(const Cube &cube) {
         std::vector<CornerLocation> unsolved_corner_locations;
         for (size_t i = 0; i < 8; i++) {
+            if (Cube::CORNER_LOCATION_ORDER[i] == CORNER_BUFFER) continue; // skip the buffer piece itself
             if (cube.getCorner(Cube::CORNER_LOCATION_ORDER[i]) != Cube::STARTING_CORNER_PIECES[i]) {
                 unsolved_corner_locations.push_back(Cube::CORNER_LOCATION_ORDER[i]);
             }
