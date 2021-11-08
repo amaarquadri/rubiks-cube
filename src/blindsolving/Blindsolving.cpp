@@ -240,8 +240,20 @@ namespace blindsolving {
         return unsolved_corner_locations;
     }
 
-    constexpr static const EdgeLocation EDGE_BUFFER = {D, F};
-    constexpr static const CornerLocation CORNER_BUFFER = {U, R, F};
+    char swapIfNecessary(const char &chr) {
+        switch (chr) {
+            case 'C':
+                return 'W';
+            case 'W':
+                return 'C';
+            case 'E':
+                return 'O';
+            case 'O':
+                return 'E';
+            default:
+                return chr;
+        }
+    }
 
     std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &scramble) {
         // set up test cube
