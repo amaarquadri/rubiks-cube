@@ -19,12 +19,12 @@ namespace blindsolving {
     class Reconstruction;
     std::vector<EdgeLocation> getUnsolvedEdges(const Cube &cube);
     std::vector<CornerLocation> getUnsolvedCorners(const Cube &cube);
-    std::vector<Reconstruction> getPossibleReconstructions(const Algorithm &corner_location);
+    std::vector<Reconstruction> getPossibleReconstructions(Cube &cube);
 }
 
 class Cube {
 public:
-    friend std::vector<blindsolving::Reconstruction> blindsolving::getPossibleReconstructions(const Algorithm &corner_location);
+    friend std::vector<blindsolving::Reconstruction> blindsolving::getPossibleReconstructions(Cube &cube);
     friend std::vector<EdgeLocation> blindsolving::getUnsolvedEdges(const Cube &cube);
     friend std::vector<CornerLocation> blindsolving::getUnsolvedCorners(const Cube &cube);
     friend struct std::hash<Cube>;
