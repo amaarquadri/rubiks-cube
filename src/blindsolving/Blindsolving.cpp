@@ -170,20 +170,6 @@ namespace blindsolving {
         return reconstruction;
     }
 
-    constexpr static const std::array<EdgePiece, 12> PARITY_EDGE_PIECES{{
-                                                                                Cube::STARTING_EDGE_PIECES[3],
-                                                                                Cube::STARTING_EDGE_PIECES[1],
-                                                                                Cube::STARTING_EDGE_PIECES[2],
-                                                                                Cube::STARTING_EDGE_PIECES[0],
-                                                                                Cube::STARTING_EDGE_PIECES[4],
-                                                                                Cube::STARTING_EDGE_PIECES[5],
-                                                                                Cube::STARTING_EDGE_PIECES[6],
-                                                                                Cube::STARTING_EDGE_PIECES[7],
-                                                                                Cube::STARTING_EDGE_PIECES[8],
-                                                                                Cube::STARTING_EDGE_PIECES[9],
-                                                                                Cube::STARTING_EDGE_PIECES[10],
-                                                                                Cube::STARTING_EDGE_PIECES[11]}};
-
     /**
      * @return The EdgeLocation where the given EdgePiece belongs in a solved Cube.
      */
@@ -278,9 +264,9 @@ namespace blindsolving {
                 char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
                 SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
 
-                cube.apply(first.moves + second.moves);
+                cube.cycleEdges({EDGE_BUFFER, first_target, second_target});
                 std::vector<Reconstruction> possible_reconstructions = getPossibleReconstructions(cube);
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleEdges({second_target, first_target, EDGE_BUFFER});
                 for (Reconstruction &reconstruction: possible_reconstructions) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
@@ -302,9 +288,11 @@ namespace blindsolving {
                 SolveData second = SolveData{};
                 second.moves = PARITY_ALG;
 
-                cube.apply(first.moves + second.moves);
+                cube.cycleEdges({EDGE_BUFFER, first_target});
+                cube.cycleEdges({Cube::EDGE_LOCATION_ORDER[0], Cube::EDGE_LOCATION_ORDER[3]});
                 std::vector<Reconstruction> possible_reconstructions = getPossibleReconstructions(cube);
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleEdges({Cube::EDGE_LOCATION_ORDER[0], Cube::EDGE_LOCATION_ORDER[3]});
+                cube.cycleEdges({EDGE_BUFFER, first_target});
                 for (Reconstruction &reconstruction: possible_reconstructions) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
@@ -319,24 +307,24 @@ namespace blindsolving {
                 // we can have the edge_location as the second target
                 char second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location));
                 SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleEdges({EDGE_BUFFER, first_target, edge_location});
                 for (Reconstruction reconstruction: getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleEdges({edge_location, first_target, EDGE_BUFFER});
 
                 // or we can have the flipped side of the edge_location as the second target
                 second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location.flip()));
                 second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleEdges({EDGE_BUFFER, first_target, edge_location.flip()});
                 for (Reconstruction reconstruction: getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleEdges({edge_location.flip(), first_target, EDGE_BUFFER});
             }
             cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
@@ -355,26 +343,26 @@ namespace blindsolving {
                 EdgeLocation second_target = getLocation(cube.getEdge(edge_location));
                 char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
                 SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleEdges({EDGE_BUFFER, edge_location, second_target});
                 for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleEdges({second_target, edge_location, EDGE_BUFFER});
 
                 first_alg = EDGE_LETTERING.at(edge_location.flip());
                 first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
                 second_target = second_target.flip();
                 second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
                 second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleEdges({EDGE_BUFFER, edge_location.flip(), second_target});
                 for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleEdges({second_target, edge_location.flip(), EDGE_BUFFER});
             }
             cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
@@ -399,9 +387,9 @@ namespace blindsolving {
                 char second_alg = CORNER_LETTERING.at(second_target);
                 SolveData second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
 
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, first_target, second_target});
                 std::vector<Reconstruction> possible_reconstructions = getPossibleReconstructions(cube);
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({second_target, first_target, CORNER_BUFFER});
                 for (Reconstruction &reconstruction: possible_reconstructions) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
@@ -435,35 +423,35 @@ namespace blindsolving {
                 // we can have the corner_location as the second target
                 char second_alg = CORNER_LETTERING.at(corner_location);
                 SolveData second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, first_target, corner_location});
                 for (Reconstruction reconstruction: getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({corner_location, first_target, CORNER_BUFFER});
 
                 // or we can have the clockwise rotation of the corner_location as the second target
                 second_alg = CORNER_LETTERING.at(corner_location.rotateClockwise());
                 second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, first_target, corner_location.rotateClockwise()});
                 for (Reconstruction reconstruction: getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({corner_location.rotateClockwise(), first_target, CORNER_BUFFER});
 
                 // or we can have the counterclockwise rotation of the corner_location as the second target
                 second_alg = CORNER_LETTERING.at(corner_location.rotateCounterClockwise());
                 second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, first_target, corner_location.rotateCounterClockwise()});
                 for (Reconstruction reconstruction: getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({corner_location.rotateCounterClockwise(), first_target, CORNER_BUFFER});
             }
             cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
@@ -480,39 +468,39 @@ namespace blindsolving {
                 CornerLocation second_target = getLocation(cube.getCorner(corner_location));
                 char second_alg = CORNER_LETTERING.at(second_target);
                 SolveData second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, corner_location, second_target});
                 for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({second_target, corner_location, CORNER_BUFFER});
 
                 first_alg = CORNER_LETTERING.at(corner_location.rotateClockwise());
                 first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
                 second_target = second_target.rotateClockwise();
                 second_alg = CORNER_LETTERING.at(second_target);
                 second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, corner_location.rotateClockwise(), second_target});
                 for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({second_target, corner_location.rotateClockwise(), CORNER_BUFFER});
 
                 first_alg = CORNER_LETTERING.at(corner_location.rotateCounterClockwise());
                 first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
                 second_target = second_target.rotateClockwise(); // rotate clockwise since we already rotated clockwise once already
                 second_alg = CORNER_LETTERING.at(second_target);
                 second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-                cube.apply(first.moves + second.moves);
+                cube.cycleCorners({CORNER_BUFFER, corner_location.rotateCounterClockwise(), second_target});
                 for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), second);
                     reconstruction.solve_data.insert(reconstruction.solve_data.begin(), first);
                     possible_reconstructions.push_back(reconstruction);
                 }
-                cube.apply((first.moves + second.moves).inv());
+                cube.cycleCorners({second_target, corner_location.rotateCounterClockwise(), CORNER_BUFFER});
             }
             cache.insert({cube, possible_reconstructions});
             return possible_reconstructions;
