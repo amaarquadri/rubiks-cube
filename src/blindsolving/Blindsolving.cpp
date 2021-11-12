@@ -598,6 +598,7 @@ namespace blindsolving {
 
         std::vector<std::pair<Reconstruction, unsigned int>> options(N);
         for (int i = 0; i < N; i++) {
+            // TODO: parallelize this with std::async
             options[i] = {possible_reconstructions[i], levEditDistance(solve, possible_reconstructions[i])};
         }
         std::sort(options.begin(), options.end(), [](const std::pair<Reconstruction, unsigned int> &first,
