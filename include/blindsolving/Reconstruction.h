@@ -22,5 +22,13 @@ namespace blindsolving {
         [[nodiscard]] SolveData operator[](const size_t &index) const;
 
         [[nodiscard]] SolveData& operator[](const size_t &index);
+
+        [[nodiscard]] SolveData &front();
+
+        [[nodiscard]] const SolveData &front() const;
+
+        [[nodiscard]] SolveData &back();
+
+        [[nodiscard]] const SolveData &back() const;
     };
 }

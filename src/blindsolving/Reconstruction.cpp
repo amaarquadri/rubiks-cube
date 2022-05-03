@@ -59,4 +59,20 @@ namespace blindsolving {
     SolveData &Reconstruction::operator[](const size_t &index) {
         return solve_data[index];
     }
+
+    SolveData &Reconstruction::front() {
+        return solve_data.front();
+    }
+
+    const SolveData &Reconstruction::front() const {
+        return solve_data.front();
+    }
+
+    SolveData &Reconstruction::back() {
+        return solve_data.back();
+    }
+
+    const SolveData &Reconstruction::back() const {
+        return solve_data.back();
+    }
 }

@@ -163,7 +163,7 @@ namespace blindsolving {
                 if (reconstruction.solve_data.empty() || reconstruction[reconstruction.length() - 1].is_parsed) {
                     reconstruction.solve_data.emplace_back(Algorithm{});
                 }
-                reconstruction[reconstruction.length() - 1].moves.push_back(moves[consumed]);
+                reconstruction.back().moves.push_back(moves[consumed]);
                 consumed++;
             }
         }
