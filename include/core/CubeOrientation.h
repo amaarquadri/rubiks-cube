@@ -1,61 +1,66 @@
 #pragma once
 
+#include "CubeRotation.h"
 #include "Face.h"
 #include "Slice.h"
-#include "CubeRotation.h"
 #include "Turn.h"
 #include <utility>
 
 struct CubeOrientation {
-    Face top; // the face that is now on top
-    Face front; // the face that is now in the front
+  Face top;    // the face that is now on top
+  Face front;  // the face that is now in the front
 
-    bool operator==(const CubeOrientation &other) const;
+  bool operator==(const CubeOrientation& other) const;
 
-    [[nodiscard]] Face getRightFace() const;
+  [[nodiscard]] Face getRightFace() const;
 
-    [[nodiscard]] Face getBackFace() const;
+  [[nodiscard]] Face getBackFace() const;
 
-    [[nodiscard]] Face getLeftFace() const;
+  [[nodiscard]] Face getLeftFace() const;
 
-    [[nodiscard]] Face getBottomFace() const;
+  [[nodiscard]] Face getBottomFace() const;
 
-    static CubeOrientation identity();
+  static CubeOrientation identity();
 
-    [[nodiscard]] CubeOrientation inv() const;
+  [[nodiscard]] CubeOrientation inv() const;
 
-    /**
-     * @brief Applies the given CubeRotation to this CubeOrientation and returns the resulting CubeOrientation
-     */
-    [[nodiscard]] CubeOrientation operator*(const CubeRotation &cubeRotation) const;
+  /**
+   * @brief Applies the given CubeRotation to this CubeOrientation and returns
+   * the resulting CubeOrientation
+   */
+  [[nodiscard]] CubeOrientation operator*(
+      const CubeRotation& cubeRotation) const;
 
-    void operator*=(const CubeRotation &cubeRotation);
+  void operator*=(const CubeRotation& cubeRotation);
 
-    /**
-     * @brief Converts the given Face in this CubeOrientation to the equivalent Face in the identity CubeOrientation
-     */
-    [[nodiscard]] Face apply(const Face &face) const;
+  /**
+   * @brief Converts the given Face in this CubeOrientation to the equivalent
+   * Face in the identity CubeOrientation
+   */
+  [[nodiscard]] Face apply(const Face& face) const;
 
-    /**
-     * @brief Converts the given Slice in this CubeOrientation to the equivalent Slice in the identity CubeOrientation
-     * If the bool is true, then the Slice is reversed
-     */
-    [[nodiscard]] std::pair<Slice, bool> apply(const Slice &slice) const;
+  /**
+   * @brief Converts the given Slice in this CubeOrientation to the equivalent
+   * Slice in the identity CubeOrientation. If the bool is true, then the Slice
+   * is reversed
+   */
+  [[nodiscard]] std::pair<Slice, bool> apply(const Slice& slice) const;
 
-    /**
-     * @brief Converts the given Turn in this CubeOrientation to the equivalent Turn in the identity CubeOrientation
-     */
-    [[nodiscard]] Turn apply(const Turn &turn) const;
+  /**
+   * @brief Converts the given Turn in this CubeOrientation to the equivalent
+   * Turn in the identity CubeOrientation
+   */
+  [[nodiscard]] Turn apply(const Turn& turn) const;
 
-    [[nodiscard]] CubeRotation apply(const CubeRotation &cubeRotation) const;
+  [[nodiscard]] CubeRotation apply(const CubeRotation& cubeRotation) const;
 };
 
-
 namespace std {
-    template<>
-    struct hash<CubeOrientation> {
-        size_t operator()(const CubeOrientation &cube_orientation) const {
-            return 31 * std::hash<Face>{}(cube_orientation.top) + std::hash<Face>{}(cube_orientation.front);
-        }
-    };
-}
+template <>
+struct hash<CubeOrientation> {
+  size_t operator()(const CubeOrientation& cube_orientation) const {
+    return 31 * std::hash<Face>{}(cube_orientation.top) +
+           std::hash<Face>{}(cube_orientation.front);
+  }
+};
+}  // namespace std

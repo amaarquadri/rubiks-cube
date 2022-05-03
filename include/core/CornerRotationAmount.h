@@ -2,10 +2,9 @@
 
 #include <cstdint>
 
-enum CornerRotationAmount : uint8_t {
-    NONE, CLOCKWISE, COUNTERCLOCKWISE
-};
+enum CornerRotationAmount : uint8_t { NONE, CLOCKWISE, COUNTERCLOCKWISE };
 
-CornerRotationAmount inv(const CornerRotationAmount &rotationAmount);
+CornerRotationAmount inv(const CornerRotationAmount& rotationAmount);
 
-CornerRotationAmount operator+(const CornerRotationAmount &first, const CornerRotationAmount &second);
+CornerRotationAmount operator+(const CornerRotationAmount& first,
+                               const CornerRotationAmount& second);

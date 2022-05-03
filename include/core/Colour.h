@@ -3,14 +3,12 @@
 #include <cstdint>
 #include <string>
 
-enum Colour : uint8_t {
-    WHITE, GREEN, RED, BLUE, ORANGE, YELLOW
-};
+enum Colour : uint8_t { WHITE, GREEN, RED, BLUE, ORANGE, YELLOW };
 
-Colour getOpposite(const Colour &colour);
+Colour getOpposite(const Colour& colour);
 
-Colour getLeft(const Colour &top, const Colour &front);
+Colour getLeft(const Colour& top, const Colour& front);
 
-Colour getRight(const Colour &top, const Colour &front);
+Colour getRight(const Colour& top, const Colour& front);
 
-std::string toStr(const Colour &colour);
+std::string toStr(const Colour& colour);
