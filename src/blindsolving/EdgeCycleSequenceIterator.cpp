@@ -1,6 +1,6 @@
 #include "EdgeCycleSequenceIterator.h"
-#include "Utils.h"
 #include "Lettering.h"
+#include "Utils.h"
 #include <vector>
 
 namespace blindsolving {
@@ -14,11 +14,10 @@ bool EdgeCycleSequenceIterator::operator++() { return ++it; }
 std::vector<char> EdgeCycleSequenceIterator::operator*() const {
   std::vector<std::vector<char>> current = *it;
   const std::vector<size_t>& permutation = it.getPermutation();
-  for (size_t i = 0; i < current.size(); i++) {
-    // add the final cycle-closing target
+  // add the final cycle-closing targets
+  for (size_t i = 0; i < current.size(); i++)
     current[i].push_back(are_even[permutation[i]] ? current[i][0]
                                                   : flipEdge(current[i][0]));
-  }
   return utility::flatten(current);
 }
 }  // namespace blindsolving
