@@ -16,7 +16,7 @@ std::pair<Algorithm, Algorithm> loadInput() {
 int main() {
   auto [scramble, solve] = loadInput();
   Reconstruction reconstruction = parseSolveAttempt(solve);
-  std::cout << reconstruction.toStr() << std::endl;
+  std::cout << toStr(reconstruction) << std::endl;
   std::vector<Reconstruction> possible_reconstructions =
       getPossibleReconstructions(scramble);
   std::vector<unsigned int> edit_distances =
@@ -25,7 +25,7 @@ int main() {
   std::cout << "Possible Reconstructions:" << std::endl;
   for (size_t i = 0; i < possible_reconstructions.size(); i++) {
     std::cout << "Edit Distance: " << edit_distances[i] << ", "
-              << possible_reconstructions[i].toStr() << std::endl;
+              << toStr(possible_reconstructions[i]) << std::endl;
   }
   return 0;
 }

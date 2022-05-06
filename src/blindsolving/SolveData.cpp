@@ -8,14 +8,7 @@ bool SolveData::operator==(const SolveData& other) const {
   if (!is_parsed) return moves == other.moves;
   // otherwise, both must be parsed
 
-  if (is_parity != other.is_parity) return false;
-  if (is_parity) return true;
-  // otherwise, neither are parity
-
-  if (is_edge != other.is_edge) return false;
-  // otherwise, both must be the same piece type
-
-  return alg == other.alg;
+  return blindsolving_move == other.blindsolving_move;
 }
 
 bool SolveData::operator!=(const SolveData& other) const {
@@ -24,12 +17,9 @@ bool SolveData::operator!=(const SolveData& other) const {
 
 std::string SolveData::toStr() const {
   if (is_parsed) {
-    if (is_parity)
-      return "Parity";
-    else
-      return (is_edge ? "Edge: " : "Corner: ") + std::string(1, alg);
+    return blindsolving_move.toStr();
   } else {
-    return "Unknown Moves: " + moves.toStr();
+    return "Unknown Moves: [" + moves.toStr() + "]";
   }
 }
 }  // namespace blindsolving

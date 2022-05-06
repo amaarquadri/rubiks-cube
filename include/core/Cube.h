@@ -8,6 +8,7 @@
 #include "EdgeLocation.h"
 #include "EdgePiece.h"
 #include "Move.h"
+#include "SolveData.h"
 #include "Turn.h"
 #include <array>
 #include <string>
@@ -16,7 +17,7 @@
 class Cube;
 
 namespace blindsolving {
-class Reconstruction;
+using Reconstruction = std::vector<SolveData>;
 std::vector<EdgeLocation> getUnsolvedEdges(const Cube& cube);
 std::vector<CornerLocation> getUnsolvedCorners(const Cube& cube);
 std::vector<Reconstruction> getPossibleReconstructions(Cube& cube);
