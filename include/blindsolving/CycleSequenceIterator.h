@@ -3,7 +3,6 @@
 #include "Lettering.h"
 #include "Utils.h"
 #include <algorithm>
-#include <numeric>
 #include <vector>
 
 namespace blindsolving {
@@ -26,11 +25,13 @@ class CycleSequenceIterator {
       : cycles(cycles), current(std::vector<std::vector<T>>{cycles.size()}) {
     permutation.reserve(cycles.size());
     counters.reserve(cycles.size());
-    const size_t max_cycle_length = std::reduce(
-        cycles.begin(), cycles.end(), 0,
-        [](const std::vector<T>& first, const std::vector<T>& second) {
-          return std::max(first.size(), second.size());
-        });
+    const size_t max_cycle_length =
+        std::max_element(
+            cycles.begin(), cycles.end(),
+            [](const std::vector<T>& first, const std::vector<T>& second) {
+              return first.size() < second.size();
+            })
+            ->size();
     for (size_t i = 0; i < cycles.size(); i++) {
       if (cycles[i].empty()) throw std::invalid_argument("Empty cycle!");
       permutation.push_back(i);
