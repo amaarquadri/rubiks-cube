@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-enum RotationAxis : uint8_t { X, Y, Z };
+enum class RotationAxis : uint8_t { X, Y, Z };
 
 std::string toStr(const RotationAxis& rotationAxis);
 

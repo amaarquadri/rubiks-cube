@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <string>
 
-enum Colour : uint8_t { WHITE, GREEN, RED, BLUE, ORANGE, YELLOW };
+enum class Colour : uint8_t { WHITE, GREEN, RED, BLUE, ORANGE, YELLOW };
 
 Colour getOpposite(const Colour& colour);
 

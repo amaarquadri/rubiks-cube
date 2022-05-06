@@ -3,12 +3,12 @@
 
 CornerRotationAmount inv(const CornerRotationAmount& rotationAmount) {
   switch (rotationAmount) {
-    case NONE:
-      return NONE;
-    case CLOCKWISE:
-      return COUNTERCLOCKWISE;
-    case COUNTERCLOCKWISE:
-      return CLOCKWISE;
+    case CornerRotationAmount::NONE:
+      return CornerRotationAmount::NONE;
+    case CornerRotationAmount::CLOCKWISE:
+      return CornerRotationAmount::COUNTERCLOCKWISE;
+    case CornerRotationAmount::COUNTERCLOCKWISE:
+      return CornerRotationAmount::CLOCKWISE;
     default:
       throw std::logic_error("Unknown enum value!");
   }

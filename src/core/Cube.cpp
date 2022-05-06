@@ -61,7 +61,7 @@ void Cube::setCorner(const CornerPiece& cornerPiece,
 }
 
 void Cube::apply(const Turn& turn) {
-  if (turn.rotationAmount == NONE) return;
+  if (turn.rotationAmount == RotationAmount::NONE) return;
 
   if (turn.is_slice_turn) {
     apply(Turn{getRotationFace(turn.slice), inv(turn.rotationAmount)});
@@ -75,6 +75,7 @@ void Cube::apply(const Turn& turn) {
   std::array<EdgeLocation, 4> edgeCycle{};
   std::array<CornerLocation, 4> cornerCycle{};
 
+  using Face::U, Face::F, Face::R, Face::B, Face::L, Face::D;
   switch (orientation.apply(turn.face)) {
     case U:
       edgeCycle = {{{U, B}, {U, R}, {U, F}, {U, L}}};
@@ -102,23 +103,23 @@ void Cube::apply(const Turn& turn) {
       break;
   }
   switch (turn.rotationAmount) {
-    case CLOCKWISE:
+    case RotationAmount::CLOCKWISE:
       cycleEdges({edgeCycle[0], edgeCycle[1], edgeCycle[2], edgeCycle[3]});
       cycleCorners(
           {cornerCycle[0], cornerCycle[1], cornerCycle[2], cornerCycle[3]});
       break;
-    case COUNTERCLOCKWISE:
+    case RotationAmount::COUNTERCLOCKWISE:
       cycleEdges({edgeCycle[0], edgeCycle[3], edgeCycle[2], edgeCycle[1]});
       cycleCorners(
           {cornerCycle[0], cornerCycle[3], cornerCycle[2], cornerCycle[1]});
       break;
-    case HALF_TURN:
+    case RotationAmount::HALF_TURN:
       cycleEdges({edgeCycle[0], edgeCycle[2]});
       cycleEdges({edgeCycle[1], edgeCycle[3]});
       cycleCorners({cornerCycle[0], cornerCycle[2]});
       cycleCorners({cornerCycle[1], cornerCycle[3]});
       break;
-    case NONE:
+    case RotationAmount::NONE:
       throw std::logic_error("turn.rotationAmount became NONE!");
   }
 }

@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <utility>
 
-enum Slice : uint8_t { M, E, S };
+enum class Slice : uint8_t { M, E, S };
 
 /**
  * @return The face that has the same rotation axis and direction as the given

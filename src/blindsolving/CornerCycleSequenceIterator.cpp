@@ -20,13 +20,13 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
   for (size_t i = 0; i < current.size(); i++) {
     // add the final cycle-closing target
     switch (rotation_amounts[permutation[i]]) {
-      case NONE:
+      case CornerRotationAmount::NONE:
         current[i].push_back(current[i][0]);
         break;
-      case CLOCKWISE:
+      case CornerRotationAmount::CLOCKWISE:
         current[i].push_back(rotateClockwise(current[i][0]));
         break;
-      case COUNTERCLOCKWISE:
+      case CornerRotationAmount::COUNTERCLOCKWISE:
         current[i].push_back(rotateCounterClockwise(current[i][0]));
         break;
       default:

@@ -62,7 +62,7 @@ static int mergeTurns(
     RotationAmount new_rotation_amount =
         original_second_last_turn.rotationAmount +
         original_last_turn.rotationAmount;
-    if (new_rotation_amount == NONE) {
+    if (new_rotation_amount == RotationAmount::NONE) {
       // remove both moves from moves and previousTurns
       moves.erase(moves.begin() + last_pair.first);
       moves.erase(moves.begin() + second_last_pair.first);
@@ -215,7 +215,8 @@ static std::tuple<int, Turn, int> parseExpandedTurns(const std::string& str) {
   std::string remaining = str.substr(consumed, str.size() - consumed);
   auto [consumed_for_rotation_amount, clockwise, rotation_amount] =
       parseExpandedRotationAmount(remaining);
-  turn.rotationAmount = clockwise ? CLOCKWISE : COUNTERCLOCKWISE;
+  turn.rotationAmount =
+      clockwise ? RotationAmount::CLOCKWISE : RotationAmount::COUNTERCLOCKWISE;
   return {consumed + consumed_for_rotation_amount, turn, rotation_amount};
 }
 

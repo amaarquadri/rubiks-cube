@@ -184,8 +184,9 @@ CornerLocation getLocation(const CornerPiece& corner_piece) {
       "invalid.");
 }
 
-constexpr static const EdgeLocation EDGE_BUFFER = {D, F};
-constexpr static const CornerLocation CORNER_BUFFER = {U, L, B};
+constexpr static const EdgeLocation EDGE_BUFFER = {Face::D, Face::F};
+constexpr static const CornerLocation CORNER_BUFFER = {Face::U, Face::L,
+                                                       Face::B};
 
 std::vector<EdgeLocation> getUnsolvedEdges(const Cube& cube) {
   std::vector<EdgeLocation> unsolved_edge_locations;

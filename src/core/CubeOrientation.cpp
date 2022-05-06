@@ -13,9 +13,10 @@ Face CubeOrientation::getLeftFace() const { return getLeft(top, front); }
 
 Face CubeOrientation::getBottomFace() const { return getOpposite(top); }
 
-CubeOrientation CubeOrientation::identity() { return {U, F}; }
+CubeOrientation CubeOrientation::identity() { return {Face::U, Face::F}; }
 
 CubeOrientation CubeOrientation::inv() const {
+  using Face::U, Face::F, Face::R, Face::B, Face::L, Face::D;
   Face inv_top, inv_front;
   for (Face face : {U, F, R, B, L, D}) {
     if (apply(face) == U)
@@ -31,17 +32,17 @@ CubeOrientation CubeOrientation::operator*(
   CubeOrientation product{top, front};
   for (int i = 0; i < static_cast<uint8_t>(cubeRotation.rotationAmount); i++) {
     switch (cubeRotation.rotationAxis) {
-      case X: {
+      case RotationAxis::X: {
         Face new_top = product.front;
         Face new_front = product.getBottomFace();
         product.top = new_top;
         product.front = new_front;
         break;
       }
-      case Y:
+      case RotationAxis::Y:
         product.front = product.getRightFace();
         break;
-      case Z:
+      case RotationAxis::Z:
         product.top = product.getLeftFace();
         break;
     }
@@ -57,17 +58,17 @@ void CubeOrientation::operator*=(const CubeRotation& cubeRotation) {
 
 Face CubeOrientation::apply(const Face& face) const {
   switch (face) {
-    case U:
+    case Face::U:
       return top;
-    case F:
+    case Face::F:
       return front;
-    case R:
+    case Face::R:
       return getRightFace();
-    case B:
+    case Face::B:
       return getBackFace();
-    case L:
+    case Face::L:
       return getLeftFace();
-    case D:
+    case Face::D:
       return getBottomFace();
     default:
       throw std::logic_error("Unknown enum value!");

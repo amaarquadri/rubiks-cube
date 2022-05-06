@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-enum Face : uint8_t { U, F, R, B, L, D };
+enum class Face : uint8_t { U, F, R, B, L, D };
 
 Face getOpposite(const Face& face);
 

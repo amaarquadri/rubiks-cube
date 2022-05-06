@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum CornerRotationAmount : uint8_t { NONE, CLOCKWISE, COUNTERCLOCKWISE };
+enum class CornerRotationAmount : uint8_t { NONE, CLOCKWISE, COUNTERCLOCKWISE };
 
 CornerRotationAmount inv(const CornerRotationAmount& rotationAmount);
 

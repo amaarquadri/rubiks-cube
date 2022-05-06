@@ -5,18 +5,18 @@
 
 Face getOpposite(const Face& face) {
   switch (face) {
-    case U:
-      return D;
-    case F:
-      return B;
-    case R:
-      return L;
-    case B:
-      return F;
-    case L:
-      return R;
-    case D:
-      return U;
+    case Face::U:
+      return Face::D;
+    case Face::F:
+      return Face::B;
+    case Face::R:
+      return Face::L;
+    case Face::B:
+      return Face::F;
+    case Face::L:
+      return Face::R;
+    case Face::D:
+      return Face::U;
     default:
       throw std::logic_error("Unknown enum value!");
   }
@@ -37,17 +37,17 @@ Face getRight(const Face& top, const Face& front) {
 
 std::string toStr(const Face& face) {
   switch (face) {
-    case U:
+    case Face::U:
       return "U";
-    case F:
+    case Face::F:
       return "F";
-    case R:
+    case Face::R:
       return "R";
-    case B:
+    case Face::B:
       return "B";
-    case L:
+    case Face::L:
       return "L";
-    case D:
+    case Face::D:
       return "D";
     default:
       throw std::logic_error("Unknown enum value!");
@@ -58,17 +58,17 @@ std::pair<int, Face> parseFace(const std::string& str) {
   if (str.empty()) return {0, {}};
   char first_char = str[0];
   if (first_char == 'U')
-    return {1, U};
+    return {1, Face::U};
   else if (first_char == 'F')
-    return {1, F};
+    return {1, Face::F};
   else if (first_char == 'R')
-    return {1, R};
+    return {1, Face::R};
   else if (first_char == 'B')
-    return {1, B};
+    return {1, Face::B};
   else if (first_char == 'L')
-    return {1, L};
+    return {1, Face::L};
   else if (first_char == 'D')
-    return {1, D};
+    return {1, Face::D};
   else
     return {0, {}};
 }

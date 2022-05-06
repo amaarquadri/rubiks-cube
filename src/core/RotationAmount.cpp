@@ -3,14 +3,14 @@
 
 RotationAmount inv(const RotationAmount& rotationAmount) {
   switch (rotationAmount) {
-    case NONE:
-      return NONE;
-    case CLOCKWISE:
-      return COUNTERCLOCKWISE;
-    case HALF_TURN:
-      return HALF_TURN;
-    case COUNTERCLOCKWISE:
-      return CLOCKWISE;
+    case RotationAmount::NONE:
+      return RotationAmount::NONE;
+    case RotationAmount::CLOCKWISE:
+      return RotationAmount::COUNTERCLOCKWISE;
+    case RotationAmount::HALF_TURN:
+      return RotationAmount::HALF_TURN;
+    case RotationAmount::COUNTERCLOCKWISE:
+      return RotationAmount::CLOCKWISE;
     default:
       throw std::logic_error("Unknown enum value!");
   }
@@ -18,12 +18,12 @@ RotationAmount inv(const RotationAmount& rotationAmount) {
 
 std::string toStr(const RotationAmount& rotationAmount) {
   switch (rotationAmount) {
-    case NONE:
-    case CLOCKWISE:
+    case RotationAmount::NONE:
+    case RotationAmount::CLOCKWISE:
       return "";
-    case HALF_TURN:
+    case RotationAmount::HALF_TURN:
       return "2";
-    case COUNTERCLOCKWISE:
+    case RotationAmount::COUNTERCLOCKWISE:
       return "'";
     default:
       throw std::logic_error("Unknown enum value!");
@@ -56,13 +56,14 @@ std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
 
   switch (rotationAmount) {
     case 0:
-      return {consumed, consumed == 0 ? CLOCKWISE : NONE};
+      return {consumed,
+              consumed == 0 ? RotationAmount::CLOCKWISE : RotationAmount::NONE};
     case 1:
-      return {consumed, CLOCKWISE};
+      return {consumed, RotationAmount::CLOCKWISE};
     case 2:
-      return {consumed, HALF_TURN};
+      return {consumed, RotationAmount::HALF_TURN};
     case 3:
-      return {consumed, COUNTERCLOCKWISE};
+      return {consumed, RotationAmount::COUNTERCLOCKWISE};
     default:
       throw std::runtime_error("Impossible result mod 4!");
   }

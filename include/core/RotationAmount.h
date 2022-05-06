@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-enum RotationAmount : uint8_t { NONE, CLOCKWISE, HALF_TURN, COUNTERCLOCKWISE };
+enum class RotationAmount : uint8_t { NONE, CLOCKWISE, HALF_TURN, COUNTERCLOCKWISE };
 
 RotationAmount inv(const RotationAmount& rotationAmount);
 
