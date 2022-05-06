@@ -5,41 +5,41 @@
 #include <algorithm>
 
 namespace blindsolving {
-static const Algorithm A_ALG =
-    Algorithm::parse("M2");  // NOLINT(cert-err58-cpp)
-static const Algorithm C_ALG =
-    Algorithm::parse("U2 M' U2 M'");  // NOLINT(cert-err58-cpp)
-static const Algorithm E_ALG =
-    Algorithm::parse("D M' U R2 U' M U R2 U' D' M2");  // NOLINT(cert-err58-cpp)
-const std::map<char, Algorithm> EDGE_ALGS = {
-    // NOLINT(cert-err58-cpp)
-    {'A', A_ALG},
-    {'B', A_ALG.withSetup("R U R' U'")},
-    {'C', C_ALG},
-    {'D', A_ALG.withSetup("L' U' L U")},
-    {'E', E_ALG},
-    {'F', A_ALG.withSetup("U R U'")},
-    {'H', A_ALG.withSetup("U' L' U")},
-    {'I', A_ALG.withSetup("B' R B")},
-    {'J', A_ALG.withSetup("R B' R' B")},
-    {'K', A_ALG.withSetup("B' R' B")},
-    {'L', A_ALG.withSetup("B' R2 B")},
-    {'M', Algorithm::parse("U' M'") * 3 + Algorithm::parse("U' M") +
-              Algorithm::parse("U' M'") * 4},
-    {'N', A_ALG.withSetup("U' L U")},
-    {'O', E_ALG.inv()},
-    {'P', A_ALG.withSetup("U R' U'")},
-    {'Q', A_ALG.withSetup("B L' B'")},
-    {'R', A_ALG.withSetup("B L2 B'")},
-    {'S', A_ALG.withSetup("B L B'")},
-    {'T', A_ALG.withSetup("L' B L B'")},
-    {'V', A_ALG.withSetup("U R2 U'")},
-    {'W', C_ALG.inv()},
-    {'Z', A_ALG.withSetup("U' L2 U")},
+static const Algorithm A_ALG =  // NOLINT(cert-err58-cpp)
+    Algorithm::parse("M2");
+static const Algorithm C_ALG =  // NOLINT(cert-err58-cpp)
+    Algorithm::parse("U2 M' U2 M'");
+static const Algorithm E_ALG =  // NOLINT(cert-err58-cpp)
+    Algorithm::parse("D M' U R2 U' M U R2 U' D' M2");
+const std::map<char, Algorithm> EDGE_ALGS =  // NOLINT(cert-err58-cpp)
+    {
+        {'A', A_ALG},
+        {'B', A_ALG.withSetup("R U R' U'")},
+        {'C', C_ALG},
+        {'D', A_ALG.withSetup("L' U' L U")},
+        {'E', E_ALG},
+        {'F', A_ALG.withSetup("U R U'")},
+        {'H', A_ALG.withSetup("U' L' U")},
+        {'I', A_ALG.withSetup("B' R B")},
+        {'J', A_ALG.withSetup("R B' R' B")},
+        {'K', A_ALG.withSetup("B' R' B")},
+        {'L', A_ALG.withSetup("B' R2 B")},
+        {'M', Algorithm::parse("U' M'") * 3 + Algorithm::parse("U' M") +
+                  Algorithm::parse("U' M'") * 4},
+        {'N', A_ALG.withSetup("U' L U")},
+        {'O', E_ALG.inv()},
+        {'P', A_ALG.withSetup("U R' U'")},
+        {'Q', A_ALG.withSetup("B L' B'")},
+        {'R', A_ALG.withSetup("B L2 B'")},
+        {'S', A_ALG.withSetup("B L B'")},
+        {'T', A_ALG.withSetup("L' B L B'")},
+        {'V', A_ALG.withSetup("U R2 U'")},
+        {'W', C_ALG.inv()},
+        {'Z', A_ALG.withSetup("U' L2 U")},
 };
 
-static const Algorithm L_ALG = Algorithm::parse(
-    "R U' R' U' R U R' F' R U R' U' R' F R");    // NOLINT(cert-err58-cpp)
+static const Algorithm L_ALG = Algorithm::parse(  // NOLINT(cert-err58-cpp)
+    "R U' R' U' R U R' F' R U R' U' R' F R");
 const std::map<char, Algorithm> CORNER_ALGS = {  // NOLINT(cert-err58-cpp)
     {'B', Jb_PERM.withSetup("U'")},
     {'C', Y_PERM},
@@ -63,8 +63,8 @@ const std::map<char, Algorithm> CORNER_ALGS = {  // NOLINT(cert-err58-cpp)
     {'W', Y_PERM.withSetup("R2")},
     {'Z', Y_PERM.withSetup("D' R2")}};
 
-const Algorithm PARITY_ALG =
-    A_ALG.withSetup("D' L2 D");  // NOLINT(cert-err58-cpp)
+const Algorithm PARITY_ALG =  // NOLINT(cert-err58-cpp)
+    A_ALG.withSetup("D' L2 D");
 
 Reconstruction parseSolveAttempt(const Algorithm& moves) {
   int consumed = 0;
