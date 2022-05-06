@@ -145,15 +145,14 @@ void Cube::apply(const Algorithm& algorithm) {
 void Cube::cycleEdges(const std::vector<EdgeLocation>& edgeLocations) {
   EdgePiece nextEdgePiece{};
   uint8_t i = 0;
-  for (auto edgeLocation = edgeLocations.begin();
-       edgeLocation < edgeLocations.end(); edgeLocation++) {
+  for (const auto& edge_location : edgeLocations) {
     if (i == 0) {
-      nextEdgePiece = getEdge(*edgeLocation);
+      nextEdgePiece = getEdge(edge_location);
       i++;
       continue;
     }
-    EdgePiece temp = getEdge(*edgeLocation);
-    setEdge(nextEdgePiece, *edgeLocation);
+    EdgePiece temp = getEdge(edge_location);
+    setEdge(nextEdgePiece, edge_location);
     nextEdgePiece = temp;
     i++;
   }
@@ -163,15 +162,14 @@ void Cube::cycleEdges(const std::vector<EdgeLocation>& edgeLocations) {
 void Cube::cycleCorners(const std::vector<CornerLocation>& cornerLocations) {
   CornerPiece nextCornerPiece{};
   uint8_t i = 0;
-  for (auto cornerLocation = cornerLocations.begin();
-       cornerLocation < cornerLocations.end(); cornerLocation++) {
+  for (const auto& corner_locations : cornerLocations) {
     if (i == 0) {
-      nextCornerPiece = getCorner(*cornerLocation);
+      nextCornerPiece = getCorner(corner_locations);
       i++;
       continue;
     }
-    CornerPiece temp = getCorner(*cornerLocation);
-    setCorner(nextCornerPiece, *cornerLocation);
+    CornerPiece temp = getCorner(corner_locations);
+    setCorner(nextCornerPiece, corner_locations);
     nextCornerPiece = temp;
     i++;
   }
