@@ -1,18 +1,22 @@
 #include "Cube.h"
 #include "Permutation.h"
+#include <array>
 #include <chrono>
 #include <random>
 #include <stdexcept>
+#include <string>
 
-static unsigned seed = std::chrono::system_clock::now()
-                           .time_since_epoch()
-                           .count();  // NOLINT(cert-err58-cpp)
-static auto random_engine =
-    std::default_random_engine(seed);  // NOLINT(cert-err58-cpp)
-static std::uniform_int_distribution<uint8_t> bool_distribution(
-    0, 1);  // NOLINT(cert-err58-cpp)
-static std::uniform_int_distribution<uint8_t> three_distribution(
-    0, 2);  // NOLINT(cert-err58-cpp)
+
+static unsigned seed =  // NOLINT(cert-err58-cpp)
+    std::chrono::system_clock::now().time_since_epoch().count();
+static auto random_engine =  // NOLINT(cert-err58-cpp)
+    std::default_random_engine(seed);
+static std::uniform_int_distribution<uint8_t>
+    bool_distribution  // NOLINT(cert-err58-cpp)
+    (0, 1);
+static std::uniform_int_distribution<uint8_t>
+    three_distribution  // NOLINT(cert-err58-cpp)
+    (0, 2);
 
 EdgePiece Cube::getEdge(const EdgeLocation& edgeLocation) const {
   EdgeLocation flippedLocation = edgeLocation.flip();
