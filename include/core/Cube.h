@@ -128,9 +128,41 @@ class Cube {
   void setCorner(const CornerPiece& cornerPiece,
                  const CornerLocation& cornerLocation);
 
-  void cycleEdges(const std::vector<EdgeLocation>& edgeLocations);
+  template <size_t n>
+  void cycleEdges(const std::array<EdgeLocation, n>& edgeLocations) {
+    EdgePiece nextEdgePiece{};
+    uint8_t i = 0;
+    for (const auto& edge_location : edgeLocations) {
+      if (i == 0) {
+        nextEdgePiece = getEdge(edge_location);
+        i++;
+        continue;
+      }
+      EdgePiece temp = getEdge(edge_location);
+      setEdge(nextEdgePiece, edge_location);
+      nextEdgePiece = temp;
+      i++;
+    }
+    setEdge(nextEdgePiece, edgeLocations.front());
+  }
 
-  void cycleCorners(const std::vector<CornerLocation>& cornerLocations);
+  template <size_t n>
+  void cycleCorners(const std::array<CornerLocation, n>& cornerLocations) {
+    CornerPiece nextCornerPiece{};
+    uint8_t i = 0;
+    for (const auto& corner_locations : cornerLocations) {
+      if (i == 0) {
+        nextCornerPiece = getCorner(corner_locations);
+        i++;
+        continue;
+      }
+      CornerPiece temp = getCorner(corner_locations);
+      setCorner(nextCornerPiece, corner_locations);
+      nextCornerPiece = temp;
+      i++;
+    }
+    setCorner(nextCornerPiece, cornerLocations.front());
+  }
 };
 
 namespace std {

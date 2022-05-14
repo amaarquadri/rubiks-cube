@@ -253,10 +253,10 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
       SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
 
-      cube.cycleEdges({EDGE_BUFFER, first_target, second_target});
+      cube.cycleEdges<3>({EDGE_BUFFER, first_target, second_target});
       std::vector<Reconstruction> possible_reconstructions =
           getPossibleReconstructions(cube);
-      cube.cycleEdges({second_target, first_target, EDGE_BUFFER});
+      cube.cycleEdges<3>({second_target, first_target, EDGE_BUFFER});
       for (Reconstruction& reconstruction : possible_reconstructions) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
@@ -280,14 +280,14 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       SolveData second = SolveData{};
       second.moves = PARITY_ALG;
 
-      cube.cycleEdges({EDGE_BUFFER, first_target});
-      cube.cycleEdges(
+      cube.cycleEdges<2>({EDGE_BUFFER, first_target});
+      cube.cycleEdges<2>(
           {Cube::EDGE_LOCATION_ORDER[0], Cube::EDGE_LOCATION_ORDER[3]});
       std::vector<Reconstruction> possible_reconstructions =
           getPossibleReconstructions(cube);
-      cube.cycleEdges(
+      cube.cycleEdges<2>(
           {Cube::EDGE_LOCATION_ORDER[0], Cube::EDGE_LOCATION_ORDER[3]});
-      cube.cycleEdges({EDGE_BUFFER, first_target});
+      cube.cycleEdges<2>({EDGE_BUFFER, first_target});
       for (Reconstruction& reconstruction : possible_reconstructions) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
@@ -302,25 +302,25 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       // we can have the edge_location as the second target
       char second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location));
       SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges({EDGE_BUFFER, first_target, edge_location});
+      cube.cycleEdges<3>({EDGE_BUFFER, first_target, edge_location});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleEdges({edge_location, first_target, EDGE_BUFFER});
+      cube.cycleEdges<3>({edge_location, first_target, EDGE_BUFFER});
 
       // or we can have the flipped side of the edge_location as the second
       // target
       second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location.flip()));
       second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges({EDGE_BUFFER, first_target, edge_location.flip()});
+      cube.cycleEdges<3>({EDGE_BUFFER, first_target, edge_location.flip()});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleEdges({edge_location.flip(), first_target, EDGE_BUFFER});
+      cube.cycleEdges<3>({edge_location.flip(), first_target, EDGE_BUFFER});
     }
     cache.insert({cube, possible_reconstructions});
     return possible_reconstructions;
@@ -340,26 +340,26 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       EdgeLocation second_target = getLocation(cube.getEdge(edge_location));
       char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
       SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges({EDGE_BUFFER, edge_location, second_target});
+      cube.cycleEdges<3>({EDGE_BUFFER, edge_location, second_target});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleEdges({second_target, edge_location, EDGE_BUFFER});
+      cube.cycleEdges<3>({second_target, edge_location, EDGE_BUFFER});
 
       first_alg = EDGE_LETTERING.at(edge_location.flip());
       first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
       second_target = second_target.flip();
       second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
       second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges({EDGE_BUFFER, edge_location.flip(), second_target});
+      cube.cycleEdges<3>({EDGE_BUFFER, edge_location.flip(), second_target});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleEdges({second_target, edge_location.flip(), EDGE_BUFFER});
+      cube.cycleEdges<3>({second_target, edge_location.flip(), EDGE_BUFFER});
     }
     cache.insert({cube, possible_reconstructions});
     return possible_reconstructions;
@@ -387,10 +387,10 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       SolveData second =
           SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
 
-      cube.cycleCorners({CORNER_BUFFER, first_target, second_target});
+      cube.cycleCorners<3>({CORNER_BUFFER, first_target, second_target});
       std::vector<Reconstruction> possible_reconstructions =
           getPossibleReconstructions(cube);
-      cube.cycleCorners({second_target, first_target, CORNER_BUFFER});
+      cube.cycleCorners<3>({second_target, first_target, CORNER_BUFFER});
       for (Reconstruction& reconstruction : possible_reconstructions) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
@@ -428,26 +428,26 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       char second_alg = CORNER_LETTERING.at(corner_location);
       SolveData second =
           SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners({CORNER_BUFFER, first_target, corner_location});
+      cube.cycleCorners<3>({CORNER_BUFFER, first_target, corner_location});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleCorners({corner_location, first_target, CORNER_BUFFER});
+      cube.cycleCorners<3>({corner_location, first_target, CORNER_BUFFER});
 
       // or we can have the clockwise rotation of the corner_location as the
       // second target
       second_alg = CORNER_LETTERING.at(corner_location.rotateClockwise());
       second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners(
+      cube.cycleCorners<3>(
           {CORNER_BUFFER, first_target, corner_location.rotateClockwise()});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleCorners(
+      cube.cycleCorners<3>(
           {corner_location.rotateClockwise(), first_target, CORNER_BUFFER});
 
       // or we can have the counterclockwise rotation of the corner_location as
@@ -455,15 +455,15 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       second_alg =
           CORNER_LETTERING.at(corner_location.rotateCounterClockwise());
       second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners({CORNER_BUFFER, first_target,
-                         corner_location.rotateCounterClockwise()});
+      cube.cycleCorners<3>({CORNER_BUFFER, first_target,
+                            corner_location.rotateCounterClockwise()});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleCorners({corner_location.rotateCounterClockwise(), first_target,
-                         CORNER_BUFFER});
+      cube.cycleCorners<3>({corner_location.rotateCounterClockwise(),
+                            first_target, CORNER_BUFFER});
     }
     cache.insert({cube, possible_reconstructions});
     return possible_reconstructions;
@@ -482,27 +482,27 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
       char second_alg = CORNER_LETTERING.at(second_target);
       SolveData second =
           SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners({CORNER_BUFFER, corner_location, second_target});
+      cube.cycleCorners<3>({CORNER_BUFFER, corner_location, second_target});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleCorners({second_target, corner_location, CORNER_BUFFER});
+      cube.cycleCorners<3>({second_target, corner_location, CORNER_BUFFER});
 
       first_alg = CORNER_LETTERING.at(corner_location.rotateClockwise());
       first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
       second_target = second_target.rotateClockwise();
       second_alg = CORNER_LETTERING.at(second_target);
       second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners(
+      cube.cycleCorners<3>(
           {CORNER_BUFFER, corner_location.rotateClockwise(), second_target});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleCorners(
+      cube.cycleCorners<3>(
           {second_target, corner_location.rotateClockwise(), CORNER_BUFFER});
 
       first_alg = CORNER_LETTERING.at(corner_location.rotateCounterClockwise());
@@ -512,17 +512,17 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
                                             // rotated clockwise once already
       second_alg = CORNER_LETTERING.at(second_target);
       second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners({CORNER_BUFFER,
-                         corner_location.rotateCounterClockwise(),
-                         second_target});
+      cube.cycleCorners<3>({CORNER_BUFFER,
+                            corner_location.rotateCounterClockwise(),
+                            second_target});
       for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
         reconstruction.insert(reconstruction.begin(), second);
         reconstruction.insert(reconstruction.begin(), first);
         possible_reconstructions.push_back(reconstruction);
       }
-      cube.cycleCorners({second_target,
-                         corner_location.rotateCounterClockwise(),
-                         CORNER_BUFFER});
+      cube.cycleCorners<3>({second_target,
+                            corner_location.rotateCounterClockwise(),
+                            CORNER_BUFFER});
     }
     cache.insert({cube, possible_reconstructions});
     return possible_reconstructions;

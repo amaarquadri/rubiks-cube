@@ -104,20 +104,20 @@ void Cube::apply(const Turn& turn) {
   }
   switch (turn.rotationAmount) {
     case RotationAmount::CLOCKWISE:
-      cycleEdges({edgeCycle[0], edgeCycle[1], edgeCycle[2], edgeCycle[3]});
-      cycleCorners(
+      cycleEdges<4>({edgeCycle[0], edgeCycle[1], edgeCycle[2], edgeCycle[3]});
+      cycleCorners<4>(
           {cornerCycle[0], cornerCycle[1], cornerCycle[2], cornerCycle[3]});
       break;
     case RotationAmount::COUNTERCLOCKWISE:
-      cycleEdges({edgeCycle[0], edgeCycle[3], edgeCycle[2], edgeCycle[1]});
-      cycleCorners(
+      cycleEdges<4>({edgeCycle[0], edgeCycle[3], edgeCycle[2], edgeCycle[1]});
+      cycleCorners<4>(
           {cornerCycle[0], cornerCycle[3], cornerCycle[2], cornerCycle[1]});
       break;
     case RotationAmount::HALF_TURN:
-      cycleEdges({edgeCycle[0], edgeCycle[2]});
-      cycleEdges({edgeCycle[1], edgeCycle[3]});
-      cycleCorners({cornerCycle[0], cornerCycle[2]});
-      cycleCorners({cornerCycle[1], cornerCycle[3]});
+      cycleEdges<2>({edgeCycle[0], edgeCycle[2]});
+      cycleEdges<2>({edgeCycle[1], edgeCycle[3]});
+      cycleCorners<2>({cornerCycle[0], cornerCycle[2]});
+      cycleCorners<2>({cornerCycle[1], cornerCycle[3]});
       break;
     case RotationAmount::NONE:
       throw std::logic_error("turn.rotationAmount became NONE!");
@@ -140,40 +140,6 @@ void Cube::apply(const Algorithm& algorithm) {
   for (const Move& move : algorithm.moves) {
     apply(move);
   }
-}
-
-void Cube::cycleEdges(const std::vector<EdgeLocation>& edgeLocations) {
-  EdgePiece nextEdgePiece{};
-  uint8_t i = 0;
-  for (const auto& edge_location : edgeLocations) {
-    if (i == 0) {
-      nextEdgePiece = getEdge(edge_location);
-      i++;
-      continue;
-    }
-    EdgePiece temp = getEdge(edge_location);
-    setEdge(nextEdgePiece, edge_location);
-    nextEdgePiece = temp;
-    i++;
-  }
-  setEdge(nextEdgePiece, *edgeLocations.begin());
-}
-
-void Cube::cycleCorners(const std::vector<CornerLocation>& cornerLocations) {
-  CornerPiece nextCornerPiece{};
-  uint8_t i = 0;
-  for (const auto& corner_locations : cornerLocations) {
-    if (i == 0) {
-      nextCornerPiece = getCorner(corner_locations);
-      i++;
-      continue;
-    }
-    CornerPiece temp = getCorner(corner_locations);
-    setCorner(nextCornerPiece, corner_locations);
-    nextCornerPiece = temp;
-    i++;
-  }
-  setCorner(nextCornerPiece, *cornerLocations.begin());
 }
 
 void Cube::scramble() {
