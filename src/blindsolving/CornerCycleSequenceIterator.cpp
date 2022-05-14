@@ -10,9 +10,19 @@ CornerCycleSequenceIterator::CornerCycleSequenceIterator(
     const std::vector<std::vector<char>>& cycles,
     const std::vector<CornerRotationAmount>& rotation_amounts)
     : it(CycleSequenceIterator<char>{cycles}),
-      rotation_amounts(rotation_amounts) {}
+      rotation_amounts(rotation_amounts),
+      modifications(std::vector<CornerRotationAmount>{
+          cycles.size(), CornerRotationAmount::NONE}) {}
 
-bool CornerCycleSequenceIterator::operator++() { return ++it; }
+bool CornerCycleSequenceIterator::operator++() {
+  // attempt to increment the set of CornerRotationAmounts
+  for (CornerRotationAmount& rot : modifications) {
+    rot = rot + CornerRotationAmount::CLOCKWISE;
+    if (rot != CornerRotationAmount::NONE) return true;
+  }
+  // otherwise, increment the parent iterator
+  return ++it;
+}
 
 std::vector<char> CornerCycleSequenceIterator::operator*() const {
   std::vector<std::vector<char>> current = *it;
@@ -31,6 +41,19 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
         break;
       default:
         throw std::logic_error("Unknown enum value!");
+    }
+  }
+  // modify the correct cycles
+  for (size_t i = 0; i < modifications.size(); i++) {
+    switch (modifications[i]) {
+      case CornerRotationAmount::NONE:
+        break;
+      case CornerRotationAmount::CLOCKWISE:
+        for (char& c : current[i]) c = rotateClockwise(c);
+        break;
+      case CornerRotationAmount::COUNTERCLOCKWISE:
+        for (char& c : current[i]) c = rotateCounterClockwise(c);
+        break;
     }
   }
   return utility::flatten(current);
