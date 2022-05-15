@@ -8,3 +8,10 @@ CornerRotationAmount inv(const CornerRotationAmount& rotationAmount);
 
 CornerRotationAmount operator+(const CornerRotationAmount& first,
                                const CornerRotationAmount& second);
+
+CornerRotationAmount operator-(const CornerRotationAmount& first,
+                               const CornerRotationAmount& second);
+
+CornerRotationAmount operator+(const CornerRotationAmount& rotation_amount);
+
+CornerRotationAmount operator-(const CornerRotationAmount& rotation_amount);
