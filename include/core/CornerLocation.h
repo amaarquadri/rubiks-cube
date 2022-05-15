@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CornerRotationAmount.h"
 #include "Face.h"
 
 struct CornerLocation {
@@ -15,6 +16,9 @@ struct CornerLocation {
   [[nodiscard]] CornerLocation rotateClockwise() const;
 
   [[nodiscard]] CornerLocation rotateCounterClockwise() const;
+
+  [[nodiscard]] CornerLocation rotate(
+      const CornerRotationAmount& rotation_amount) const;
 };
 
 namespace std {
