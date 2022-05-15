@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Colour.h"
+#include "CornerRotationAmount.h"
 
 struct CornerPiece {
   // must be defined in clockwise order
@@ -15,6 +16,9 @@ struct CornerPiece {
   [[nodiscard]] CornerPiece rotateClockwise() const;
 
   [[nodiscard]] CornerPiece rotateCounterclockwise() const;
+
+  [[nodiscard]] CornerPiece rotate(
+      const CornerRotationAmount& rotation_amount) const;
 };
 
 namespace std {
