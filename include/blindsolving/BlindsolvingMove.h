@@ -8,9 +8,9 @@ struct BlindsolvingMove {
   bool is_edge;  // only valid if !is_parity
   char alg;      // only valid if !is_parity
 
-  BlindsolvingMove() : is_parity(true) {}
+  constexpr BlindsolvingMove() : is_parity(true) {}
 
-  BlindsolvingMove(const bool& is_edge, const char& alg)
+  constexpr BlindsolvingMove(const bool& is_edge, const char& alg)
       : is_parity(false), is_edge(is_edge), alg(alg) {}
 
   BlindsolvingMove(const BlindsolvingMove& other);
@@ -23,6 +23,6 @@ struct BlindsolvingMove {
 
   [[nodiscard]] std::string toStr() const;
 
-  ~BlindsolvingMove(){};
+  constexpr ~BlindsolvingMove(){};
 };
 }  // namespace blindsolving
