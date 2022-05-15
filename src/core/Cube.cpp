@@ -6,7 +6,6 @@
 #include <stdexcept>
 #include <string>
 
-
 static unsigned seed =  // NOLINT(cert-err58-cpp)
     std::chrono::system_clock::now().time_since_epoch().count();
 static auto random_engine =  // NOLINT(cert-err58-cpp)
@@ -18,50 +17,53 @@ static std::uniform_int_distribution<uint8_t>
     three_distribution  // NOLINT(cert-err58-cpp)
     (0, 2);
 
-EdgePiece Cube::getEdge(const EdgeLocation& edgeLocation) const {
-  EdgeLocation flippedLocation = edgeLocation.flip();
+EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
+  const EdgeLocation flipped_location = edge_location.flip();
   for (int i = 0; i < 12; i++) {
-    if (EDGE_LOCATION_ORDER[i] == edgeLocation) return edges[i];
-    if (EDGE_LOCATION_ORDER[i] == flippedLocation) return edges[i].flip();
+    if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
+    if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
   throw std::invalid_argument("EdgeLocation not found!");
 }
 
-void Cube::setEdge(const EdgePiece& edgePiece,
-                   const EdgeLocation& edgeLocation) {
-  EdgeLocation flippedLocation = edgeLocation.flip();
+ConstEdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) const {
+  const EdgeLocation flipped_location = edge_location.flip();
   for (int i = 0; i < 12; i++) {
-    if (EDGE_LOCATION_ORDER[i] == edgeLocation) edges[i] = edgePiece;
-    if (EDGE_LOCATION_ORDER[i] == flippedLocation) edges[i] = edgePiece.flip();
+    if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
+    if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
+  throw std::invalid_argument("EdgeLocation not found!");
 }
 
-CornerPiece Cube::getCorner(const CornerLocation& cornerLocation) const {
-  CornerLocation clockwiseLocation = cornerLocation.rotateClockwise();
-  CornerLocation counterclockwiseLocation =
-      cornerLocation.rotateCounterClockwise();
+CornerPieceProxy Cube::operator[](const CornerLocation& corner_location) {
+  const CornerLocation clockwise_location = corner_location.rotateClockwise();
+  const CornerLocation counterclockwise_location =
+      corner_location.rotateCounterClockwise();
   for (int i = 0; i < 8; i++) {
-    if (CORNER_LOCATION_ORDER[i] == cornerLocation) return corners[i];
-    if (CORNER_LOCATION_ORDER[i] == clockwiseLocation)
-      return corners[i].rotateCounterclockwise();
-    if (CORNER_LOCATION_ORDER[i] == counterclockwiseLocation)
-      return corners[i].rotateClockwise();
+    if (CORNER_LOCATION_ORDER[i] == corner_location)
+      return {corners[i], CornerRotationAmount::NONE};
+    if (CORNER_LOCATION_ORDER[i] == clockwise_location)
+      return {corners[i], CornerRotationAmount::CLOCKWISE};
+    if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
+      return {corners[i], CornerRotationAmount::COUNTERCLOCKWISE};
   }
   throw std::invalid_argument("CornerLocation not found!");
 }
 
-void Cube::setCorner(const CornerPiece& cornerPiece,
-                     const CornerLocation& cornerLocation) {
-  CornerLocation clockwiseLocation = cornerLocation.rotateClockwise();
-  CornerLocation counterclockwiseLocation =
-      cornerLocation.rotateCounterClockwise();
+ConstCornerPieceProxy Cube::operator[](
+    const CornerLocation& corner_location) const {
+  const CornerLocation clockwise_location = corner_location.rotateClockwise();
+  const CornerLocation counterclockwise_location =
+      corner_location.rotateCounterClockwise();
   for (int i = 0; i < 8; i++) {
-    if (CORNER_LOCATION_ORDER[i] == cornerLocation) corners[i] = cornerPiece;
-    if (CORNER_LOCATION_ORDER[i] == clockwiseLocation)
-      corners[i] = cornerPiece.rotateClockwise();
-    if (CORNER_LOCATION_ORDER[i] == counterclockwiseLocation)
-      corners[i] = cornerPiece.rotateCounterclockwise();
+    if (CORNER_LOCATION_ORDER[i] == corner_location)
+      return {corners[i], CornerRotationAmount::NONE};
+    if (CORNER_LOCATION_ORDER[i] == clockwise_location)
+      return {corners[i], CornerRotationAmount::CLOCKWISE};
+    if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
+      return {corners[i], CornerRotationAmount::COUNTERCLOCKWISE};
   }
+  throw std::invalid_argument("CornerLocation not found!");
 }
 
 void Cube::apply(const Turn& turn) {

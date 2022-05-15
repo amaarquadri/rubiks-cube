@@ -8,29 +8,13 @@
 #include "EdgeLocation.h"
 #include "EdgePiece.h"
 #include "Move.h"
-#include "SolveData.h"
 #include "Turn.h"
 #include <array>
 #include <string>
 #include <vector>
 
-class Cube;
-
-namespace blindsolving {
-using Reconstruction = std::vector<SolveData>;
-std::vector<EdgeLocation> getUnsolvedEdges(const Cube& cube);
-std::vector<CornerLocation> getUnsolvedCorners(const Cube& cube);
-std::vector<Reconstruction> getPossibleReconstructions(Cube& cube);
-}  // namespace blindsolving
-
 class Cube {
  public:
-  friend std::vector<blindsolving::Reconstruction>
-  blindsolving::getPossibleReconstructions(Cube& cube);
-  friend std::vector<EdgeLocation> blindsolving::getUnsolvedEdges(
-      const Cube& cube);
-  friend std::vector<CornerLocation> blindsolving::getUnsolvedCorners(
-      const Cube& cube);
   friend struct std::hash<Cube>;
 
   static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
@@ -117,16 +101,13 @@ class Cube {
 
   [[nodiscard]] std::string toNetString() const;
 
- private:
-  [[nodiscard]] EdgePiece getEdge(const EdgeLocation& edgeLocation) const;
+  EdgePieceProxy operator[](const EdgeLocation& edge_location);
 
-  void setEdge(const EdgePiece& edgePiece, const EdgeLocation& edgeLocation);
+  ConstEdgePieceProxy operator[](const EdgeLocation& edge_location) const;
 
-  [[nodiscard]] CornerPiece getCorner(
-      const CornerLocation& cornerLocation) const;
+  CornerPieceProxy operator[](const CornerLocation& corner_location);
 
-  void setCorner(const CornerPiece& cornerPiece,
-                 const CornerLocation& cornerLocation);
+  ConstCornerPieceProxy operator[](const CornerLocation& corner_location) const;
 
   template <size_t n>
   void cycleEdges(const std::array<EdgeLocation, n>& edgeLocations) {
@@ -134,16 +115,16 @@ class Cube {
     uint8_t i = 0;
     for (const auto& edge_location : edgeLocations) {
       if (i == 0) {
-        nextEdgePiece = getEdge(edge_location);
+        nextEdgePiece = (*this)[edge_location];
         i++;
         continue;
       }
-      EdgePiece temp = getEdge(edge_location);
-      setEdge(nextEdgePiece, edge_location);
+      const EdgePiece temp = (*this)[edge_location];
+      (*this)[edge_location] = nextEdgePiece;
       nextEdgePiece = temp;
       i++;
     }
-    setEdge(nextEdgePiece, edgeLocations.front());
+    (*this)[edgeLocations.front()] = nextEdgePiece;
   }
 
   template <size_t n>
@@ -152,16 +133,16 @@ class Cube {
     uint8_t i = 0;
     for (const auto& corner_locations : cornerLocations) {
       if (i == 0) {
-        nextCornerPiece = getCorner(corner_locations);
+        nextCornerPiece = (*this)[corner_locations];
         i++;
         continue;
       }
-      CornerPiece temp = getCorner(corner_locations);
-      setCorner(nextCornerPiece, corner_locations);
+      const CornerPiece temp = (*this)[corner_locations];
+      (*this)[corner_locations] = nextCornerPiece;
       nextCornerPiece = temp;
       i++;
     }
-    setCorner(nextCornerPiece, cornerLocations.front());
+    (*this)[cornerLocations.front()] = nextCornerPiece;
   }
 };
 

@@ -193,8 +193,7 @@ std::vector<EdgeLocation> getUnsolvedEdges(const Cube& cube) {
   for (size_t i = 0; i < 12; i++) {
     if (Cube::EDGE_LOCATION_ORDER[i] == EDGE_BUFFER)
       continue;  // skip the buffer piece itself
-    if (cube.getEdge(Cube::EDGE_LOCATION_ORDER[i]) !=
-        Cube::STARTING_EDGE_PIECES[i]) {
+    if (cube[Cube::EDGE_LOCATION_ORDER[i]] != Cube::STARTING_EDGE_PIECES[i]) {
       unsolved_edge_locations.push_back(Cube::EDGE_LOCATION_ORDER[i]);
     }
   }
@@ -206,7 +205,7 @@ std::vector<CornerLocation> getUnsolvedCorners(const Cube& cube) {
   for (size_t i = 0; i < 8; i++) {
     if (Cube::CORNER_LOCATION_ORDER[i] == CORNER_BUFFER)
       continue;  // skip the buffer piece itself
-    if (cube.getCorner(Cube::CORNER_LOCATION_ORDER[i]) !=
+    if (cube[Cube::CORNER_LOCATION_ORDER[i]] !=
         Cube::STARTING_CORNER_PIECES[i]) {
       unsolved_corner_locations.push_back(Cube::CORNER_LOCATION_ORDER[i]);
     }
@@ -237,12 +236,12 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
     return it->second;
   }
 
-  EdgePiece edge_buffer_piece = cube.getEdge(EDGE_BUFFER);
+  EdgePiece edge_buffer_piece = cube[EDGE_BUFFER];
   if (getLocation(edge_buffer_piece) != EDGE_BUFFER &&
       getLocation(edge_buffer_piece) != EDGE_BUFFER.flip()) {
     // edge_buffer_piece is not solved, nor flipped in the correct location
     EdgeLocation first_target = getLocation(edge_buffer_piece);
-    EdgePiece next_piece = cube.getEdge(first_target);
+    EdgePiece next_piece = cube[first_target];
     EdgeLocation second_target = getLocation(next_piece);
 
     char first_alg = EDGE_LETTERING.at(first_target);
@@ -337,7 +336,7 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
     for (EdgeLocation& edge_location : unsolved_edges) {
       char first_alg = EDGE_LETTERING.at(edge_location);
       SolveData first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
-      EdgeLocation second_target = getLocation(cube.getEdge(edge_location));
+      EdgeLocation second_target = getLocation(cube[edge_location]);
       char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
       SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
       cube.cycleEdges<3>({EDGE_BUFFER, edge_location, second_target});
@@ -366,14 +365,14 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
   }
 
   // edges are fully solved, or solved up to parity
-  CornerPiece corner_buffer_piece = cube.getCorner(CORNER_BUFFER);
+  CornerPiece corner_buffer_piece = cube[CORNER_BUFFER];
   if (getLocation(corner_buffer_piece) != CORNER_BUFFER &&
       getLocation(corner_buffer_piece) != CORNER_BUFFER.rotateClockwise() &&
       getLocation(corner_buffer_piece) !=
           CORNER_BUFFER.rotateCounterClockwise()) {
     // corner_buffer_piece is not solved, nor rotated in place
     CornerLocation first_target = getLocation(corner_buffer_piece);
-    CornerPiece next_piece = cube.getCorner(first_target);
+    CornerPiece next_piece = cube[first_target];
     CornerLocation second_target = getLocation(next_piece);
 
     char first_alg = CORNER_LETTERING.at(first_target);
@@ -477,8 +476,7 @@ std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
     for (CornerLocation& corner_location : unsolved_corners) {
       char first_alg = CORNER_LETTERING.at(corner_location);
       SolveData first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
-      CornerLocation second_target =
-          getLocation(cube.getCorner(corner_location));
+      CornerLocation second_target = getLocation(cube[corner_location]);
       char second_alg = CORNER_LETTERING.at(second_target);
       SolveData second =
           SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
