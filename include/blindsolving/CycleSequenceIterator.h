@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Lettering.h"
+#include "MathUtils.h"
 #include "Utils.h"
 #include <algorithm>
 #include <vector>
@@ -73,6 +74,16 @@ class CycleSequenceIterator {
       is_current_valid = true;
     }
     return current;
+  }
+
+  /**
+   * Computes the period of this iterator (i.e. the number of unique outputs
+   * before overflow and repetition).
+   */
+  size_t getPeriod() const {
+    size_t period = utility::factorial(cycles.size());
+    for (const auto& cycle : cycles) period *= cycle.size();
+    return period;
   }
 
   const std::vector<size_t>& getPermutation() const { return permutation; }

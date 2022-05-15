@@ -38,4 +38,9 @@ std::vector<char> EdgeCycleSequenceIterator::operator*() const {
       for (char& c : current[i]) c = flipEdge(c);
   return utility::flatten(current);
 }
+
+size_t EdgeCycleSequenceIterator::getPeriod() const {
+  // extra factor of 2 to the power of the number of cycles
+  return it.getPeriod() * (1 << are_even.size());
+}
 }  // namespace blindsolving
