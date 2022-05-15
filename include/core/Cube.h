@@ -33,7 +33,7 @@ class Cube {
       const Cube& cube);
   friend struct std::hash<Cube>;
 
-  constexpr static const std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
+  static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
       {{Face::U, Face::B},
        {Face::U, Face::R},
        {Face::U, Face::F},
@@ -46,7 +46,7 @@ class Cube {
        {Face::D, Face::R},
        {Face::D, Face::B},
        {Face::D, Face::L}}};
-  constexpr static const std::array<CornerLocation, 8> CORNER_LOCATION_ORDER{
+  static constexpr std::array<CornerLocation, 8> CORNER_LOCATION_ORDER{
       {{Face::U, Face::L, Face::B},
        {Face::U, Face::B, Face::R},
        {Face::U, Face::R, Face::F},
@@ -55,7 +55,7 @@ class Cube {
        {Face::D, Face::F, Face::R},
        {Face::D, Face::R, Face::B},
        {Face::D, Face::B, Face::L}}};
-  constexpr static const std::array<EdgePiece, 12> STARTING_EDGE_PIECES{
+  static constexpr std::array<EdgePiece, 12> STARTING_EDGE_PIECES{
       {{Colour::WHITE, Colour::BLUE},
        {Colour::WHITE, Colour::RED},
        {Colour::WHITE, Colour::GREEN},
@@ -68,7 +68,7 @@ class Cube {
        {Colour::YELLOW, Colour::RED},
        {Colour::YELLOW, Colour::BLUE},
        {Colour::YELLOW, Colour::ORANGE}}};
-  constexpr static const std::array<CornerPiece, 8> STARTING_CORNER_PIECES{
+  static constexpr std::array<CornerPiece, 8> STARTING_CORNER_PIECES{
       {{Colour::WHITE, Colour::ORANGE, Colour::BLUE},
        {Colour::WHITE, Colour::BLUE, Colour::RED},
        {Colour::WHITE, Colour::RED, Colour::GREEN},
@@ -77,7 +77,7 @@ class Cube {
        {Colour::YELLOW, Colour::GREEN, Colour::RED},
        {Colour::YELLOW, Colour::RED, Colour::BLUE},
        {Colour::YELLOW, Colour::BLUE, Colour::ORANGE}}};
-  constexpr static const CubeOrientation STARTING_ORIENTATION{Face::U, Face::F};
+  static constexpr CubeOrientation STARTING_ORIENTATION{Face::U, Face::F};
 
  private:
   std::array<EdgePiece, 12> edges;
