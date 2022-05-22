@@ -151,40 +151,45 @@ void Cube::apply(const Algorithm& algorithm) {
 }
 
 void Cube::scramble() {
-  Permutation<12> edge_permutation =
-      Permutation<12>::randomPermutation(random_engine);
-  Permutation<8> corner_permutation =
-      Permutation<8>::randomPermutation(random_engine);
-  if (edge_permutation.isOdd() != corner_permutation.isOdd())
-    corner_permutation.flipParity();
+  const auto edge_permutation =
+      Permutation<EDGE_LOCATION_ORDER.size()>::randomPermutation(random_engine);
+  const auto corner_permutation = [&]() {
+    auto corner_perm =
+        Permutation<CORNER_LOCATION_ORDER.size()>::randomPermutation(
+            random_engine);
+    if (edge_permutation.isOdd() != corner_perm.isOdd())
+      corner_perm.flipParity();
+    return corner_perm;
+  }();
 
   edges = edge_permutation.apply(STARTING_EDGE_PIECES);
   corners = corner_permutation.apply(STARTING_CORNER_PIECES);
 
-  bool edgeFlipParity = false;
-  for (int i = 0; i < 11; i++) {
-    if (bool_distribution(random_engine) == 1) {
+  bool edge_flip_parity = false;
+  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; i++) {
+    if (bool_distribution(random_engine)) {
       edges[i] = edges[i].flip();
-      edgeFlipParity = !edgeFlipParity;
+      edge_flip_parity = !edge_flip_parity;
     }
   }
-  if (edgeFlipParity) edges[11] = edges[11].flip();
+  if (edge_flip_parity) edges.back() = edges.back().flip();
 
-  uint8_t cornerRotationParity = 0;
-  for (int i = 0; i < 7; i++) {
-    uint8_t rotation = three_distribution(random_engine);
+  uint8_t corner_rotation_parity = 0;
+  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; i++) {
+    const uint8_t rotation = three_distribution(random_engine);
     if (rotation == 1)
       corners[i] = corners[i].rotateClockwise();
     else if (rotation == 2)
       corners[i] = corners[i].rotateCounterclockwise();
-    cornerRotationParity += rotation;
+    corner_rotation_parity += rotation;
   }
-  uint8_t lastRotation = cornerRotationParity % 3;
-  if (lastRotation == 2)
-    corners[7] = corners[7].rotateClockwise();  // need another 1 to get to 3
-  else if (lastRotation == 1)
-    corners[7] =
-        corners[7].rotateCounterclockwise();  // need another 2 to get to 3
+  const uint8_t last_rotation = corner_rotation_parity % 3;
+  if (last_rotation == 2)
+    corners.back() =
+        corners.back().rotateClockwise();  // need another 1 to get to 3
+  else if (last_rotation == 1)
+    corners.back() =
+        corners.back().rotateCounterclockwise();  // need another 2 to get to 3
 }
 
 void Cube::setSolved() {
