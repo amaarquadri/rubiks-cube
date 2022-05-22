@@ -68,7 +68,7 @@ const Algorithm PARITY_ALG =  // NOLINT(cert-err58-cpp)
     A_ALG.withSetup("D' L2 D");
 
 Reconstruction parseSolveAttempt(const Algorithm& moves) {
-  int consumed = 0;
+  size_t consumed = 0;
 
   // extract all initial CubeRotations
   CubeOrientation orientation = CubeOrientation::identity();
@@ -103,7 +103,7 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
     bool found_match = false;
     SolveData solve_data{};
     Cube test_transformation{};
-    for (int i = consumed; i < moves.length(); i++) {
+    for (size_t i = consumed; i < moves.length(); i++) {
       test_transformation.apply(orientation.apply(moves[i].turn));
 
       for (auto [chr, transformation] : edge_alg_transformations) {
@@ -156,7 +156,7 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
  */
 EdgeLocation getLocation(const EdgePiece& edge_piece) {
   EdgePiece flipped_piece = edge_piece.flip();
-  for (int i = 0; i < 12; i++) {
+  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
     if (edge_piece == Cube::STARTING_EDGE_PIECES[i]) {
       return Cube::EDGE_LOCATION_ORDER[i];
     } else if (flipped_piece == Cube::STARTING_EDGE_PIECES[i]) {
@@ -168,13 +168,16 @@ EdgeLocation getLocation(const EdgePiece& edge_piece) {
 }
 
 CornerLocation getLocation(const CornerPiece& corner_piece) {
-  CornerPiece clockwise_piece = corner_piece.rotateClockwise();
-  CornerPiece counterclockwise_piece = corner_piece.rotateCounterclockwise();
-  for (int i = 0; i < 8; i++) {
+  const CornerPiece clockwise_piece = corner_piece.rotateClockwise();
+  const CornerPiece counterclockwise_piece =
+      corner_piece.rotateCounterclockwise();
+  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
     if (corner_piece == Cube::STARTING_CORNER_PIECES[i]) {
       return Cube::CORNER_LOCATION_ORDER[i];
-    } else if (clockwise_piece == Cube::STARTING_CORNER_PIECES[i]) {
-      return Cube::CORNER_LOCATION_ORDER[i].rotateCounterClockwise();
+    }
+    // rotate the resulting CornerLocation in the opposite direction
+    else if (clockwise_piece == Cube::STARTING_CORNER_PIECES[i]) {
+      return Cube::CORNER_LOCATION_ORDER[i].rotateCounterclockwise();
     } else if (counterclockwise_piece == Cube::STARTING_CORNER_PIECES[i]) {
       return Cube::CORNER_LOCATION_ORDER[i].rotateClockwise();
     }
