@@ -1,5 +1,6 @@
 #include "CornerCycleSequenceIterator.h"
 #include "CornerRotationAmount.h"
+#include "Cube.h"
 #include "CycleSequenceIterator.h"
 #include "Lettering.h"
 #include "Utils.h"
@@ -61,8 +62,8 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
 }
 
 size_t CornerCycleSequenceIterator::getPeriod() const {
-  static constexpr std::array<size_t, 8> POWERS_OF_3{1,  3,   9,   27,
-                                                     81, 243, 729, 2187};
+  static constexpr std::array<size_t, Cube::CORNER_LOCATION_ORDER.size()>
+      POWERS_OF_3{1, 3, 9, 27, 81, 243, 729, 2187};
   return it.getPeriod() * POWERS_OF_3[rotation_amounts.size()];
 }
 }  // namespace blindsolving
