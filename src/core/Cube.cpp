@@ -42,10 +42,11 @@ CornerPieceProxy Cube::operator[](const CornerLocation& corner_location) {
   for (size_t i = 0; i < 8; i++) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
       return {corners[i], CornerRotationAmount::NONE};
+    // Note that the rotation for the CornerPieceProxy is the inverse
     if (CORNER_LOCATION_ORDER[i] == clockwise_location)
-      return {corners[i], CornerRotationAmount::CLOCKWISE};
-    if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
       return {corners[i], CornerRotationAmount::COUNTERCLOCKWISE};
+    if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
+      return {corners[i], CornerRotationAmount::CLOCKWISE};
   }
   throw std::invalid_argument("CornerLocation not found!");
 }
@@ -58,10 +59,11 @@ ConstCornerPieceProxy Cube::operator[](
   for (size_t i = 0; i < 8; i++) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
       return {corners[i], CornerRotationAmount::NONE};
+    // Note that the rotation for the CornerPieceProxy is the inverse
     if (CORNER_LOCATION_ORDER[i] == clockwise_location)
-      return {corners[i], CornerRotationAmount::CLOCKWISE};
-    if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
       return {corners[i], CornerRotationAmount::COUNTERCLOCKWISE};
+    if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
+      return {corners[i], CornerRotationAmount::CLOCKWISE};
   }
   throw std::invalid_argument("CornerLocation not found!");
 }
