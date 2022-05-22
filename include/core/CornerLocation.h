@@ -13,9 +13,17 @@ struct CornerLocation {
 
   [[nodiscard]] bool operator!=(const CornerLocation& other) const;
 
+  /**
+   * @return The CornerLocation that is a clockwise rotation from this
+   * CornerLocation. For example, {U, R, F} becomes {R, F, U}.
+   */
   [[nodiscard]] CornerLocation rotateClockwise() const;
 
-  [[nodiscard]] CornerLocation rotateCounterClockwise() const;
+  /**
+   * @return The CornerLocation that is a counterclockwise rotation from this
+   * CornerLocation. For example, {U, R, F} becomes {F, U, R}.
+   */
+  [[nodiscard]] CornerLocation rotateCounterclockwise() const;
 
   [[nodiscard]] CornerLocation rotate(
       const CornerRotationAmount& rotation_amount) const;

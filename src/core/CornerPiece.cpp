@@ -16,11 +16,11 @@ bool CornerPiece::operator!=(const CornerPiece& other) const {
 }
 
 CornerPiece CornerPiece::rotateClockwise() const {
-  return {third, first, second};
+  return {second, third, first};
 }
 
 CornerPiece CornerPiece::rotateCounterclockwise() const {
-  return {second, third, first};
+  return {third, first, second};
 }
 
 CornerPiece CornerPiece::rotate(

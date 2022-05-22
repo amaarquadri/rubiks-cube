@@ -40,6 +40,10 @@ class CornerPieceProxy {
   const CornerRotationAmount rotation_amount;
 
  public:
+  /**
+   * Represents a proxy for the corner_piece with the given applied rotation
+   * (i.e. corner_piece.rotate(rotation_amount)).
+   */
   CornerPieceProxy(CornerPiece& corner_piece,
                    const CornerRotationAmount& rotationAmount);
 

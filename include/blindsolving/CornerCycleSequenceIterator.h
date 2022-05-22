@@ -22,6 +22,13 @@ class CornerCycleSequenceIterator {
   std::vector<CornerRotationAmount> modifications;
 
  public:
+  /**
+   * @param rotation_amounts The CornerRotationAmount that must be applied to
+   * the first element of a cycle to get the last element of that cycle. For
+   * example, if 'B' is the first element of a cycle and the corresponding
+   * CornerRotationAmount is CLOCKWISE, then it will result in 'M' being the
+   * last element of the cycle.
+   */
   CornerCycleSequenceIterator(
       const std::vector<std::vector<char>>& cycles,
       const std::vector<CornerRotationAmount>& rotation_amounts);

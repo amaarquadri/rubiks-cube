@@ -10,11 +10,11 @@ bool CornerLocation::operator!=(const CornerLocation& other) const {
 }
 
 CornerLocation CornerLocation::rotateClockwise() const {
-  return {third, first, second};
+  return {second, third, first};
 }
 
-CornerLocation CornerLocation::rotateCounterClockwise() const {
-  return {second, third, first};
+CornerLocation CornerLocation::rotateCounterclockwise() const {
+  return {third, first, second};
 }
 
 CornerLocation CornerLocation::rotate(
@@ -25,7 +25,7 @@ CornerLocation CornerLocation::rotate(
     case CornerRotationAmount::CLOCKWISE:
       return rotateClockwise();
     case CornerRotationAmount::COUNTERCLOCKWISE:
-      return rotateCounterClockwise();
+      return rotateCounterclockwise();
     default:
       throw std::logic_error("Unknown enum value!");
   }

@@ -25,7 +25,7 @@ static std::unordered_map<CornerLocation, char> getCornerLettering() {
     corner_lettering.insert(
         {location.rotateClockwise(), clockwise_corner_labels[i]});
     corner_lettering.insert(
-        {location.rotateCounterClockwise(), counterclockwise_corner_labels[i]});
+        {location.rotateCounterclockwise(), counterclockwise_corner_labels[i]});
   }
   return corner_lettering;
 }
@@ -58,6 +58,6 @@ char rotateClockwise(const char& corner) {
 
 char rotateCounterClockwise(const char& corner) {
   return CORNER_LETTERING.at(
-      REVERSE_CORNER_LETTERING.at(corner).rotateCounterClockwise());
+      REVERSE_CORNER_LETTERING.at(corner).rotateCounterclockwise());
 }
 }  // namespace blindsolving
