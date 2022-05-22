@@ -44,14 +44,10 @@ class Permutation {
     return parity;
   }
 
-  void flipParity() {
-    uint8_t temp = values[0];
-    values[0] = values[1];
-    values[1] = temp;
-  }
+  void flipParity() { std::swap(values[0], values[1]); }
 
   template <typename T>
-  std::array<T, n> apply(const std::array<T, n>& items) {
+  std::array<T, n> apply(const std::array<T, n>& items) const {
     std::array<T, n> permutedItems;
     for (size_t i = 0; i < n; i++) permutedItems[i] = items[values[i]];
     return permutedItems;
