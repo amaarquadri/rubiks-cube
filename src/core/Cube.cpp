@@ -6,7 +6,7 @@
 #include <stdexcept>
 #include <string>
 
-static unsigned seed =  // NOLINT(cert-err58-cpp)
+static const unsigned seed =  // NOLINT(cert-err58-cpp)
     std::chrono::system_clock::now().time_since_epoch().count();
 static auto random_engine =  // NOLINT(cert-err58-cpp)
     std::default_random_engine(seed);
@@ -19,7 +19,7 @@ static std::uniform_int_distribution<uint8_t>
 
 EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
   const EdgeLocation flipped_location = edge_location.flip();
-  for (size_t i = 0; i < 12; i++) {
+  for (size_t i = 0; i < EDGE_LOCATION_ORDER.size(); i++) {
     if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
     if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
@@ -28,7 +28,7 @@ EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
 
 ConstEdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) const {
   const EdgeLocation flipped_location = edge_location.flip();
-  for (size_t i = 0; i < 12; i++) {
+  for (size_t i = 0; i < EDGE_LOCATION_ORDER.size(); i++) {
     if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
     if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
