@@ -13,7 +13,7 @@ EdgeCycleSequenceIterator::EdgeCycleSequenceIterator(
 
 bool EdgeCycleSequenceIterator::operator++() {
   // attempt to increment the set of booleans
-  for (bool&& b : are_inverted) {
+  for (auto&& b : are_inverted) {  // must use auto&& so we can write to b
     if (b)
       b = false;
     else {
