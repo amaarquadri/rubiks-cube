@@ -18,11 +18,9 @@ class Permutation {
  public:
   template <typename URNG>
   static Permutation<n> randomPermutation(URNG&& g) {
-    if (n < 2) {
-      throw std::invalid_argument("Error: n < 2");
-    }
+    if (n < 2) throw std::invalid_argument("Error: n < 2");
     std::array<uint8_t, n> values;
-    for (int i = 0; i < n; i++) values[i] = i;
+    for (size_t i = 0; i < n; i++) values[i] = i;
     std::shuffle(values.begin(), values.end(), g);
     return Permutation{values};
   }
@@ -33,14 +31,14 @@ class Permutation {
     for (int startingIndex = 0; startingIndex < n; startingIndex++) {
       if (!visited[startingIndex]) {
         visited[startingIndex] = true;
-        uint8_t cycleIndex = values[startingIndex];
-        bool cycleParity = false;
-        while (cycleIndex != startingIndex) {
-          visited[cycleIndex] = true;
-          cycleIndex = values[cycleIndex];
-          cycleParity = !cycleParity;
+        uint8_t cycle_index = values[startingIndex];
+        bool cycle_parity = false;
+        while (cycle_index != startingIndex) {
+          visited[cycle_index] = true;
+          cycle_index = values[cycle_index];
+          cycle_parity = !cycle_parity;
         }
-        parity ^= cycleParity;
+        parity ^= cycle_parity;
       }
     }
     return parity;
@@ -55,7 +53,7 @@ class Permutation {
   template <typename T>
   std::array<T, n> apply(const std::array<T, n>& items) {
     std::array<T, n> permutedItems;
-    for (int i = 0; i < n; i++) permutedItems[i] = items[values[i]];
+    for (size_t i = 0; i < n; i++) permutedItems[i] = items[values[i]];
     return permutedItems;
   }
 };
