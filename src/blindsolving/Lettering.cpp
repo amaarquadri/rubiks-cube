@@ -7,7 +7,7 @@ static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
   const std::string edge_labels = "ABCDFJNRUVWZ";
   const std::string flipped_edge_labels = "MIEQLPTHGKOS";
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
-    EdgeLocation location = Cube::EDGE_LOCATION_ORDER[i];
+    const EdgeLocation location = Cube::EDGE_LOCATION_ORDER[i];
     edge_lettering.insert({location, edge_labels[i]});
     edge_lettering.insert({location.flip(), flipped_edge_labels[i]});
   }
@@ -20,7 +20,7 @@ static std::unordered_map<CornerLocation, char> getCornerLettering() {
   const std::string clockwise_corner_labels = "NJFRHLPT";
   const std::string counterclockwise_corner_labels = "QMIESGKO";
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
-    CornerLocation location = Cube::CORNER_LOCATION_ORDER[i];
+    const CornerLocation location = Cube::CORNER_LOCATION_ORDER[i];
     corner_lettering.insert({location, corner_labels[i]});
     corner_lettering.insert(
         {location.rotateClockwise(), clockwise_corner_labels[i]});
