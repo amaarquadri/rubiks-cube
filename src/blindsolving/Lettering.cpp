@@ -4,8 +4,8 @@
 namespace blindsolving {
 static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
   std::unordered_map<EdgeLocation, char> edge_lettering;
-  std::string edge_labels = "ABCDFJNRUVWZ";
-  std::string flipped_edge_labels = "MIEQLPTHGKOS";
+  const std::string edge_labels = "ABCDFJNRUVWZ";
+  const std::string flipped_edge_labels = "MIEQLPTHGKOS";
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
     EdgeLocation location = Cube::EDGE_LOCATION_ORDER[i];
     edge_lettering.insert({location, edge_labels[i]});
@@ -16,9 +16,9 @@ static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
 
 static std::unordered_map<CornerLocation, char> getCornerLettering() {
   std::unordered_map<CornerLocation, char> corner_lettering;
-  std::string corner_labels = "ABCDUVWZ";
-  std::string clockwise_corner_labels = "NJFRHLPT";
-  std::string counterclockwise_corner_labels = "QMIESGKO";
+  const std::string corner_labels = "ABCDUVWZ";
+  const std::string clockwise_corner_labels = "NJFRHLPT";
+  const std::string counterclockwise_corner_labels = "QMIESGKO";
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
     CornerLocation location = Cube::CORNER_LOCATION_ORDER[i];
     corner_lettering.insert({location, corner_labels[i]});
@@ -34,9 +34,7 @@ template <typename K, typename V>
 static std::unordered_map<V, K> reverseMap(
     const std::unordered_map<K, V>& map) {
   std::unordered_map<V, K> reverse_map;
-  for (const auto& [k, v] : map) {
-    reverse_map.insert({v, k});
-  }
+  for (const auto& [k, v] : map) reverse_map.insert({v, k});
   return reverse_map;
 }
 
