@@ -27,6 +27,7 @@ add_executable(rubiks_cube
         src/core/Turn.cpp
         src/blindsolving/Blindsolving.cpp
         src/blindsolving/BlindsolvingMove.cpp
+        src/blindsolving/BlindsolvingReconstruction.cpp
         src/blindsolving/CornerCycleSequenceIterator.cpp
         src/blindsolving/EdgeCycleSequenceIterator.cpp
         src/blindsolving/Lettering.cpp
