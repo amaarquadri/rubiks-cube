@@ -128,21 +128,21 @@ class Cube {
   }
 
   template <size_t n>
-  void cycleCorners(const std::array<CornerLocation, n>& cornerLocations) {
+  void cycleCorners(const std::array<CornerLocation, n>& corner_locations) {
     CornerPiece nextCornerPiece{};
     uint8_t i = 0;
-    for (const auto& corner_locations : cornerLocations) {
+    for (const auto& corner_location : corner_locations) {
       if (i == 0) {
-        nextCornerPiece = (*this)[corner_locations];
+        nextCornerPiece = (*this)[corner_location];
         i++;
         continue;
       }
-      const CornerPiece temp = (*this)[corner_locations];
-      (*this)[corner_locations] = nextCornerPiece;
+      const CornerPiece temp = (*this)[corner_location];
+      (*this)[corner_location] = nextCornerPiece;
       nextCornerPiece = temp;
       i++;
     }
-    (*this)[cornerLocations.front()] = nextCornerPiece;
+    (*this)[corner_locations.front()] = nextCornerPiece;
   }
 };
 
