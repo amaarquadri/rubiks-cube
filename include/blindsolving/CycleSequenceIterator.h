@@ -4,6 +4,7 @@
 #include "MathUtils.h"
 #include "Utils.h"
 #include <algorithm>
+#include <numeric>
 #include <vector>
 
 namespace blindsolving {
@@ -84,6 +85,12 @@ class CycleSequenceIterator {
     size_t period = utility::factorial(cycles.size());
     for (const auto& cycle : cycles) period *= cycle.size();
     return period;
+  }
+
+  void reset() {
+    std::iota(permutation.begin(), permutation.end(), 0);
+    std::fill(counters.begin(), counters.end(), 0);
+    is_current_valid = false;
   }
 
   const std::vector<size_t>& getPermutation() const { return permutation; }

@@ -1,6 +1,7 @@
 #include "EdgeCycleSequenceIterator.h"
 #include "Lettering.h"
 #include "Utils.h"
+#include <algorithm>
 #include <vector>
 
 namespace blindsolving {
@@ -42,5 +43,10 @@ std::vector<char> EdgeCycleSequenceIterator::operator*() const {
 size_t EdgeCycleSequenceIterator::getPeriod() const {
   // extra factor of 2 to the power of the number of cycles
   return it.getPeriod() * (1 << are_even.size());
+}
+
+void EdgeCycleSequenceIterator::reset() {
+  it.reset();
+  std::fill(are_inverted.begin(), are_inverted.end(), false);
 }
 }  // namespace blindsolving

@@ -64,4 +64,9 @@ std::vector<BlindsolvingMove> ReconstructionIterator::operator*() const {
 size_t ReconstructionIterator::getPeriod() const {
   return edge_iterator.getPeriod() * corner_iterator.getPeriod();
 }
+
+void ReconstructionIterator::reset() {
+  edge_iterator.reset();
+  corner_iterator.reset();
+}
 }  // namespace blindsolving

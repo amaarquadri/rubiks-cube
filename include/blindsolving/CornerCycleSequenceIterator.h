@@ -42,5 +42,7 @@ class CornerCycleSequenceIterator {
   std::vector<char> operator*() const;
 
   size_t getPeriod() const;
+
+  void reset();
 };
 }  // namespace blindsolving

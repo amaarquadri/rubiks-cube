@@ -4,6 +4,7 @@
 #include "CycleSequenceIterator.h"
 #include "Lettering.h"
 #include "Utils.h"
+#include <algorithm>
 #include <array>
 #include <vector>
 
@@ -65,5 +66,11 @@ size_t CornerCycleSequenceIterator::getPeriod() const {
   static constexpr std::array<size_t, Cube::CORNER_LOCATION_ORDER.size()>
       POWERS_OF_3{1, 3, 9, 27, 81, 243, 729, 2187};
   return it.getPeriod() * POWERS_OF_3[rotation_amounts.size()];
+}
+
+void CornerCycleSequenceIterator::reset() {
+  it.reset();
+  std::fill(modifications.begin(), modifications.end(),
+            CornerRotationAmount::NONE);
 }
 }  // namespace blindsolving

@@ -33,5 +33,7 @@ class ReconstructionIterator {
   std::vector<BlindsolvingMove> operator*() const;
 
   size_t getPeriod() const;
+
+  void reset();
 };
 }  // namespace blindsolving

@@ -26,5 +26,7 @@ class EdgeCycleSequenceIterator {
   std::vector<char> operator*() const;
 
   size_t getPeriod() const;
+
+  void reset();
 };
 }  // namespace blindsolving
