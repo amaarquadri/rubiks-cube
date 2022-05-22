@@ -40,7 +40,7 @@ RotationAmount operator+(const RotationAmount& first,
 std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
   int rotationAmount = 1;  // default to a single CLOCKWISE RotationAmount
   int consumed = 0;
-  for (char chr : str) {
+  for (const char& chr : str) {
     if (chr >= '0' && chr <= '9') {
       int digit = chr - '0';
       rotationAmount =
