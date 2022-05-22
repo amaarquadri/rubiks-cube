@@ -14,7 +14,7 @@ namespace blindsolving {
 template <typename T>
 class CycleSequenceIterator {
  private:
-  const std::vector<std::vector<T>>& cycles;
+  const std::vector<std::vector<T>> cycles;
   std::vector<size_t> permutation;
   std::vector<size_t>
       counters;  // counters[i] is the counter for cycles[permutation[i]]

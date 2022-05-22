@@ -12,10 +12,10 @@ namespace blindsolving {
 class ReconstructionIterator {
  private:
   // arbitrary first reconstruction
-  const std::vector<char>& first_edge_cycle;
+  const std::vector<char> first_edge_cycle;
   EdgeCycleSequenceIterator edge_iterator;
-  const bool& has_parity;
-  const std::vector<char>& first_corner_cycle;
+  const bool has_parity;
+  const std::vector<char> first_corner_cycle;
   CornerCycleSequenceIterator corner_iterator;
   const size_t length;
 

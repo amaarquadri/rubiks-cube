@@ -7,7 +7,7 @@ namespace blindsolving {
 class EdgeCycleSequenceIterator {
  private:
   CycleSequenceIterator<char> it;
-  const std::vector<bool>& are_even;
+  const std::vector<bool> are_even;
 
   /**
    * For any given output of the CycleSequenceIterator, the corresponding output

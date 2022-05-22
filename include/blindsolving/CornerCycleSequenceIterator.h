@@ -11,7 +11,7 @@ namespace blindsolving {
 class CornerCycleSequenceIterator {
  private:
   CycleSequenceIterator<char> it;
-  const std::vector<CornerRotationAmount>& rotation_amounts;
+  const std::vector<CornerRotationAmount> rotation_amounts;
 
   /**
    * For any given output of the CycleSequenceIterator, the corresponding output
