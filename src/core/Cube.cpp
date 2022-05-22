@@ -19,7 +19,7 @@ static std::uniform_int_distribution<uint8_t>
 
 EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
   const EdgeLocation flipped_location = edge_location.flip();
-  for (int i = 0; i < 12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
     if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
@@ -28,7 +28,7 @@ EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
 
 ConstEdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) const {
   const EdgeLocation flipped_location = edge_location.flip();
-  for (int i = 0; i < 12; i++) {
+  for (size_t i = 0; i < 12; i++) {
     if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
     if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
@@ -39,7 +39,7 @@ CornerPieceProxy Cube::operator[](const CornerLocation& corner_location) {
   const CornerLocation clockwise_location = corner_location.rotateClockwise();
   const CornerLocation counterclockwise_location =
       corner_location.rotateCounterClockwise();
-  for (int i = 0; i < 8; i++) {
+  for (size_t i = 0; i < 8; i++) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
       return {corners[i], CornerRotationAmount::NONE};
     if (CORNER_LOCATION_ORDER[i] == clockwise_location)
@@ -55,7 +55,7 @@ ConstCornerPieceProxy Cube::operator[](
   const CornerLocation clockwise_location = corner_location.rotateClockwise();
   const CornerLocation counterclockwise_location =
       corner_location.rotateCounterClockwise();
-  for (int i = 0; i < 8; i++) {
+  for (size_t i = 0; i < 8; i++) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
       return {corners[i], CornerRotationAmount::NONE};
     if (CORNER_LOCATION_ORDER[i] == clockwise_location)
