@@ -10,6 +10,7 @@
 #include "Move.h"
 #include "Turn.h"
 #include <array>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -110,39 +111,29 @@ class Cube {
   ConstCornerPieceProxy operator[](const CornerLocation& corner_location) const;
 
   template <size_t n>
-  void cycleEdges(const std::array<EdgeLocation, n>& edgeLocations) {
-    EdgePiece nextEdgePiece{};
-    uint8_t i = 0;
-    for (const auto& edge_location : edgeLocations) {
-      if (i == 0) {
-        nextEdgePiece = (*this)[edge_location];
-        i++;
-        continue;
-      }
-      const EdgePiece temp = (*this)[edge_location];
-      (*this)[edge_location] = nextEdgePiece;
-      nextEdgePiece = temp;
-      i++;
+  void cycleEdges(const std::array<EdgeLocation, n>& edge_locations) {
+    if constexpr (n < 2)
+      throw std::invalid_argument("Must cycle at least 2 edges!");
+    EdgePiece next_edge_piece = (*this)[edge_locations.front()];
+    for (size_t i = 1; i < edge_locations.size(); i++) {
+      const EdgePiece temp = (*this)[edge_locations[i]];
+      (*this)[edge_locations[i]] = next_edge_piece;
+      next_edge_piece = temp;
     }
-    (*this)[edgeLocations.front()] = nextEdgePiece;
+    (*this)[edge_locations.front()] = next_edge_piece;
   }
 
   template <size_t n>
   void cycleCorners(const std::array<CornerLocation, n>& corner_locations) {
-    CornerPiece nextCornerPiece{};
-    uint8_t i = 0;
-    for (const auto& corner_location : corner_locations) {
-      if (i == 0) {
-        nextCornerPiece = (*this)[corner_location];
-        i++;
-        continue;
-      }
-      const CornerPiece temp = (*this)[corner_location];
-      (*this)[corner_location] = nextCornerPiece;
-      nextCornerPiece = temp;
-      i++;
+    if constexpr (n < 2)
+      throw std::invalid_argument("Must cycle at least 2 edges!");
+    CornerPiece next_corner_piece = (*this)[corner_locations.front()];
+    for (size_t i = 1; i < corner_locations.size(); i++) {
+      const CornerPiece temp = (*this)[corner_locations[i]];
+      (*this)[corner_locations[i]] = next_corner_piece;
+      next_corner_piece = temp;
     }
-    (*this)[corner_locations.front()] = nextCornerPiece;
+    (*this)[corner_locations.front()] = next_corner_piece;
   }
 };
 
@@ -151,12 +142,10 @@ template <>
 struct hash<Cube> {
   size_t operator()(const Cube& cube) const {
     size_t hash = std::hash<CubeOrientation>{}(cube.orientation);
-    for (EdgePiece edge_piece : cube.edges) {
+    for (EdgePiece edge_piece : cube.edges)
       hash = 31 * hash + std::hash<EdgePiece>{}(edge_piece);
-    }
-    for (CornerPiece corner_piece : cube.corners) {
+    for (CornerPiece corner_piece : cube.corners)
       hash = 31 * hash + std::hash<CornerPiece>{}(corner_piece);
-    }
     return hash;
   }
 };
