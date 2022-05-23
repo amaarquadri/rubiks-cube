@@ -94,5 +94,7 @@ class CycleSequenceIterator {
   }
 
   const std::vector<size_t>& getPermutation() const { return permutation; }
+
+  const std::vector<size_t>& getCounters() const { return counters; }
 };
 }  // namespace blindsolving
