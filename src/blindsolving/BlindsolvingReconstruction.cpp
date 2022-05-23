@@ -2,30 +2,32 @@
 #include <string>
 
 namespace blindsolving {
-std::string toStr(const BlindsolvingReconstruction& reconstruction) {
+void BlindsolvingReconstruction::applyTo(Cube& cube) const {
+  for (const BlindsolvingMove& move : *this) move.applyTo(cube);
+}
+
+std::string BlindsolvingReconstruction::toStr() const {
   unsigned int consumed = 0;
   std::string result;
-  while (consumed < reconstruction.size()) {
-    if (reconstruction[consumed].is_parity) {
+  while (consumed < size()) {
+    if ((*this)[consumed].is_parity) {
       result += "Parity, ";
       consumed++;
       continue;
     }
-    if (reconstruction[consumed].is_edge) {
+    if ((*this)[consumed].is_edge) {
       result += "Edges: [";
-      while (consumed < reconstruction.size() &&
-             !reconstruction[consumed].is_parity &&
-             reconstruction[consumed].is_edge) {
-        result += std::string(1, reconstruction[consumed].alg) + " ";
+      while (consumed < size() && !(*this)[consumed].is_parity &&
+             (*this)[consumed].is_edge) {
+        result += std::string(1, (*this)[consumed].alg) + " ";
         consumed++;
       }
       result += "], ";
     } else {
       result += "Corners: [";
-      while (consumed < reconstruction.size() &&
-             !reconstruction[consumed].is_parity &&
-             !reconstruction[consumed].is_edge) {
-        result += std::string(1, reconstruction[consumed].alg) + " ";
+      while (consumed < size() && !(*this)[consumed].is_parity &&
+             !(*this)[consumed].is_edge) {
+        result += std::string(1, (*this)[consumed].alg) + " ";
         consumed++;
       }
       result += "], ";

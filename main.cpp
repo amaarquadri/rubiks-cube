@@ -26,7 +26,7 @@ int main() {
 
   std::cout << "Closest reconstruction matches:\n";
   for (const auto& [recon, edit_distance] : best_reconstructions)
-    std::cout << "Edit distance: " << edit_distance << ", " << toStr(recon)
+    std::cout << "Edit distance: " << edit_distance << ", " << recon.toStr()
               << '\n';
   return 0;
 }
