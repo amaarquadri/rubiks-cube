@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Blindsolving.h"
 #include "Cube.h"
 #include "EdgeCycleSequenceIterator.h"
