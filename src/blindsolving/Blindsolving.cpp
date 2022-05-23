@@ -7,6 +7,7 @@
 #include "ReconstructionIterator.h"
 #include "Utils.h"
 #include <stdexcept>
+#include <unordered_map>
 
 namespace blindsolving {
 static const Algorithm A_ALG =  // NOLINT(cert-err58-cpp)
@@ -15,7 +16,7 @@ static const Algorithm C_ALG =  // NOLINT(cert-err58-cpp)
     Algorithm::parse("U2 M' U2 M'");
 static const Algorithm E_ALG =  // NOLINT(cert-err58-cpp)
     Algorithm::parse("D M' U R2 U' M U R2 U' D' M2");
-const std::map<char, Algorithm> EDGE_ALGS =  // NOLINT(cert-err58-cpp)
+const std::unordered_map<char, Algorithm> EDGE_ALGS =  // NOLINT(cert-err58-cpp)
     {
         {'A', A_ALG},
         {'B', A_ALG.withSetup("R U R' U'")},
@@ -44,28 +45,29 @@ const std::map<char, Algorithm> EDGE_ALGS =  // NOLINT(cert-err58-cpp)
 
 static const Algorithm L_ALG = Algorithm::parse(  // NOLINT(cert-err58-cpp)
     "R U' R' U' R U R' F' R U R' U' R' F R");
-const std::map<char, Algorithm> CORNER_ALGS = {  // NOLINT(cert-err58-cpp)
-    {'B', Jb_PERM.withSetup("U'")},
-    {'C', Y_PERM},
-    {'D', Ja_PERM.withSetup("U2")},
-    {'E', L_ALG.withSetup("F' D")},
-    {'F', Jb_PERM.withSetup("R U'")},
-    {'G', Y_PERM.withSetup("R")},
-    {'H', L_ALG.withSetup("D")},
-    {'I', L_ALG.withSetup("R'")},
-    {'J', L_ALG.withSetup("R2")},
-    {'K', L_ALG.withSetup("R")},
-    {'L', L_ALG},
-    {'M', Y_PERM.withSetup("R'")},
-    {'O', L_ALG.withSetup("D' R")},
-    {'P', L_ALG.withSetup("D'")},
-    {'R', Y_PERM.withSetup("F")},
-    {'S', Y_PERM.withSetup("D R")},
-    {'T', L_ALG.withSetup("D2")},
-    {'U', L_ALG.withSetup("F'")},
-    {'V', Y_PERM.withSetup("D R2")},
-    {'W', Y_PERM.withSetup("R2")},
-    {'Z', Y_PERM.withSetup("D' R2")}};
+const std::unordered_map<char, Algorithm>
+    CORNER_ALGS =  // NOLINT(cert-err58-cpp)
+    {{'B', Jb_PERM.withSetup("U'")},
+     {'C', Y_PERM},
+     {'D', Ja_PERM.withSetup("U2")},
+     {'E', L_ALG.withSetup("F' D")},
+     {'F', Jb_PERM.withSetup("R U'")},
+     {'G', Y_PERM.withSetup("R")},
+     {'H', L_ALG.withSetup("D")},
+     {'I', L_ALG.withSetup("R'")},
+     {'J', L_ALG.withSetup("R2")},
+     {'K', L_ALG.withSetup("R")},
+     {'L', L_ALG},
+     {'M', Y_PERM.withSetup("R'")},
+     {'O', L_ALG.withSetup("D' R")},
+     {'P', L_ALG.withSetup("D'")},
+     {'R', Y_PERM.withSetup("F")},
+     {'S', Y_PERM.withSetup("D R")},
+     {'T', L_ALG.withSetup("D2")},
+     {'U', L_ALG.withSetup("F'")},
+     {'V', Y_PERM.withSetup("D R2")},
+     {'W', Y_PERM.withSetup("R2")},
+     {'Z', Y_PERM.withSetup("D' R2")}};
 
 const Algorithm PARITY_ALG =  // NOLINT(cert-err58-cpp)
     A_ALG.withSetup("D' L2 D");
@@ -86,14 +88,14 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
   }
 
   // set up transformations
-  std::map<char, Cube> edge_alg_transformations;
-  for (auto [chr, alg] : EDGE_ALGS) {
+  std::unordered_map<char, Cube> edge_alg_transformations;
+  for (const auto& [chr, alg] : EDGE_ALGS) {
     Cube cube{};
     cube.apply(alg);
     edge_alg_transformations.insert({chr, cube});
   }
-  std::map<char, Cube> corner_alg_transformations;
-  for (auto [chr, alg] : CORNER_ALGS) {
+  std::unordered_map<char, Cube> corner_alg_transformations;
+  for (const auto& [chr, alg] : CORNER_ALGS) {
     Cube cube{};
     cube.apply(alg);
     corner_alg_transformations.insert({chr, cube});
