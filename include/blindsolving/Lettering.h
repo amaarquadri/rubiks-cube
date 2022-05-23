@@ -14,5 +14,5 @@ char flipEdge(const char& edge);
 
 char rotateClockwise(const char& corner);
 
-char rotateCounterClockwise(const char& corner);
+char rotateCounterclockwise(const char& corner);
 }  // namespace blindsolving

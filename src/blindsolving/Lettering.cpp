@@ -56,7 +56,7 @@ char rotateClockwise(const char& corner) {
       REVERSE_CORNER_LETTERING.at(corner).rotateClockwise());
 }
 
-char rotateCounterClockwise(const char& corner) {
+char rotateCounterclockwise(const char& corner) {
   return CORNER_LETTERING.at(
       REVERSE_CORNER_LETTERING.at(corner).rotateCounterclockwise());
 }

@@ -55,7 +55,7 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
         for (char& c : current[i]) c = rotateClockwise(c);
         break;
       case CornerRotationAmount::COUNTERCLOCKWISE:
-        for (char& c : current[i]) c = rotateCounterClockwise(c);
+        for (char& c : current[i]) c = rotateCounterclockwise(c);
         break;
     }
   }

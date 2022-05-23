@@ -297,7 +297,7 @@ ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
     else if (corner_cycle.back() == rotateClockwise(corner_cycle.front()))
       rotation_amounts.push_back(CornerRotationAmount::CLOCKWISE);
     else if (corner_cycle.back() ==
-             rotateCounterClockwise(corner_cycle.front()))
+             rotateCounterclockwise(corner_cycle.front()))
       rotation_amounts.push_back(CornerRotationAmount::COUNTERCLOCKWISE);
     else
       throw std::logic_error(
