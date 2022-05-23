@@ -14,6 +14,8 @@ namespace blindsolving {
 extern const std::map<char, Algorithm> EDGE_ALGS;
 extern const std::map<char, Algorithm> CORNER_ALGS;
 extern const Algorithm PARITY_ALG;
+constexpr EdgeLocation EDGE_BUFFER{Face::D, Face::F};
+constexpr CornerLocation CORNER_BUFFER{Face::U, Face::L, Face::B};
 
 Reconstruction parseSolveAttempt(const Algorithm& moves);
 

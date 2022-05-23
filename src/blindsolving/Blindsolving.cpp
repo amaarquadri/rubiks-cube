@@ -190,10 +190,6 @@ CornerLocation getLocation(const CornerPiece& corner_piece) {
       "invalid.");
 }
 
-constexpr static const EdgeLocation EDGE_BUFFER = {Face::D, Face::F};
-constexpr static const CornerLocation CORNER_BUFFER = {Face::U, Face::L,
-                                                       Face::B};
-
 char swapIfNecessary(const char& chr) {
   switch (chr) {
     case 'C':
