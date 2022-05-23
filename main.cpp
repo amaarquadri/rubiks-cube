@@ -24,9 +24,9 @@ int main() {
   const std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
       best_reconstructions = getBestReconstructions(reconstruction, it, n);
 
-  std::cout << "Closest Reconstruction matches:\n";
+  std::cout << "Closest reconstruction matches:\n";
   for (const auto& [recon, edit_distance] : best_reconstructions)
-    std::cout << "Edit Distance: " << edit_distance << ", " << toStr(recon)
+    std::cout << "Edit distance: " << edit_distance << ", " << toStr(recon)
               << '\n';
   return 0;
 }
