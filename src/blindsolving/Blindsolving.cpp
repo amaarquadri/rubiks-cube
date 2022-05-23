@@ -1,9 +1,12 @@
 #include "Blindsolving.h"
+#include "BlindsolvingReconstruction.h"
 #include "Cube.h"
 #include "Lettering.h"
 #include "PLL.h"
 #include "Reconstruction.h"
-#include <algorithm>
+#include "ReconstructionIterator.h"
+#include "Utils.h"
+#include <stdexcept>
 
 namespace blindsolving {
 static const Algorithm A_ALG =  // NOLINT(cert-err58-cpp)
@@ -191,31 +194,6 @@ constexpr static const EdgeLocation EDGE_BUFFER = {Face::D, Face::F};
 constexpr static const CornerLocation CORNER_BUFFER = {Face::U, Face::L,
                                                        Face::B};
 
-std::vector<EdgeLocation> getUnsolvedEdges(const Cube& cube) {
-  std::vector<EdgeLocation> unsolved_edge_locations;
-  for (size_t i = 0; i < 12; i++) {
-    if (Cube::EDGE_LOCATION_ORDER[i] == EDGE_BUFFER)
-      continue;  // skip the buffer piece itself
-    if (cube[Cube::EDGE_LOCATION_ORDER[i]] != Cube::STARTING_EDGE_PIECES[i]) {
-      unsolved_edge_locations.push_back(Cube::EDGE_LOCATION_ORDER[i]);
-    }
-  }
-  return unsolved_edge_locations;
-}
-
-std::vector<CornerLocation> getUnsolvedCorners(const Cube& cube) {
-  std::vector<CornerLocation> unsolved_corner_locations;
-  for (size_t i = 0; i < 8; i++) {
-    if (Cube::CORNER_LOCATION_ORDER[i] == CORNER_BUFFER)
-      continue;  // skip the buffer piece itself
-    if (cube[Cube::CORNER_LOCATION_ORDER[i]] !=
-        Cube::STARTING_CORNER_PIECES[i]) {
-      unsolved_corner_locations.push_back(Cube::CORNER_LOCATION_ORDER[i]);
-    }
-  }
-  return unsolved_corner_locations;
-}
-
 char swapIfNecessary(const char& chr) {
   switch (chr) {
     case 'C':
@@ -231,418 +209,166 @@ char swapIfNecessary(const char& chr) {
   }
 }
 
-std::unordered_map<Cube, std::vector<Reconstruction>> cache;
-std::vector<Reconstruction> getPossibleReconstructions(Cube& cube) {
-  // check the cache to see if we have calculated this scramble already
-  auto it = cache.find(cube);
-  if (it != cache.end()) {
-    return it->second;
-  }
-
-  EdgePiece edge_buffer_piece = cube[EDGE_BUFFER];
-  if (getLocation(edge_buffer_piece) != EDGE_BUFFER &&
-      getLocation(edge_buffer_piece) != EDGE_BUFFER.flip()) {
-    // edge_buffer_piece is not solved, nor flipped in the correct location
-    EdgeLocation first_target = getLocation(edge_buffer_piece);
-    EdgePiece next_piece = cube[first_target];
-    EdgeLocation second_target = getLocation(next_piece);
-
-    char first_alg = EDGE_LETTERING.at(first_target);
-    SolveData first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
-
-    if (second_target != EDGE_BUFFER && second_target.flip() != EDGE_BUFFER) {
-      // normal letter pair
-      char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
-      SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-
-      cube.cycleEdges<3>({EDGE_BUFFER, first_target, second_target});
-      std::vector<Reconstruction> possible_reconstructions =
-          getPossibleReconstructions(cube);
-      cube.cycleEdges<3>({second_target, first_target, EDGE_BUFFER});
-      for (Reconstruction& reconstruction : possible_reconstructions) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-      }
-      cache.insert({cube, possible_reconstructions});
-      return possible_reconstructions;
-    }
-
-    // second target is buffer (or flipped buffer), so we need to break into a
-    // new cycle
-    std::vector<EdgeLocation> unsolved_edges = getUnsolvedEdges(cube);
-    unsolved_edges.erase(
-        std::remove_if(unsolved_edges.begin(), unsolved_edges.end(),
-                       [&](const EdgeLocation& edge_location) {
-                         return edge_location == first_target ||
-                                edge_location == first_target.flip();
-                       }),
-        unsolved_edges.end());
-    if (unsolved_edges.empty()) {
-      // letter, parity
-      SolveData second = SolveData{};
-      second.moves = PARITY_ALG;
-
-      cube.cycleEdges<2>({EDGE_BUFFER, first_target});
-      cube.cycleEdges<2>(
-          {Cube::EDGE_LOCATION_ORDER[0], Cube::EDGE_LOCATION_ORDER[3]});
-      std::vector<Reconstruction> possible_reconstructions =
-          getPossibleReconstructions(cube);
-      cube.cycleEdges<2>(
-          {Cube::EDGE_LOCATION_ORDER[0], Cube::EDGE_LOCATION_ORDER[3]});
-      cube.cycleEdges<2>({EDGE_BUFFER, first_target});
-      for (Reconstruction& reconstruction : possible_reconstructions) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-      }
-      cache.insert({cube, possible_reconstructions});
-      return possible_reconstructions;
-    }
-    // letter, new cycle
-    std::vector<Reconstruction> possible_reconstructions;
-    possible_reconstructions.reserve(2 * unsolved_edges.size());
-    for (EdgeLocation& edge_location : unsolved_edges) {
-      // we can have the edge_location as the second target
-      char second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location));
-      SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges<3>({EDGE_BUFFER, first_target, edge_location});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleEdges<3>({edge_location, first_target, EDGE_BUFFER});
-
-      // or we can have the flipped side of the edge_location as the second
-      // target
-      second_alg = swapIfNecessary(EDGE_LETTERING.at(edge_location.flip()));
-      second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges<3>({EDGE_BUFFER, first_target, edge_location.flip()});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleEdges<3>({edge_location.flip(), first_target, EDGE_BUFFER});
-    }
-    cache.insert({cube, possible_reconstructions});
-    return possible_reconstructions;
-  }
-
-  // edge buffer piece is already solved, or in the correct location but flipped
-  std::vector<EdgeLocation> unsolved_edges = getUnsolvedEdges(cube);
-  if (!unsolved_edges.empty() &&
-      !(unsolved_edges.size() == 2 &&
-        unsolved_edges[0] == Cube::EDGE_LOCATION_ORDER[0] &&
-        unsolved_edges[1] == Cube::EDGE_LOCATION_ORDER[3])) {
-    // more edge cycles to break into
-    std::vector<Reconstruction> possible_reconstructions;
-    for (EdgeLocation& edge_location : unsolved_edges) {
-      char first_alg = EDGE_LETTERING.at(edge_location);
-      SolveData first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
-      EdgeLocation second_target = getLocation(cube[edge_location]);
-      char second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
-      SolveData second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges<3>({EDGE_BUFFER, edge_location, second_target});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleEdges<3>({second_target, edge_location, EDGE_BUFFER});
-
-      first_alg = EDGE_LETTERING.at(edge_location.flip());
-      first = SolveData{EDGE_ALGS.at(first_alg), true, first_alg};
-      second_target = second_target.flip();
-      second_alg = swapIfNecessary(EDGE_LETTERING.at(second_target));
-      second = SolveData{EDGE_ALGS.at(second_alg), true, second_alg};
-      cube.cycleEdges<3>({EDGE_BUFFER, edge_location.flip(), second_target});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleEdges<3>({second_target, edge_location.flip(), EDGE_BUFFER});
-    }
-    cache.insert({cube, possible_reconstructions});
-    return possible_reconstructions;
-  }
-
-  // edges are fully solved, or solved up to parity
-  CornerPiece corner_buffer_piece = cube[CORNER_BUFFER];
-  if (getLocation(corner_buffer_piece) != CORNER_BUFFER &&
-      getLocation(corner_buffer_piece) != CORNER_BUFFER.rotateClockwise() &&
-      getLocation(corner_buffer_piece) !=
-          CORNER_BUFFER.rotateCounterClockwise()) {
-    // corner_buffer_piece is not solved, nor rotated in place
-    CornerLocation first_target = getLocation(corner_buffer_piece);
-    CornerPiece next_piece = cube[first_target];
-    CornerLocation second_target = getLocation(next_piece);
-
-    char first_alg = CORNER_LETTERING.at(first_target);
-    SolveData first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
-
-    if (second_target != CORNER_BUFFER &&
-        second_target.rotateClockwise() != CORNER_BUFFER &&
-        second_target.rotateCounterClockwise() != CORNER_BUFFER) {
-      // normal letter pair
-      char second_alg = CORNER_LETTERING.at(second_target);
-      SolveData second =
-          SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-
-      cube.cycleCorners<3>({CORNER_BUFFER, first_target, second_target});
-      std::vector<Reconstruction> possible_reconstructions =
-          getPossibleReconstructions(cube);
-      cube.cycleCorners<3>({second_target, first_target, CORNER_BUFFER});
-      for (Reconstruction& reconstruction : possible_reconstructions) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-      }
-      cache.insert({cube, possible_reconstructions});
-      return possible_reconstructions;
-    }
-
-    // second target is buffer (or one of its rotations), so we need to break
-    // into a new cycle
-    std::vector<CornerLocation> unsolved_corners = getUnsolvedCorners(cube);
-    unsolved_corners.erase(
-        std::remove_if(
-            unsolved_corners.begin(), unsolved_corners.end(),
-            [&](const CornerLocation& corner_location) {
-              return corner_location == first_target ||
-                     corner_location == first_target.rotateClockwise() ||
-                     corner_location == first_target.rotateCounterClockwise();
-            }),
-        unsolved_corners.end());
-
-    if (unsolved_corners.empty()) {
-      // no second letter in this pair
-      std::vector<Reconstruction> possible_reconstructions(1);
-      possible_reconstructions[0].push_back(first);
-      cache.insert({cube, possible_reconstructions});
-      return possible_reconstructions;
-    }
-
-    // letter, new cycle
-    std::vector<Reconstruction> possible_reconstructions;
-    possible_reconstructions.reserve(3 * unsolved_corners.size());
-    for (CornerLocation& corner_location : unsolved_corners) {
-      // we can have the corner_location as the second target
-      char second_alg = CORNER_LETTERING.at(corner_location);
-      SolveData second =
-          SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners<3>({CORNER_BUFFER, first_target, corner_location});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleCorners<3>({corner_location, first_target, CORNER_BUFFER});
-
-      // or we can have the clockwise rotation of the corner_location as the
-      // second target
-      second_alg = CORNER_LETTERING.at(corner_location.rotateClockwise());
-      second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners<3>(
-          {CORNER_BUFFER, first_target, corner_location.rotateClockwise()});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleCorners<3>(
-          {corner_location.rotateClockwise(), first_target, CORNER_BUFFER});
-
-      // or we can have the counterclockwise rotation of the corner_location as
-      // the second target
-      second_alg =
-          CORNER_LETTERING.at(corner_location.rotateCounterClockwise());
-      second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners<3>({CORNER_BUFFER, first_target,
-                            corner_location.rotateCounterClockwise()});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleCorners<3>({corner_location.rotateCounterClockwise(),
-                            first_target, CORNER_BUFFER});
-    }
-    cache.insert({cube, possible_reconstructions});
-    return possible_reconstructions;
-  }
-
-  // corner buffer piece is already solved
-  std::vector<CornerLocation> unsolved_corners = getUnsolvedCorners(cube);
-  if (!unsolved_corners.empty()) {
-    // more corner cycles to break into
-    std::vector<Reconstruction> possible_reconstructions;
-    for (CornerLocation& corner_location : unsolved_corners) {
-      char first_alg = CORNER_LETTERING.at(corner_location);
-      SolveData first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
-      CornerLocation second_target = getLocation(cube[corner_location]);
-      char second_alg = CORNER_LETTERING.at(second_target);
-      SolveData second =
-          SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners<3>({CORNER_BUFFER, corner_location, second_target});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleCorners<3>({second_target, corner_location, CORNER_BUFFER});
-
-      first_alg = CORNER_LETTERING.at(corner_location.rotateClockwise());
-      first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
-      second_target = second_target.rotateClockwise();
-      second_alg = CORNER_LETTERING.at(second_target);
-      second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners<3>(
-          {CORNER_BUFFER, corner_location.rotateClockwise(), second_target});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleCorners<3>(
-          {second_target, corner_location.rotateClockwise(), CORNER_BUFFER});
-
-      first_alg = CORNER_LETTERING.at(corner_location.rotateCounterClockwise());
-      first = SolveData{CORNER_ALGS.at(first_alg), false, first_alg};
-      second_target =
-          second_target.rotateClockwise();  // rotate clockwise since we already
-                                            // rotated clockwise once already
-      second_alg = CORNER_LETTERING.at(second_target);
-      second = SolveData{CORNER_ALGS.at(second_alg), false, second_alg};
-      cube.cycleCorners<3>({CORNER_BUFFER,
-                            corner_location.rotateCounterClockwise(),
-                            second_target});
-      for (Reconstruction reconstruction : getPossibleReconstructions(cube)) {
-        reconstruction.insert(reconstruction.begin(), second);
-        reconstruction.insert(reconstruction.begin(), first);
-        possible_reconstructions.push_back(reconstruction);
-      }
-      cube.cycleCorners<3>({second_target,
-                            corner_location.rotateCounterClockwise(),
-                            CORNER_BUFFER});
-    }
-    cache.insert({cube, possible_reconstructions});
-    return possible_reconstructions;
-  }
-
-  // cube is already solved
-  std::vector<Reconstruction> possible_reconstructions(1);
-  cache.insert({cube, possible_reconstructions});
-  return possible_reconstructions;
-}
-
-std::vector<Reconstruction> getPossibleReconstructions(
-    const Algorithm& scramble) {
+ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
   Cube cube{};
   cube.apply(scramble);
-  return getPossibleReconstructions(cube);
-}
+  bool has_parity = false;
 
-/***
- * Computes the Levenshtein edit distance
- */
-unsigned int levEditDistance(const Reconstruction& first,
-                             const Reconstruction& second) {
-  const size_t N = first.size();
-  const size_t M = second.size();
-
-  // ensure that M <= N, to reduce memory usage
-  if (N < M) return levEditDistance(second, first);
-
-  std::vector<unsigned int> current_row(M);
-  for (size_t m = 0; m < M; m++) current_row[m] = m;
-
-  for (size_t n = 1; n < N; n++) {
-    unsigned int last_row_last_column = current_row[0];
-    current_row[0] = n;
-    for (size_t m = 1; m < M; m++) {
-      if (first[n] != second[m]) {
-        // store the desired value of current_row[m] in last_row_last_column
-        if (current_row[m - 1] < last_row_last_column)
-          last_row_last_column = current_row[m - 1];
-        if (current_row[m] < last_row_last_column)
-          last_row_last_column = current_row[m];
-        last_row_last_column++;
-      }
-      std::swap(last_row_last_column, current_row[m]);
+  /**
+   * Solves the current edge cycle until the buffer is in the correct location
+   * (or flipped).
+   */
+  const auto solve_edge_cycle = [&](std::vector<char>& edge_cycle) {
+    EdgeLocation target = getLocation(cube[EDGE_BUFFER]);
+    while (target != EDGE_BUFFER && target != EDGE_BUFFER.flip()) {
+      if (has_parity)
+        edge_cycle.push_back(swapIfNecessary(EDGE_LETTERING.at(target)));
+      else
+        edge_cycle.push_back(EDGE_LETTERING.at(target));
+      has_parity = !has_parity;
+      cube.cycleEdges<2>({EDGE_BUFFER, target});
+      target = getLocation(cube[EDGE_BUFFER]);
     }
-  }
-  return current_row[M - 1];
+  };
 
-  //        std::vector<unsigned int> last_row(M);
-  //        for (size_t m = 0; m < M; m++) last_row[m] = m;
-  //
-  //        for (size_t n = 1; n < N; n++) {
-  //            std::vector<unsigned int> current_row(M);
-  //            current_row[0] = n;
-  //            for (size_t m = 1; n < M; m++) {
-  //                if (first[n] == second[m]) {
-  //                    current_row[m] = last_row[m - 1];
-  //                }
-  //                else {
-  //                    unsigned int value = last_row[m - 1];
-  //                    if (last_row[m] < value) value = last_row[m];
-  //                    if (current_row[m - 1] < value) value = current_row[m -
-  //                    1]; current_row[m] = value + 1;
-  //                }
-  //            }
-  //        }
-  //
-  //        std::vector<unsigned int> matrix(N * M); // N rows, M columns,
-  //        element (n, m) is at index (M * n + m)
-  //
-  //        // fill first row and first column
-  //        for (int m = 0; m < M; m++) matrix[m] = m;
-  //        for (int n = 1; n < N; n++) matrix[M * n] = n;
-  //
-  //        // recursively fill the rest of the matrix
-  //        for (int n = 1; n < N; n++) {
-  //            for (int m = 1; m < M; m++) {
-  //                    if (first[n] == second[m]) matrix[M * n + m] = matrix[M
-  //                    * (n - 1) + (m - 1)]; else {
-  //                        // take 1 + the minimum of the three surrounding
-  //                        elements unsigned int value = matrix[M * (n - 1) +
-  //                        (m - 1)]; if (matrix[M * n + (m - 1)] < value) value
-  //                        = matrix[M * n + (m - 1)]; if (matrix[M * (n - 1) +
-  //                        m] < value) value = matrix[M * (n - 1) + m];
-  //                        matrix[M * n + m] = value + 1;
-  //                    }
-  //            }
-  //        }
-  //
-  //        // return last element of the matrix
-  //        return matrix[N * M - 1];
+  std::vector<char> first_edge_cycle;
+  solve_edge_cycle(first_edge_cycle);
+
+  std::vector<std::vector<char>> edge_cycles;
+  std::vector<bool> are_even;
+  while (true) {
+    bool found_unsolved_edge = false;
+    std::vector<char> edge_cycle;
+    for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
+      if (Cube::EDGE_LOCATION_ORDER[i] == EDGE_BUFFER)
+        continue;  // skip the buffer piece itself
+      if (cube[Cube::EDGE_LOCATION_ORDER[i]] != Cube::STARTING_EDGE_PIECES[i]) {
+        found_unsolved_edge = true;
+        if (has_parity)
+          edge_cycle.push_back(
+              swapIfNecessary(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i])));
+        else
+          edge_cycle.push_back(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i]));
+        has_parity = !has_parity;
+        cube.cycleEdges<2>({EDGE_BUFFER, Cube::EDGE_LOCATION_ORDER[i]});
+        break;
+      }
+    }
+    if (!found_unsolved_edge) break;
+    solve_edge_cycle(edge_cycle);
+    are_even.push_back(edge_cycle.back() == edge_cycle.front());
+    edge_cycle.pop_back();
+    edge_cycles.push_back(edge_cycle);
+  }
+
+  const auto solve_corner_cycle = [&](std::vector<char>& corner_cycle) {
+    CornerLocation target = getLocation(cube[CORNER_BUFFER]);
+    while (target != CORNER_BUFFER &&
+           target != CORNER_BUFFER.rotateClockwise() &&
+           target != CORNER_BUFFER.rotateCounterclockwise()) {
+      corner_cycle.push_back(CORNER_LETTERING.at(target));
+      cube.cycleCorners<2>({CORNER_BUFFER, target});
+      target = getLocation(cube[CORNER_BUFFER]);
+    }
+  };
+
+  std::vector<char> first_corner_cycle;
+  solve_corner_cycle(first_corner_cycle);
+
+  std::vector<std::vector<char>> corner_cycles;
+  std::vector<CornerRotationAmount> rotation_amounts;
+  while (true) {
+    bool found_unsolved_corner = false;
+    std::vector<char> corner_cycle;
+    for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
+      if (Cube::CORNER_LOCATION_ORDER[i] == CORNER_BUFFER)
+        continue;  // skip the buffer piece itself
+      if (cube[Cube::CORNER_LOCATION_ORDER[i]] !=
+          Cube::STARTING_CORNER_PIECES[i]) {
+        found_unsolved_corner = true;
+        corner_cycle.push_back(
+            CORNER_LETTERING.at(Cube::CORNER_LOCATION_ORDER[i]));
+        cube.cycleCorners<2>({CORNER_BUFFER, Cube::CORNER_LOCATION_ORDER[i]});
+        break;
+      }
+    }
+    if (!found_unsolved_corner) break;
+    solve_corner_cycle(corner_cycle);
+    if (corner_cycle.back() == corner_cycle.front())
+      rotation_amounts.push_back(CornerRotationAmount::NONE);
+    else if (corner_cycle.back() == rotateClockwise(corner_cycle.front()))
+      rotation_amounts.push_back(CornerRotationAmount::CLOCKWISE);
+    else if (corner_cycle.back() ==
+             rotateCounterClockwise(corner_cycle.front()))
+      rotation_amounts.push_back(CornerRotationAmount::COUNTERCLOCKWISE);
+    else
+      throw std::logic_error(
+          "Last target in cycle doesn't match first target!");
+    corner_cycle.pop_back();
+    corner_cycles.push_back(corner_cycle);
+  }
+
+  return ReconstructionIterator{
+      first_edge_cycle,   edge_cycles,   are_even,        has_parity,
+      first_corner_cycle, corner_cycles, rotation_amounts};
 }
 
-std::vector<unsigned int> sortBestReconstructions(
-    const Reconstruction& solve,
-    std::vector<Reconstruction>& possible_reconstructions) {
-  size_t N = possible_reconstructions.size();
-  if (N == 0) {
-    throw std::invalid_argument("possible_reconstructions cannot be empty!");
+std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
+                       const size_t& max) {
+  /**
+   * Used to mark unparsed components of the parsed solve to differentiate it
+   * from parsed components when computing Levenshtein edit distances.
+   */
+  static constexpr BlindsolvingMove UNPARSED_SENTINEL{true, ' '};
+
+  const size_t period = it.getPeriod();
+  it.reset();  // ensures that all possible reconstructions are checked
+
+  BlindsolvingReconstruction baseline;
+  for (const SolveData& solve_data : solve) {
+    if (solve_data.is_parsed)
+      baseline.push_back(solve_data.blindsolving_move);
+    else
+      baseline.push_back(UNPARSED_SENTINEL);
   }
 
-  std::vector<std::pair<Reconstruction, unsigned int>> options(N);
-  for (int i = 0; i < N; i++) {
-    // TODO: parallelize this with std::async
-    options[i] = {possible_reconstructions[i],
-                  levEditDistance(solve, possible_reconstructions[i])};
+  std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+      best_reconstructions;
+  for (size_t i = 0; i < std::min(period, max); ++i) {
+    std::pair<BlindsolvingReconstruction, unsigned int> reconstruction;
+    reconstruction.first = *it;
+    reconstruction.second =
+        utility::levEditDistance(baseline, reconstruction.first);
+    best_reconstructions.push_back(reconstruction);
+    ++it;
   }
-  std::sort(options.begin(), options.end(),
-            [](const std::pair<Reconstruction, unsigned int>& first,
-               const std::pair<Reconstruction, unsigned int>& second) {
-              return first.second < second.second;
-            });
 
-  std::vector<unsigned int> sorted_edit_distances(N);
-  for (int i = 0; i < N; i++) {
-    possible_reconstructions[i] = options[i].first;
-    sorted_edit_distances[i] = options[i].second;
-  }
-  return sorted_edit_distances;
+  const auto comparator =
+      [](const std::pair<BlindsolvingReconstruction, unsigned int>& first,
+         const std::pair<BlindsolvingReconstruction, unsigned int>& second) {
+        return first.second < second.second;
+      };
+  std::sort(best_reconstructions.begin(), best_reconstructions.end(),
+            comparator);
+
+  if (period == max) return best_reconstructions;
+
+  do {
+    std::pair<BlindsolvingReconstruction, unsigned int> reconstruction;
+    reconstruction.first = *it;
+    reconstruction.second =
+        utility::levEditDistance(baseline, reconstruction.first);
+    const size_t index = std::upper_bound(best_reconstructions.begin(),
+                                          best_reconstructions.end(),
+                                          reconstruction, comparator) -
+                         best_reconstructions.begin();
+    if (index < max) {
+      for (size_t i = max - 1; i > index; i--)
+        best_reconstructions[i] = best_reconstructions[i - 1];
+      best_reconstructions[index] = reconstruction;
+    }
+  } while (++it);
+  return best_reconstructions;
 }
 }  // namespace blindsolving

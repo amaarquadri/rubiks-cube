@@ -1,10 +1,12 @@
 #pragma once
 
 #include "Algorithm.h"
+#include "BlindsolvingReconstruction.h"
 #include "CornerLocation.h"
 #include "Cube.h"
 #include "EdgeLocation.h"
 #include "Reconstruction.h"
+#include "ReconstructionIterator.h"
 #include <map>
 #include <unordered_map>
 
@@ -15,10 +17,13 @@ extern const Algorithm PARITY_ALG;
 
 Reconstruction parseSolveAttempt(const Algorithm& moves);
 
-std::vector<Reconstruction> getPossibleReconstructions(
-    const Algorithm& scramble);
+ReconstructionIterator getReconstructionIterator(const Algorithm& scramble);
 
-std::vector<unsigned int> sortBestReconstructions(
-    const Reconstruction& solve,
-    std::vector<Reconstruction>& possible_reconstructions);
+/**
+ * @param n The maximum number of BlindsolvingReconstructions to include in the
+ * result.
+ */
+std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
+                       const size_t& max);
 }  // namespace blindsolving

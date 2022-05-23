@@ -14,18 +14,19 @@ std::pair<Algorithm, Algorithm> loadInput() {
 }
 
 int main() {
-  auto [scramble, solve] = loadInput();
-  Reconstruction reconstruction = parseSolveAttempt(solve);
-  std::cout << toStr(reconstruction) << std::endl;
-  std::vector<Reconstruction> possible_reconstructions =
-      getPossibleReconstructions(scramble);
-  std::vector<unsigned int> edit_distances =
-      sortBestReconstructions(reconstruction, possible_reconstructions);
+  const auto [scramble, solve] = loadInput();
+  const Reconstruction reconstruction = parseSolveAttempt(solve);
+  std::cout << "Attempt reconstruction:\n" << toStr(reconstruction) << '\n';
+  ReconstructionIterator it = getReconstructionIterator(scramble);
 
-  std::cout << "Possible Reconstructions:" << std::endl;
-  for (size_t i = 0; i < possible_reconstructions.size(); i++) {
-    std::cout << "Edit Distance: " << edit_distances[i] << ", "
-              << toStr(possible_reconstructions[i]) << std::endl;
-  }
+  std::cout << "Processing " << it.getPeriod() << " reconstructions...\n";
+  const size_t n = std::min(it.getPeriod(), 3ull);
+  const std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+      best_reconstructions = getBestReconstructions(reconstruction, it, n);
+
+  std::cout << "Closest Reconstruction matches:\n";
+  for (const auto& [recon, edit_distance] : best_reconstructions)
+    std::cout << "Edit Distance: " << edit_distance << ", " << toStr(recon)
+              << '\n';
   return 0;
 }
