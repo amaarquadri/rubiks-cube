@@ -29,18 +29,33 @@ bool CornerCycleSequenceIterator::operator++() {
 
 std::vector<char> CornerCycleSequenceIterator::operator*() const {
   std::vector<std::vector<char>> current = *it;
+
+  // add the final cycle-closing targets
+  const std::vector<size_t>& counters = it.getCounters();
   const std::vector<size_t>& permutation = it.getPermutation();
   for (size_t i = 0; i < current.size(); i++) {
-    // add the final cycle-closing target
     switch (rotation_amounts[permutation[i]]) {
       case CornerRotationAmount::NONE:
+        // just add the final cycle-closing target
         current[i].push_back(current[i][0]);
         break;
       case CornerRotationAmount::CLOCKWISE:
+        // rotate the last counters[permutations[i]] elements clockwise (which
+        // wrap around to the end)
+        for (size_t j = current[i].size() - counters[permutation[i]];
+             j < current[i].size(); j++)
+          current[i][j] = rotateClockwise(current[i][j]);
+        // add the final cycle-closing target
         current[i].push_back(rotateClockwise(current[i][0]));
         break;
       case CornerRotationAmount::COUNTERCLOCKWISE:
-        current[i].push_back(rotateCounterClockwise(current[i][0]));
+        // rotate the last counters[permutations[i]] elements counterclockwise
+        // (which wrap around to the end)
+        for (size_t j = current[i].size() - counters[permutation[i]];
+             j < current[i].size(); j++)
+          current[i][j] = rotateCounterclockwise(current[i][j]);
+        // add the final cycle-closing target
+        current[i].push_back(rotateCounterclockwise(current[i][0]));
         break;
       default:
         throw std::logic_error("Unknown enum value!");

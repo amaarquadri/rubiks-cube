@@ -28,11 +28,24 @@ bool EdgeCycleSequenceIterator::operator++() {
 
 std::vector<char> EdgeCycleSequenceIterator::operator*() const {
   std::vector<std::vector<char>> current = *it;
+
+  // perform modifications
+  const std::vector<size_t>& counters = it.getCounters();
   const std::vector<size_t>& permutation = it.getPermutation();
-  // add the final cycle-closing targets
-  for (size_t i = 0; i < current.size(); i++)
-    current[i].push_back(are_even[permutation[i]] ? current[i][0]
-                                                  : flipEdge(current[i][0]));
+  for (size_t i = 0; i < current.size(); i++) {
+    if (are_even[permutation[i]])
+      // just add the final cycle-closing target
+      current[i].push_back(current[i][0]);
+    else {
+      // invert the last counters[permutations[i]] elements (which wrap around
+      // to the end)
+      for (size_t j = current[i].size() - counters[permutation[i]];
+           j < current[i].size(); j++)
+        current[i][j] = flipEdge(current[i][j]);
+      // add the final cycle-closing target
+      current[i].push_back(flipEdge(current[i][0]));
+    }
+  }
   // invert the correct cycles
   for (size_t i = 0; i < are_inverted.size(); i++)
     if (are_inverted[i])
