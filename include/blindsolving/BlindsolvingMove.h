@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Cube.h"
 #include <string>
 
 namespace blindsolving {
@@ -22,6 +23,8 @@ struct BlindsolvingMove {
   [[nodiscard]] bool operator!=(const BlindsolvingMove& other) const;
 
   [[nodiscard]] std::string toStr() const;
+
+  void applyTo(Cube& cube) const;
 
   constexpr ~BlindsolvingMove(){};
 };

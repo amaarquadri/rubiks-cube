@@ -1,4 +1,6 @@
 #include "BlindsolvingMove.h"
+#include "Blindsolving.h"
+#include "Cube.h"
 
 namespace blindsolving {
 BlindsolvingMove::BlindsolvingMove(const BlindsolvingMove& other) {
@@ -23,5 +25,14 @@ bool BlindsolvingMove::operator!=(const BlindsolvingMove& other) const {
 std::string BlindsolvingMove::toStr() const {
   if (is_parity) return "Parity";
   return (is_edge ? "Edge: " : "Corner: ") + std::string(1, alg);
+}
+
+void BlindsolvingMove::applyTo(Cube& cube) const {
+  if (is_parity)
+    cube.apply(PARITY_ALG);
+  else if (is_edge)
+    cube.apply(EDGE_ALGS.at(alg));
+  else
+    cube.apply(CORNER_ALGS.at(alg));
 }
 }  // namespace blindsolving
