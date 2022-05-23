@@ -1,5 +1,5 @@
 #include "ReconstructionIterator.h"
-#include "BlindsolvingMove.h"
+#include "BlindsolvingReconstruction.h"
 
 namespace blindsolving {
 static size_t calculateLength(
@@ -45,8 +45,8 @@ bool ReconstructionIterator::operator++() {
   return ++edge_iterator || ++corner_iterator;
 }
 
-std::vector<BlindsolvingMove> ReconstructionIterator::operator*() const {
-  std::vector<BlindsolvingMove> reconstruction;
+BlindsolvingReconstruction ReconstructionIterator::operator*() const {
+  BlindsolvingReconstruction reconstruction;
   reconstruction.reserve(length);
   for (const char& edge : first_edge_cycle)
     reconstruction.emplace_back(true, edge);

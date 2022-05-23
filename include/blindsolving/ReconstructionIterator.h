@@ -1,6 +1,6 @@
 #pragma once
 
-#include "BlindsolvingMove.h"
+#include "BlindsolvingReconstruction.h"
 #include "CornerCycleSequenceIterator.h"
 #include "CornerRotationAmount.h"
 #include "Cube.h"
@@ -30,7 +30,7 @@ class ReconstructionIterator {
 
   bool operator++();
 
-  std::vector<BlindsolvingMove> operator*() const;
+  BlindsolvingReconstruction operator*() const;
 
   size_t getPeriod() const;
 
