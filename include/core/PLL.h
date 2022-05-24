@@ -21,8 +21,8 @@ const Algorithm Ab_PERM = Aa_PERM.inv();           // NOLINT(cert-err58-cpp)
 const Algorithm F_PERM = Algorithm::parse(
     "R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R");  // NOLINT(cert-err58-cpp)
 const Algorithm E_PERM =
-    Algorithm::commutator("R B' R'", "D") +
-    Algorithm::commutator("R B R'", "D");  // NOLINT(cert-err58-cpp)
+    Algorithm::commutator("R B' R'", "F") +
+    Algorithm::commutator("R B R'", "F");  // NOLINT(cert-err58-cpp)
 const Algorithm H_PERM =
     Algorithm::parse("M2 U' M2 U2 M2 U' M2");  // NOLINT(cert-err58-cpp)
 const Algorithm Z_PERM = Algorithm::parse(
