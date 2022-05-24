@@ -240,6 +240,10 @@ ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
     return count % 2 == 1;
   }();
 
+  /**
+   * Solves the current corner cycle until the buffer is in the correct location
+   * (or rotated).
+   */
   const auto solve_corner_cycle = [&](std::vector<char>& corner_cycle) {
     CornerLocation target = getLocation(cube[CORNER_BUFFER]);
     while (target != CORNER_BUFFER &&
