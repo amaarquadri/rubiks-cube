@@ -30,11 +30,14 @@ const Algorithm Z_PERM = Algorithm::parse(
 const Algorithm V_PERM =
     Algorithm::parse("R' U R' U' X ");  // NOLINT(cert-err58-cpp)
 
-// TODO: check which one is which
-const Algorithm Ga_PERM = Algorithm::parse("");  // NOLINT(cert-err58-cpp)
-const Algorithm Gb_PERM = Algorithm::parse("");  // NOLINT(cert-err58-cpp)
-const Algorithm Gc_PERM = Algorithm::parse("");  // NOLINT(cert-err58-cpp)
-const Algorithm Gd_PERM = Algorithm::parse("");  // NOLINT(cert-err58-cpp)
+const Algorithm Ga_PERM =
+    Algorithm::parse("R2 U R' U R' U' R U' R2 D U' R' U R D' U'");
+const Algorithm Gb_PERM =
+    Algorithm::parse("R' U' R Y R2 D Y R' U R U' R D' Y' R2");
+const Algorithm Gc_PERM =
+    Algorithm::parse("R2 F2 R U2 R U2 R' F R U R' U' R' F R2");
+const Algorithm Gd_PERM =
+    Algorithm::parse("R U R' Y' R2 D' Y' R U' R' U R' D Y R2");
 
 // TODO: check which one is which
 const Algorithm Na_PERM =
