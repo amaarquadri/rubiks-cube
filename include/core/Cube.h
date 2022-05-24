@@ -75,6 +75,8 @@ class Cube {
         corners(STARTING_CORNER_PIECES),
         orientation(STARTING_ORIENTATION) {}
 
+  explicit Cube(const Algorithm& scramble) : Cube() { apply(scramble); }
+
   void apply(const Turn& turn);
 
   void apply(const CubeRotation& cubeRotation);
