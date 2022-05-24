@@ -28,7 +28,7 @@ const Algorithm H_PERM =
 const Algorithm Z_PERM = Algorithm::parse(
     "M2 U' M2 U' M' U2 M2 U2 M' U2");  // NOLINT(cert-err58-cpp)
 const Algorithm V_PERM =
-    Algorithm::parse("R' U R' U' X ");  // NOLINT(cert-err58-cpp)
+    Algorithm::parse("R' U R' U' Y R' F' R2 U' R' U R' F R F");
 
 const Algorithm Ga_PERM =
     Algorithm::parse("R2 U R' U R' U' R U' R2 D U' R' U R D' U'");
