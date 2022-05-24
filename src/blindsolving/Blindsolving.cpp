@@ -47,11 +47,11 @@ static const Algorithm L_ALG = Algorithm::parse(  // NOLINT(cert-err58-cpp)
     "R U' R' U' R U R' F' R U R' U' R' F R");
 const std::unordered_map<char, Algorithm>
     CORNER_ALGS =  // NOLINT(cert-err58-cpp)
-    {{'B', Jb_PERM.withSetup("U'")},
+    {{'B', Ja_PERM.withSetup("U'")},
      {'C', Y_PERM},
-     {'D', Ja_PERM.withSetup("U2")},
+     {'D', Jb_PERM.withSetup("U2")},
      {'E', L_ALG.withSetup("F' D")},
-     {'F', Jb_PERM.withSetup("R U'")},
+     {'F', Ja_PERM.withSetup("R U'")},
      {'G', Y_PERM.withSetup("R")},
      {'H', L_ALG.withSetup("D")},
      {'I', L_ALG.withSetup("R'")},
