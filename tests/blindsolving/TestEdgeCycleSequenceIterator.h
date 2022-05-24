@@ -15,7 +15,7 @@ static Cube applyEdgeAlgs(const std::vector<char>& chars) {
   return cube;
 }
 
-static void testEdgeCycleSequenceIterator() {
+void testEdgeCycleSequenceIterator() {
   std::vector<std::vector<char>> cycles;
   cycles.push_back({'A', 'B', 'C'});
   cycles.push_back({'D', 'F'});
