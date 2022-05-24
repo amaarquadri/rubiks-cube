@@ -61,8 +61,8 @@ namespace std {
 template <>
 struct hash<EdgePiece> {
   size_t operator()(const EdgePiece& edge_location) const {
-    return 31 * std::hash<Colour>{}(edge_location.first) +
-           std::hash<Colour>{}(edge_location.second);
+    static constexpr std::hash<Colour> hasher{};
+    return 31 * hasher(edge_location.first) + hasher(edge_location.second);
   }
 };
 }  // namespace std

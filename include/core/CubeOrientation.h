@@ -59,8 +59,8 @@ namespace std {
 template <>
 struct hash<CubeOrientation> {
   size_t operator()(const CubeOrientation& cube_orientation) const {
-    return 31 * std::hash<Face>{}(cube_orientation.top) +
-           std::hash<Face>{}(cube_orientation.front);
+    static constexpr std::hash<Face> hasher{};
+    return 31 * hasher(cube_orientation.top) + hasher(cube_orientation.front);
   }
 };
 }  // namespace std

@@ -17,8 +17,8 @@ namespace std {
 template <>
 struct hash<EdgeLocation> {
   size_t operator()(const EdgeLocation& edgeLocation) const {
-    return 31 * std::hash<Face>{}(edgeLocation.first) +
-           std::hash<Face>{}(edgeLocation.second);
+    static constexpr std::hash<Face> hasher{};
+    return 31 * hasher(edgeLocation.first) + hasher(edgeLocation.second);
   }
 };
 }  // namespace std

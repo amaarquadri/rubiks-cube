@@ -141,11 +141,14 @@ namespace std {
 template <>
 struct hash<Cube> {
   size_t operator()(const Cube& cube) const {
-    size_t hash = std::hash<CubeOrientation>{}(cube.orientation);
+    static constexpr std::hash<CubeOrientation> orientation_hasher;
+    static constexpr std::hash<EdgePiece> edge_hasher{};
+    static constexpr std::hash<CornerPiece> corner_hasher{};
+    size_t hash = orientation_hasher(cube.orientation);
     for (EdgePiece edge_piece : cube.edges)
-      hash = 31 * hash + std::hash<EdgePiece>{}(edge_piece);
+      hash = 31 * hash + edge_hasher(edge_piece);
     for (CornerPiece corner_piece : cube.corners)
-      hash = 31 * hash + std::hash<CornerPiece>{}(corner_piece);
+      hash = 31 * hash + corner_hasher(corner_piece);
     return hash;
   }
 };
