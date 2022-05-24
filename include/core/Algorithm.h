@@ -27,7 +27,7 @@ struct Algorithm {
    */
   [[nodiscard]] bool operator==(const Algorithm& other) const;
 
-  [[nodiscard]] Move operator[](const size_t& index) const;
+  [[nodiscard]] const Move& operator[](const size_t& index) const;
 
   [[nodiscard]] Move& operator[](const size_t& index);
 
