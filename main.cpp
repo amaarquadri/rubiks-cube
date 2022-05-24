@@ -4,16 +4,16 @@
 #include <iostream>
 #include <sstream>
 
-static std::pair<Algorithm, Algorithm> loadInput() {
-  std::ifstream file("tests/blindsolve3.txt");
+static std::pair<Algorithm, Algorithm> loadInput(const std::string& file_name) {
+  std::ifstream file(file_name);
   std::stringstream buffer;
   buffer << file.rdbuf();
   return Algorithm::parseScrambleSolve(buffer.str());
 }
 
-int main() {
+static void viewReconstruction(const std::string& file_name) {
   using namespace blindsolving;
-  const auto [scramble, solve] = loadInput();
+  const auto [scramble, solve] = loadInput(file_name);
   const Reconstruction reconstruction = parseSolveAttempt(solve);
   std::cout << "Attempt reconstruction:\n" << toStr(reconstruction) << '\n';
   ReconstructionIterator it = getReconstructionIterator(Cube{scramble});
@@ -27,5 +27,9 @@ int main() {
   for (const auto& [recon, edit_distance] : best_reconstructions)
     std::cout << "Edit distance: " << edit_distance << ", " << recon.toStr()
               << '\n';
+}
+
+int main() {
+  viewReconstruction("tests/blindsolve3.txt");
   return 0;
 }
