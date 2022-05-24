@@ -33,5 +33,10 @@ const Algorithm Gc_PERM =
 const Algorithm Gd_PERM =
     Algorithm::parse("R U R' Y' R2 D' Y' R U' R' U R' D Y R2");
 
+const Algorithm Ra_PERM =
+    Algorithm::parse("R U' R' U' R U R D R' U' R D' R' U2 R' U'");
+const Algorithm Rb_PERM =
+    Algorithm::parse("R' U2 R U2 R' F R U R' U' R' F' R2 U'");
+
 const Algorithm Na_PERM = Jb_PERM.withSetup("R U R' U");
 const Algorithm Nb_PERM = Ja_PERM.withSetup("L' U' L U'");
