@@ -45,6 +45,21 @@ bool ReconstructionIterator::operator++() {
   return ++edge_iterator || ++corner_iterator;
 }
 
+static char swapIfNecessary(const char& chr) {
+  switch (chr) {
+    case 'C':
+      return 'W';
+    case 'W':
+      return 'C';
+    case 'E':
+      return 'O';
+    case 'O':
+      return 'E';
+    default:
+      return chr;
+  }
+}
+
 BlindsolvingReconstruction ReconstructionIterator::operator*() const {
   BlindsolvingReconstruction reconstruction;
   reconstruction.reserve(length);
@@ -52,6 +67,8 @@ BlindsolvingReconstruction ReconstructionIterator::operator*() const {
     reconstruction.emplace_back(true, edge);
   const std::vector<char> edge_moves = *edge_iterator;
   for (const char& edge : edge_moves) reconstruction.emplace_back(true, edge);
+  for (size_t i = 1; i < reconstruction.size(); i += 2)
+    reconstruction[i].alg = swapIfNecessary(reconstruction[i].alg);
   if (has_parity) reconstruction.emplace_back();
   for (const char& corner : first_corner_cycle)
     reconstruction.emplace_back(false, corner);

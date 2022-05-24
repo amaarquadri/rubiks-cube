@@ -192,25 +192,9 @@ CornerLocation getLocation(const CornerPiece& corner_piece) {
       "invalid.");
 }
 
-char swapIfNecessary(const char& chr) {
-  switch (chr) {
-    case 'C':
-      return 'W';
-    case 'W':
-      return 'C';
-    case 'E':
-      return 'O';
-    case 'O':
-      return 'E';
-    default:
-      return chr;
-  }
-}
-
 ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
   Cube cube{};
   cube.apply(scramble);
-  bool has_parity = false;
 
   /**
    * Solves the current edge cycle until the buffer is in the correct location
@@ -219,11 +203,7 @@ ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
   const auto solve_edge_cycle = [&](std::vector<char>& edge_cycle) {
     EdgeLocation target = getLocation(cube[EDGE_BUFFER]);
     while (target != EDGE_BUFFER && target != EDGE_BUFFER.flip()) {
-      if (has_parity)
-        edge_cycle.push_back(swapIfNecessary(EDGE_LETTERING.at(target)));
-      else
-        edge_cycle.push_back(EDGE_LETTERING.at(target));
-      has_parity = !has_parity;
+      edge_cycle.push_back(EDGE_LETTERING.at(target));
       cube.cycleEdges<2>({EDGE_BUFFER, target});
       target = getLocation(cube[EDGE_BUFFER]);
     }
@@ -242,12 +222,7 @@ ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
         continue;  // skip the buffer piece itself
       if (cube[Cube::EDGE_LOCATION_ORDER[i]] != Cube::STARTING_EDGE_PIECES[i]) {
         found_unsolved_edge = true;
-        if (has_parity)
-          edge_cycle.push_back(
-              swapIfNecessary(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i])));
-        else
-          edge_cycle.push_back(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i]));
-        has_parity = !has_parity;
+        edge_cycle.push_back(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i]));
         cube.cycleEdges<2>({EDGE_BUFFER, Cube::EDGE_LOCATION_ORDER[i]});
         break;
       }
@@ -258,6 +233,12 @@ ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
     edge_cycle.pop_back();
     edge_cycles.push_back(edge_cycle);
   }
+
+  const bool has_parity = [&]() {
+    size_t count = first_edge_cycle.size() + edge_cycles.size();
+    for (const auto& cycle : edge_cycles) count += cycle.size();
+    return count % 2 == 1;
+  }();
 
   const auto solve_corner_cycle = [&](std::vector<char>& corner_cycle) {
     CornerLocation target = getLocation(cube[CORNER_BUFFER]);
