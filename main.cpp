@@ -4,9 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-using namespace blindsolving;
-
-std::pair<Algorithm, Algorithm> loadInput() {
+static std::pair<Algorithm, Algorithm> loadInput() {
   std::ifstream file("tests/blindsolve3.txt");
   std::stringstream buffer;
   buffer << file.rdbuf();
@@ -14,6 +12,7 @@ std::pair<Algorithm, Algorithm> loadInput() {
 }
 
 int main() {
+  using namespace blindsolving;
   const auto [scramble, solve] = loadInput();
   const Reconstruction reconstruction = parseSolveAttempt(solve);
   std::cout << "Attempt reconstruction:\n" << toStr(reconstruction) << '\n';
