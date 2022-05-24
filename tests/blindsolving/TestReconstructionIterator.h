@@ -8,15 +8,9 @@
 #include <stdexcept>
 #include <unordered_set>
 
-void testReconstructionIterator(const Algorithm& scramble) {
-  const Cube scrambled_cube = [&]() {
-    Cube cube{};
-    cube.apply(scramble);
-    return cube;
-  }();
-
+void testReconstructionIterator(const Cube& scrambled_cube) {
   blindsolving::ReconstructionIterator it =
-      blindsolving::getReconstructionIterator(scramble);
+      blindsolving::getReconstructionIterator(scrambled_cube);
   std::unordered_set<blindsolving::BlindsolvingReconstruction> recons{};
   std::cout << "Testing " << it.getPeriod() << " reconstructions...\n";
   size_t i = 0;  // only used if info == true

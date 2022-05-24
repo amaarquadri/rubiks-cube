@@ -192,10 +192,7 @@ CornerLocation getLocation(const CornerPiece& corner_piece) {
       "invalid.");
 }
 
-ReconstructionIterator getReconstructionIterator(const Algorithm& scramble) {
-  Cube cube{};
-  cube.apply(scramble);
-
+ReconstructionIterator getReconstructionIterator(Cube cube) {
   /**
    * Solves the current edge cycle until the buffer is in the correct location
    * (or flipped).

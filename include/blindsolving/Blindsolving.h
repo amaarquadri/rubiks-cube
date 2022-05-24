@@ -18,7 +18,11 @@ constexpr CornerLocation CORNER_BUFFER{Face::U, Face::L, Face::B};
 
 Reconstruction parseSolveAttempt(const Algorithm& moves);
 
-ReconstructionIterator getReconstructionIterator(const Algorithm& scramble);
+/**
+ * @param cube The Cube to create a ReconstructionIterator for. It is passed by
+ * value so that a local copy is created which can be modified in the function.
+ */
+ReconstructionIterator getReconstructionIterator(Cube cube);
 
 /**
  * @param n The maximum number of BlindsolvingReconstructions to include in the

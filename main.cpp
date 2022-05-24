@@ -17,7 +17,7 @@ int main() {
   const auto [scramble, solve] = loadInput();
   const Reconstruction reconstruction = parseSolveAttempt(solve);
   std::cout << "Attempt reconstruction:\n" << toStr(reconstruction) << '\n';
-  ReconstructionIterator it = getReconstructionIterator(scramble);
+  ReconstructionIterator it = getReconstructionIterator(Cube{scramble});
 
   std::cout << "Processing " << it.getPeriod() << " reconstructions...\n";
   const size_t n = std::min(it.getPeriod(), 3ull);
