@@ -34,7 +34,9 @@ bool Algorithm::operator==(const Algorithm& other) const {
   return test_cube.isSolved() && test_cube.isStandardOrientation();
 }
 
-Move Algorithm::operator[](const size_t& index) const { return moves[index]; }
+const Move& Algorithm::operator[](const size_t& index) const {
+  return moves[index];
+}
 
 Move& Algorithm::operator[](const size_t& index) { return moves[index]; }
 
