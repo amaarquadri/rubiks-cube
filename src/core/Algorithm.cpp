@@ -230,6 +230,8 @@ std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(
     throw std::invalid_argument(
         "No new line characters! Cannot distinguish scramble from solve");
 
+  // use parseExpanded for the attempted solution so that the division between
+  // blindsolving moves can easily be determined
   return {parse(alg.substr(0, scramble_length)),
           parseExpanded(alg.substr(scramble_length + 1,
                                    alg.size() - scramble_length - 1))};
