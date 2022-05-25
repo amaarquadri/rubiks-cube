@@ -41,27 +41,27 @@ class Cube {
        {Face::D, Face::R, Face::B},
        {Face::D, Face::B, Face::L}}};
   static constexpr std::array<EdgePiece, 12> STARTING_EDGE_PIECES{
-      {{Colour::WHITE, Colour::BLUE},
-       {Colour::WHITE, Colour::RED},
-       {Colour::WHITE, Colour::GREEN},
-       {Colour::WHITE, Colour::ORANGE},
-       {Colour::GREEN, Colour::RED},
-       {Colour::RED, Colour::BLUE},
-       {Colour::BLUE, Colour::ORANGE},
-       {Colour::ORANGE, Colour::GREEN},
-       {Colour::YELLOW, Colour::GREEN},
-       {Colour::YELLOW, Colour::RED},
-       {Colour::YELLOW, Colour::BLUE},
-       {Colour::YELLOW, Colour::ORANGE}}};
+      {{Colour::White, Colour::Blue},
+       {Colour::White, Colour::Red},
+       {Colour::White, Colour::Green},
+       {Colour::White, Colour::Orange},
+       {Colour::Green, Colour::Red},
+       {Colour::Red, Colour::Blue},
+       {Colour::Blue, Colour::Orange},
+       {Colour::Orange, Colour::Green},
+       {Colour::Yellow, Colour::Green},
+       {Colour::Yellow, Colour::Red},
+       {Colour::Yellow, Colour::Blue},
+       {Colour::Yellow, Colour::Orange}}};
   static constexpr std::array<CornerPiece, 8> STARTING_CORNER_PIECES{
-      {{Colour::WHITE, Colour::ORANGE, Colour::BLUE},
-       {Colour::WHITE, Colour::BLUE, Colour::RED},
-       {Colour::WHITE, Colour::RED, Colour::GREEN},
-       {Colour::WHITE, Colour::GREEN, Colour::ORANGE},
-       {Colour::YELLOW, Colour::ORANGE, Colour::GREEN},
-       {Colour::YELLOW, Colour::GREEN, Colour::RED},
-       {Colour::YELLOW, Colour::RED, Colour::BLUE},
-       {Colour::YELLOW, Colour::BLUE, Colour::ORANGE}}};
+      {{Colour::White, Colour::Orange, Colour::Blue},
+       {Colour::White, Colour::Blue, Colour::Red},
+       {Colour::White, Colour::Red, Colour::Green},
+       {Colour::White, Colour::Green, Colour::Orange},
+       {Colour::Yellow, Colour::Orange, Colour::Green},
+       {Colour::Yellow, Colour::Green, Colour::Red},
+       {Colour::Yellow, Colour::Red, Colour::Blue},
+       {Colour::Yellow, Colour::Blue, Colour::Orange}}};
   static constexpr CubeOrientation STARTING_ORIENTATION{Face::U, Face::F};
 
  private:

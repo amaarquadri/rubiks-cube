@@ -4,18 +4,18 @@
 
 Colour getOpposite(const Colour& colour) {
   switch (colour) {
-    case Colour::WHITE:
-      return Colour::YELLOW;
-    case Colour::GREEN:
-      return Colour::BLUE;
-    case Colour::RED:
-      return Colour::ORANGE;
-    case Colour::BLUE:
-      return Colour::GREEN;
-    case Colour::ORANGE:
-      return Colour::RED;
-    case Colour::YELLOW:
-      return Colour::WHITE;
+    case Colour::White:
+      return Colour::Yellow;
+    case Colour::Green:
+      return Colour::Blue;
+    case Colour::Red:
+      return Colour::Orange;
+    case Colour::Blue:
+      return Colour::Green;
+    case Colour::Orange:
+      return Colour::Red;
+    case Colour::Yellow:
+      return Colour::White;
     default:
       throw std::logic_error("Unknown enum value!");
   }
@@ -37,17 +37,17 @@ Colour getRight(const Colour& top, const Colour& front) {
 
 std::string toStr(const Colour& colour) {
   switch (colour) {
-    case Colour::WHITE:
+    case Colour::White:
       return "W";
-    case Colour::GREEN:
+    case Colour::Green:
       return "G";
-    case Colour::RED:
+    case Colour::Red:
       return "R";
-    case Colour::BLUE:
+    case Colour::Blue:
       return "B";
-    case Colour::ORANGE:
+    case Colour::Orange:
       return "O";
-    case Colour::YELLOW:
+    case Colour::Yellow:
       return "Y";
     default:
       throw std::logic_error("Unknown enum value!");
