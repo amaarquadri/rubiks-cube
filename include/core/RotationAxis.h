@@ -10,6 +10,6 @@ std::string toStr(const RotationAxis& rotationAxis);
 /**
  * @brief Returns the number of characters consumed and the parsed RotationAxis.
  * If it was not possible to parse a RotationAxis, then the number of characters
- * consumed will be zero
+ * consumed will be zero.
  */
-std::pair<int, RotationAxis> parseRotationAxis(const std::string& str);
+std::pair<size_t, RotationAxis> parseRotationAxis(const std::string& str);

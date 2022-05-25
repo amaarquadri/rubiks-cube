@@ -16,7 +16,7 @@ struct CubeRotation {
   /**
    * @brief Returns the number of characters consumed and the parsed
    * CubeRotation. If it was not possible to parse a CubeRotation, then the
-   * number of characters consumed will be zero
+   * number of characters consumed will be zero.
    */
-  static std::pair<int, CubeRotation> parse(const std::string& str);
+  static std::pair<size_t, CubeRotation> parse(const std::string& str);
 };

@@ -17,6 +17,6 @@ std::string toStr(const Face& face);
 /**
  * @brief Returns the number of characters consumed and the parsed Face. If it
  * was not possible to parse a Face, then the number of characters consumed will
- * be zero
+ * be zero.
  */
-std::pair<int, Face> parseFace(const std::string& str);
+std::pair<size_t, Face> parseFace(const std::string& str);

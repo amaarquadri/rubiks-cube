@@ -30,7 +30,7 @@ struct Turn {
   /**
    * @brief Returns the number of characters consumed and the parsed Turn. If it
    * was not possible to parse a Turn, then the number of characters consumed
-   * will be zero
+   * will be zero.
    */
-  static std::pair<int, Turn> parse(const std::string& str);
+  static std::pair<size_t, Turn> parse(const std::string& str);
 };

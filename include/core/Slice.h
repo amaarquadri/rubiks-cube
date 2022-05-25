@@ -31,6 +31,6 @@ std::string toStr(const Slice& face);
 /**
  * @brief Returns the number of characters consumed and the parsed Slice. If it
  * was not possible to parse a Slice, then the number of characters consumed
- * will be zero
+ * will be zero.
  */
-std::pair<int, Slice> parseSlice(const std::string& str);
+std::pair<size_t, Slice> parseSlice(const std::string& str);

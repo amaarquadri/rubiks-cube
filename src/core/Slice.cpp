@@ -59,9 +59,9 @@ std::string toStr(const Slice& face) {
   }
 }
 
-std::pair<int, Slice> parseSlice(const std::string& str) {
+std::pair<size_t, Slice> parseSlice(const std::string& str) {
   if (str.empty()) return {0, {}};
-  char first_char = str[0];
+  const char& first_char = str[0];
   if (first_char == 'M')
     return {1, Slice::M};
   else if (first_char == 'E')

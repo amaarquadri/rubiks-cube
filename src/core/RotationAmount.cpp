@@ -39,9 +39,9 @@ RotationAmount operator-(const RotationAmount& rotation_amount) {
   return static_cast<RotationAmount>(clockwise_turns);
 }
 
-std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
-  int rotation_amount = 1;  // default to a single Clockwise RotationAmount
-  int consumed = 0;
+std::pair<size_t, RotationAmount> parseRotationAmount(const std::string& str) {
+  size_t consumed = 0;
+  size_t rotation_amount = 1;  // default to a single Clockwise RotationAmount
   for (const char& chr : str) {
     if (chr >= '0' && chr <= '9') {
       int digit = chr - '0';

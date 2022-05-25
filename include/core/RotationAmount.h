@@ -27,8 +27,8 @@ RotationAmount operator-(const RotationAmount& rotation_amount);
  * @brief Returns the number of characters consumed and the parsed
  * RotationAmount. If it was not possible to parse a RotationAmount, then the
  * number of characters consumed will be zero and the RotationAmount will be
- * Clockwise
+ * Clockwise.
  */
 // TODO: use size_t instead of int for number of characters consumed throughout
 //  the codebase
-std::pair<int, RotationAmount> parseRotationAmount(const std::string& str);
+std::pair<size_t, RotationAmount> parseRotationAmount(const std::string& str);

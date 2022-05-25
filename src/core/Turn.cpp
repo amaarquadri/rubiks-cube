@@ -14,7 +14,7 @@ std::string Turn::toStr() const {
          ::toStr(rotationAmount);
 }
 
-std::pair<int, Turn> Turn::parse(const std::string& str) {
+std::pair<size_t, Turn> Turn::parse(const std::string& str) {
   bool is_slice_turn = false;
   auto [consumed, face] = parseFace(str);
   Slice slice;
