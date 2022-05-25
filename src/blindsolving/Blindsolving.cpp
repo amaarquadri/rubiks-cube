@@ -293,7 +293,7 @@ ReconstructionIterator getReconstructionIterator(Cube cube) {
       first_corner_cycle, corner_cycles, rotation_amounts};
 }
 
-std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+std::vector<std::pair<BlindsolvingReconstruction, size_t>>
 getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
                        const size_t& max) {
   /**
@@ -313,10 +313,10 @@ getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
       baseline.push_back(UNPARSED_SENTINEL);
   }
 
-  std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+  std::vector<std::pair<BlindsolvingReconstruction, size_t>>
       best_reconstructions;
   for (size_t i = 0; i < std::min(period, max); ++i) {
-    std::pair<BlindsolvingReconstruction, unsigned int> reconstruction;
+    std::pair<BlindsolvingReconstruction, size_t> reconstruction;
     reconstruction.first = *it;
     reconstruction.second =
         utility::levEditDistance(baseline, reconstruction.first);

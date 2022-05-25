@@ -28,7 +28,7 @@ ReconstructionIterator getReconstructionIterator(Cube cube);
  * @param n The maximum number of BlindsolvingReconstructions to include in the
  * result.
  */
-std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+std::vector<std::pair<BlindsolvingReconstruction, size_t>>
 getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
                        const size_t& max);
 }  // namespace blindsolving

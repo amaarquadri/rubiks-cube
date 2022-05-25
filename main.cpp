@@ -35,7 +35,7 @@ static void viewReconstruction(const std::string& file_name) {
 
   std::cout << "Processing " << it.getPeriod() << " reconstructions...\n";
   const size_t n = std::min(it.getPeriod(), 3ull);
-  const std::vector<std::pair<BlindsolvingReconstruction, unsigned int>>
+  const std::vector<std::pair<BlindsolvingReconstruction, size_t>>
       best_reconstructions = getBestReconstructions(reconstruction, it, n);
 
   std::cout << "Closest reconstruction matches:\n";

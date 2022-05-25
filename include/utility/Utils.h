@@ -23,19 +23,19 @@ std::vector<T> flatten(const std::vector<std::vector<T>>& deep_vec) {
  * Computes the Levenshtein edit distance
  */
 template <typename T>
-unsigned int levEditDistance(const std::vector<T>& first,
-                             const std::vector<T>& second) {
+size_t levEditDistance(const std::vector<T>& first,
+                       const std::vector<T>& second) {
   const size_t N = first.size();
   const size_t M = second.size();
 
   // ensure that M <= N, to reduce memory usage
   if (N < M) return levEditDistance(second, first);
 
-  std::vector<unsigned int> current_row(M);
+  std::vector<size_t> current_row(M);
   for (size_t m = 0; m < M; m++) current_row[m] = m;
 
   for (size_t n = 1; n < N; n++) {
-    unsigned int last_row_last_column = current_row[0];
+    size_t last_row_last_column = current_row[0];
     current_row[0] = n;
     for (size_t m = 1; m < M; m++) {
       if (first[n] != second[m]) {
