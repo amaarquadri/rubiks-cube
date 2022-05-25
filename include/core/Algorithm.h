@@ -5,19 +5,10 @@
 #include <utility>
 #include <vector>
 
-// TODO: replace composition with inheritance
-struct Algorithm {
-  std::vector<Move> moves;
-
+struct Algorithm : public std::vector<Move> {
   Algorithm() = default;
 
-  Algorithm(const Algorithm& other);
-
-  explicit Algorithm(std::vector<Move> moves) : moves(std::move(moves)) {}
-
-  Algorithm& operator=(const Algorithm& other);
-
-  [[nodiscard]] size_t length() const;
+  Algorithm(const Algorithm::size_type& size) : std::vector<Move>(size) {}
 
   [[nodiscard]] std::string toStr() const;
 
@@ -27,12 +18,6 @@ struct Algorithm {
    * standard orientation.
    */
   [[nodiscard]] bool operator==(const Algorithm& other) const;
-
-  [[nodiscard]] const Move& operator[](const size_t& index) const;
-
-  [[nodiscard]] Move& operator[](const size_t& index);
-
-  void push_back(const Move& move);
 
   void cancelMoves();
 

@@ -77,11 +77,11 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
 
   // extract all initial CubeRotations
   CubeOrientation orientation = CubeOrientation::identity();
-  while (consumed < moves.length() && !moves[consumed].isTurn) {
+  while (consumed < moves.size() && !moves[consumed].isTurn) {
     orientation *= moves[consumed].cubeRotation;
     consumed++;
   }
-  for (size_t i = consumed + 1; i < moves.length(); i++) {
+  for (size_t i = consumed + 1; i < moves.size(); i++) {
     if (!moves[i].isTurn) {
       throw std::invalid_argument("CubeRotations can only be at the start!");
     }
@@ -104,11 +104,11 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
   parity_alg_transformation.apply(PARITY_ALG);
 
   Reconstruction reconstruction;
-  while (consumed < moves.length()) {
+  while (consumed < moves.size()) {
     bool found_match = false;
     SolveData solve_data{};
     Cube test_transformation{};
-    for (size_t i = consumed; i < moves.length(); i++) {
+    for (size_t i = consumed; i < moves.size(); i++) {
       test_transformation.apply(orientation.apply(moves[i].turn));
 
       for (auto [chr, transformation] : edge_alg_transformations) {

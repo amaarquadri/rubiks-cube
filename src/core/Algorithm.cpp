@@ -5,45 +5,20 @@
 #include <algorithm>
 #include <tuple>
 
-Algorithm::Algorithm(const Algorithm& other) { *this = other; }
-
-Algorithm& Algorithm::operator=(const Algorithm& other) {
-  moves.resize(other.length());
-  std::copy(other.moves.begin(), other.moves.end(), moves.begin());
-  return *this;
-}
-
-size_t Algorithm::length() const { return moves.size(); }
-
 std::string Algorithm::toStr() const {
   std::string result;
-  for (auto move = moves.begin(); move < moves.end(); move++) {
-    if (move->isTurn)
-      result += move->turn.toStr();
-    else
-      result += move->cubeRotation.toStr();
-    result += " ";
-  }
+  for (const auto& move : *this) result += move.toStr() + " ";
   return result;
 }
 
 bool Algorithm::operator==(const Algorithm& other) const {
-  Cube test_cube{};
-  test_cube.apply(*this);
+  Cube test_cube{*this};
   test_cube.apply(other.inv());
   return test_cube.isSolved() && test_cube.isStandardOrientation();
 }
 
-const Move& Algorithm::operator[](const size_t& index) const {
-  return moves[index];
-}
-
-Move& Algorithm::operator[](const size_t& index) { return moves[index]; }
-
-void Algorithm::push_back(const Move& move) { moves.push_back(move); }
-
 static int mergeTurns(
-    std::vector<Move>& moves,
+    Algorithm& moves,
     std::vector<std::pair<int, CubeOrientation>>& previousTurns) {
   // merges any turns resulting from the last element in previousTurns, and
   // updates both vectors returns the number of moves that were cancelled
@@ -100,16 +75,16 @@ static int mergeTurns(
 }
 
 void Algorithm::cancelMoves() {
-  if (moves.empty()) return;
+  if (empty()) return;
 
   // first pass, combine any adjacent CubeRotations with the same RotationAxis
-  for (auto it = moves.begin() + 1; it < moves.end();) {
+  for (auto it = begin() + 1; it < end();) {
     if (!(it - 1)->isTurn && !it->isTurn &&
         (it - 1)->cubeRotation.rotationAxis == it->cubeRotation.rotationAxis) {
       (it - 1)->cubeRotation.rotationAmount =
           (it - 1)->cubeRotation.rotationAmount +
           it->cubeRotation.rotationAmount;
-      it = moves.erase(it);
+      it = erase(it);
     } else
       it++;
   }
@@ -117,11 +92,11 @@ void Algorithm::cancelMoves() {
   std::vector<std::pair<int, CubeOrientation>>
       previousTurns;  // index, CubeOrientation at index
   CubeOrientation orientation = CubeOrientation::identity();
-  for (int index = 0; index < moves.size(); index++) {
-    Move move = moves[index];
+  for (int index = 0; index < size(); index++) {
+    Move move = (*this)[index];
     if (move.isTurn) {
       previousTurns.emplace_back(index, orientation);
-      index -= mergeTurns(moves, previousTurns);
+      index -= mergeTurns(*this, previousTurns);
     } else {
       orientation *= move.cubeRotation;
     }
@@ -137,9 +112,7 @@ static int consumeSeparators(const std::string& alg) {
         consumed++;
         break;
       case '/':
-        while (consumed != alg.size() && alg[consumed] != '\n') {
-          consumed++;
-        }
+        while (consumed != alg.size() && alg[consumed] != '\n') consumed++;
         if (consumed != alg.size())
           consumed++;  // consume the new line character too, if we found it
         break;
@@ -152,7 +125,7 @@ static int consumeSeparators(const std::string& alg) {
 
 Algorithm Algorithm::parse(const std::string& alg) {
   int total_consumed = 0;
-  std::vector<Move> moves;
+  Algorithm moves;
   while (total_consumed < alg.size()) {
     total_consumed += consumeSeparators(
         alg.substr(total_consumed, alg.size() - total_consumed));
@@ -170,7 +143,7 @@ Algorithm Algorithm::parse(const std::string& alg) {
       total_consumed += consumed_for_turn;
     }
   }
-  return Algorithm{moves};
+  return moves;
 }
 
 /**
@@ -225,7 +198,7 @@ static std::tuple<int, Turn, int> parseExpandedTurns(const std::string& str) {
 Algorithm Algorithm::parseExpanded(const std::string& alg) {
   // TODO: reduce code duplication for the parseExpanded functions
   int total_consumed = 0;
-  std::vector<Move> moves;
+  Algorithm moves;
   while (total_consumed < alg.size()) {
     total_consumed += consumeSeparators(
         alg.substr(total_consumed, alg.size() - total_consumed));
@@ -243,7 +216,7 @@ Algorithm Algorithm::parseExpanded(const std::string& alg) {
       total_consumed += consumed_for_turn;
     }
   }
-  return Algorithm{moves};
+  return moves;
 }
 
 std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(
@@ -263,34 +236,32 @@ std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(
 }
 
 Algorithm Algorithm::inv() const {
-  std::vector<Move> inverse_moves(moves.size());
-  std::transform(moves.rbegin(), moves.rend(), inverse_moves.begin(),
+  Algorithm inverse_moves{size()};
+  std::transform(rbegin(), rend(), inverse_moves.begin(),
                  [](const Move& move) { return move.inv(); });
-  return Algorithm{inverse_moves};
+  return inverse_moves;
 }
 
 Algorithm Algorithm::subAlgorithm(const size_t& start,
                                   const size_t& end) const {
-  std::vector<Move> sub_moves(end - start);
-  for (int i = 0; i < sub_moves.size(); i++) {
-    sub_moves[i] = moves[start + i];
-  }
-  return Algorithm{sub_moves};
+  Algorithm sub_moves{end - start};
+  for (size_t i = 0; i < sub_moves.size(); i++)
+    sub_moves[i] = (*this)[start + i];
+  return sub_moves;
 }
 
 Algorithm Algorithm::operator+(const Algorithm& other) const {
-  std::vector<Move> sum_moves(moves.size() + other.moves.size());
-  auto it = std::copy(moves.begin(), moves.end(), sum_moves.begin());
-  std::copy(other.moves.begin(), other.moves.end(), it);
-  return Algorithm{sum_moves};
+  Algorithm sum_moves{size() + other.size()};
+  auto it = std::copy(begin(), end(), sum_moves.begin());
+  std::copy(other.begin(), other.end(), it);
+  return sum_moves;
 }
 
 Algorithm Algorithm::operator*(const size_t& times) const {
-  std::vector<Move> repeated_moves(moves.size() * times);
+  Algorithm repeated_moves{size() * times};
   auto it = repeated_moves.begin();
-  for (size_t i = 0; i < times; i++)
-    it = std::copy(moves.begin(), moves.end(), it);
-  return Algorithm{repeated_moves};
+  for (size_t i = 0; i < times; i++) it = std::copy(begin(), end(), it);
+  return repeated_moves;
 }
 
 Algorithm Algorithm::withSetup(const std::string& setup_alg_string) const {

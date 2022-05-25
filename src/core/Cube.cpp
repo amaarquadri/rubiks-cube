@@ -145,9 +145,7 @@ void Cube::apply(const Move& move) {
 }
 
 void Cube::apply(const Algorithm& algorithm) {
-  for (const Move& move : algorithm.moves) {
-    apply(move);
-  }
+  for (const Move& move : algorithm) apply(move);
 }
 
 void Cube::scramble() {
