@@ -2,6 +2,7 @@
 
 #include "CubeRotation.h"
 #include "Turn.h"
+#include <string>
 
 struct Move {
   bool isTurn;
@@ -22,4 +23,6 @@ struct Move {
   Move& operator=(const Move& other);
 
   [[nodiscard]] Move inv() const;
+
+  [[nodiscard]] std::string toStr() const;
 };

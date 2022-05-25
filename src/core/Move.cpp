@@ -18,3 +18,7 @@ Move Move::inv() const {
     return Move{cubeRotation.inv()};
   }
 }
+
+std::string Move::toStr() const {
+  return isTurn ? turn.toStr() : cubeRotation.toStr();
+}
