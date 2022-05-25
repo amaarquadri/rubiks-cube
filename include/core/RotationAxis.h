@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <string>
+#include <utility>
 
 enum class RotationAxis : uint8_t { X, Y, Z };
 

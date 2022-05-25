@@ -1,8 +1,10 @@
 #pragma once
 
-#include "CubeRotation.h"
 #include "Face.h"
+#include "RotationAxis.h"
+#include <cstddef>
 #include <cstdint>
+#include <string>
 #include <utility>
 
 enum class Slice : uint8_t { M, E, S };

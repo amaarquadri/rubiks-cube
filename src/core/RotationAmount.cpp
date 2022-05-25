@@ -1,5 +1,9 @@
 #include "RotationAmount.h"
+#include <cstddef>
+#include <cstdint>
 #include <stdexcept>
+#include <string>
+#include <utility>
 
 std::string toStr(const RotationAmount& rotationAmount) {
   switch (rotationAmount) {

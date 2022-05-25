@@ -1,6 +1,8 @@
 #include "Colour.h"
+#include "CornerPiece.h"
 #include "Cube.h"
 #include <stdexcept>
+#include <string>
 
 Colour getOpposite(const Colour& colour) {
   switch (colour) {

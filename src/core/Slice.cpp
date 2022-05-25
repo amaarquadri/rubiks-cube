@@ -1,5 +1,10 @@
 #include "Slice.h"
+#include "Face.h"
+#include "RotationAxis.h"
+#include <cstddef>
 #include <stdexcept>
+#include <string>
+#include <utility>
 
 Face getRotationFace(const Slice& slice) {
   switch (slice) {

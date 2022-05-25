@@ -1,7 +1,10 @@
 #include "Face.h"
 #include "CornerLocation.h"
 #include "Cube.h"
+#include <cstddef>
 #include <stdexcept>
+#include <string>
+#include <utility>
 
 Face getOpposite(const Face& face) {
   switch (face) {
