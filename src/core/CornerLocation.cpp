@@ -1,4 +1,5 @@
 #include "CornerLocation.h"
+#include "CornerRotationAmount.h"
 #include <stdexcept>
 
 bool CornerLocation::operator==(const CornerLocation& other) const {

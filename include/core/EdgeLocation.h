@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Face.h"
+#include <cstddef>
 
 struct EdgeLocation {
   Face first;

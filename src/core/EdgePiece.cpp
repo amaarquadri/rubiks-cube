@@ -1,4 +1,5 @@
 #include "EdgePiece.h"
+#include "Colour.h"
 
 EdgePiece::EdgePiece(const EdgePieceProxy& proxy)
     : first(proxy.first()), second(proxy.second()) {}

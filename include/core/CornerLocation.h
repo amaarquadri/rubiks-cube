@@ -2,6 +2,7 @@
 
 #include "CornerRotationAmount.h"
 #include "Face.h"
+#include <cstddef>
 
 struct CornerLocation {
   // must be defined in clockwise order

@@ -2,6 +2,7 @@
 
 #include "Colour.h"
 #include "CornerRotationAmount.h"
+#include <cstddef>
 
 class CornerPieceProxy;
 class ConstCornerPieceProxy;

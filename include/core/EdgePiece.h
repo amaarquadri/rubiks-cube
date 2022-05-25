@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Colour.h"
+#include <cstddef>
 
 class EdgePieceProxy;
 class ConstEdgePieceProxy;

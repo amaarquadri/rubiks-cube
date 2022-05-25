@@ -1,4 +1,5 @@
 #include "CornerRotationAmount.h"
+#include <cstdint>
 
 CornerRotationAmount operator+(const CornerRotationAmount& first,
                                const CornerRotationAmount& second) {

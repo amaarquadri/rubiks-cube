@@ -1,4 +1,6 @@
 #include "CornerPiece.h"
+#include "Colour.h"
+#include "CornerRotationAmount.h"
 #include <stdexcept>
 
 CornerPiece::CornerPiece(const CornerPieceProxy& proxy)
