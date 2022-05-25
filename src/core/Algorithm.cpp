@@ -103,8 +103,8 @@ void Algorithm::cancelMoves() {
   }
 }
 
-static int consumeSeparators(const std::string& alg) {
-  int consumed = 0;
+static size_t consumeSeparators(const std::string& alg) {
+  size_t consumed = 0;
   while (consumed < alg.size()) {
     switch (alg[consumed]) {
       case ' ':
@@ -150,14 +150,14 @@ Algorithm Algorithm::parse(const std::string& alg) {
  * @return Tuple of (number of characters consumed, whether the rotation amount
  * is clockwise, number of rotations)
  */
-static std::tuple<int, bool, unsigned int> parseExpandedRotationAmount(
+static std::tuple<size_t, bool, size_t> parseExpandedRotationAmount(
     const std::string& str) {
   bool clockwise = true;
   unsigned int rotation_amount = 0;
   int consumed = 0;
   for (char chr : str) {
     if (chr >= '0' && chr <= '9') {
-      int digit = chr - '0';
+      const size_t digit = chr - '0';
       rotation_amount = 10 * rotation_amount + digit;
       consumed++;
     } else if (chr == '\'') {
@@ -174,9 +174,10 @@ static std::tuple<int, bool, unsigned int> parseExpandedRotationAmount(
  * @return Tuple of (number of characters consumed, the turn, the number of
  * times the turn should be repeated)
  */
-static std::tuple<int, Turn, int> parseExpandedTurns(const std::string& str) {
+static std::tuple<size_t, Turn, size_t> parseExpandedTurns(
+    const std::string& str) {
+  size_t consumed;
   Turn turn{};
-  int consumed;
   std::tie(consumed, turn.face) = parseFace(str);
   if (consumed == 0) {
     // cannot parse a Face, try parsing a Slice instead
@@ -221,14 +222,13 @@ Algorithm Algorithm::parseExpanded(const std::string& alg) {
 
 std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(
     const std::string& alg) {
-  int scramble_length = 0;
+  size_t scramble_length = 0;
   while (scramble_length < alg.size() && alg[scramble_length] != '\n')
     scramble_length++;
 
-  if (scramble_length == alg.size()) {
+  if (scramble_length == alg.size())
     throw std::invalid_argument(
         "No new line characters! Cannot distinguish scramble from solve");
-  }
 
   return {parse(alg.substr(0, scramble_length)),
           parseExpanded(alg.substr(scramble_length + 1,
