@@ -283,12 +283,11 @@ Algorithm Algorithm::operator+(const Algorithm& other) const {
   return Algorithm{sum_moves};
 }
 
-Algorithm Algorithm::operator*(const int& times) const {
+Algorithm Algorithm::operator*(const size_t& times) const {
   std::vector<Move> repeated_moves(moves.size() * times);
   auto it = repeated_moves.begin();
-  for (int i = 0; i < times; i++) {
+  for (size_t i = 0; i < times; i++)
     it = std::copy(moves.begin(), moves.end(), it);
-  }
   return Algorithm{repeated_moves};
 }
 
