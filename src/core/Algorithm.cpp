@@ -124,24 +124,19 @@ static size_t consumeSeparators(const std::string& alg) {
 }
 
 Algorithm Algorithm::parse(const std::string& alg) {
-  int total_consumed = 0;
-  Algorithm moves;
+  size_t total_consumed = 0;
+  const auto remaining_alg = [&]() {
+    return alg.substr(total_consumed, alg.size() - total_consumed);
+  };
+  Algorithm moves{};
   while (total_consumed < alg.size()) {
-    total_consumed += consumeSeparators(
-        alg.substr(total_consumed, alg.size() - total_consumed));
-    auto [consumed_for_turn, turn] =
-        Turn::parse(alg.substr(total_consumed, alg.size() - total_consumed));
-    if (consumed_for_turn == 0) {
-      // couldn't parse a Turn, try parsing a CubeRotation instead
-      auto [consumed_for_cube_rotation, cubeRotation] = CubeRotation::parse(
-          alg.substr(total_consumed, alg.size() - total_consumed));
-      if (consumed_for_cube_rotation == 0) break;
-      moves.emplace_back(cubeRotation);
-      total_consumed += consumed_for_cube_rotation;
-    } else {
-      moves.emplace_back(turn);
-      total_consumed += consumed_for_turn;
-    }
+    total_consumed += consumeSeparators(remaining_alg());
+    const auto [consumed_for_move, move] = Move::parse(remaining_alg());
+    if (consumed_for_move != 0) {
+      moves.push_back(move);
+      total_consumed += consumed_for_move;
+    } else
+      break;
   }
   return moves;
 }
