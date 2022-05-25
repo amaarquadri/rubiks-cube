@@ -69,7 +69,7 @@ ConstCornerPieceProxy Cube::operator[](
 }
 
 void Cube::apply(const Turn& turn) {
-  if (turn.rotationAmount == RotationAmount::NONE) return;
+  if (turn.rotationAmount == RotationAmount::None) return;
 
   if (turn.is_slice_turn) {
     apply(Turn{getRotationFace(turn.slice), -turn.rotationAmount});
@@ -111,24 +111,24 @@ void Cube::apply(const Turn& turn) {
       break;
   }
   switch (turn.rotationAmount) {
-    case RotationAmount::CLOCKWISE:
+    case RotationAmount::Clockwise:
       cycleEdges<4>({edgeCycle[0], edgeCycle[1], edgeCycle[2], edgeCycle[3]});
       cycleCorners<4>(
           {cornerCycle[0], cornerCycle[1], cornerCycle[2], cornerCycle[3]});
       break;
-    case RotationAmount::COUNTERCLOCKWISE:
+    case RotationAmount::Counterclockwise:
       cycleEdges<4>({edgeCycle[0], edgeCycle[3], edgeCycle[2], edgeCycle[1]});
       cycleCorners<4>(
           {cornerCycle[0], cornerCycle[3], cornerCycle[2], cornerCycle[1]});
       break;
-    case RotationAmount::HALF_TURN:
+    case RotationAmount::HalfTurn:
       cycleEdges<2>({edgeCycle[0], edgeCycle[2]});
       cycleEdges<2>({edgeCycle[1], edgeCycle[3]});
       cycleCorners<2>({cornerCycle[0], cornerCycle[2]});
       cycleCorners<2>({cornerCycle[1], cornerCycle[3]});
       break;
-    case RotationAmount::NONE:
-      throw std::logic_error("turn.rotationAmount became NONE!");
+    case RotationAmount::None:
+      throw std::logic_error("turn.rotationAmount became None!");
   }
 }
 

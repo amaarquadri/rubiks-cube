@@ -3,12 +3,12 @@
 
 std::string toStr(const RotationAmount& rotationAmount) {
   switch (rotationAmount) {
-    case RotationAmount::NONE:
-    case RotationAmount::CLOCKWISE:
+    case RotationAmount::None:
+    case RotationAmount::Clockwise:
       return "";
-    case RotationAmount::HALF_TURN:
+    case RotationAmount::HalfTurn:
       return "2";
-    case RotationAmount::COUNTERCLOCKWISE:
+    case RotationAmount::Counterclockwise:
       return "'";
     default:
       throw std::logic_error("Unknown enum value!");
@@ -40,7 +40,7 @@ RotationAmount operator-(const RotationAmount& rotation_amount) {
 }
 
 std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
-  int rotation_amount = 1;  // default to a single CLOCKWISE RotationAmount
+  int rotation_amount = 1;  // default to a single Clockwise RotationAmount
   int consumed = 0;
   for (const char& chr : str) {
     if (chr >= '0' && chr <= '9') {
@@ -59,13 +59,13 @@ std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
   switch (rotation_amount) {
     case 0:
       return {consumed,
-              consumed == 0 ? RotationAmount::CLOCKWISE : RotationAmount::NONE};
+              consumed == 0 ? RotationAmount::Clockwise : RotationAmount::None};
     case 1:
-      return {consumed, RotationAmount::CLOCKWISE};
+      return {consumed, RotationAmount::Clockwise};
     case 2:
-      return {consumed, RotationAmount::HALF_TURN};
+      return {consumed, RotationAmount::HalfTurn};
     case 3:
-      return {consumed, RotationAmount::COUNTERCLOCKWISE};
+      return {consumed, RotationAmount::Counterclockwise};
     default:
       throw std::runtime_error("Impossible result mod 4!");
   }

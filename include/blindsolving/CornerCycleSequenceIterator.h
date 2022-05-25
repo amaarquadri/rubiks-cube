@@ -26,7 +26,7 @@ class CornerCycleSequenceIterator {
    * @param rotation_amounts The CornerRotationAmount that must be applied to
    * the first element of a cycle to get the last element of that cycle. For
    * example, if 'B' is the first element of a cycle and the corresponding
-   * CornerRotationAmount is CLOCKWISE, then it will result in 'M' being the
+   * CornerRotationAmount is Clockwise, then it will result in 'M' being the
    * last element of the cycle.
    */
   CornerCycleSequenceIterator(

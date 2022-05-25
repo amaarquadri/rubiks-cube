@@ -15,7 +15,7 @@ Face getRotationFace(const Slice& slice);
 
 /**
  * @brief Computes the RotationAxis that results from applying this Slice with a
- * RotationAmount of CLOCKWISE If the bool is true, then the RotationAxis is in
+ * RotationAmount of Clockwise If the bool is true, then the RotationAxis is in
  * the opposite direction
  */
 std::pair<RotationAxis, bool> getRotationAxis(const Slice& slice);
