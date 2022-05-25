@@ -25,4 +25,11 @@ struct Move {
   [[nodiscard]] Move inv() const;
 
   [[nodiscard]] std::string toStr() const;
+
+  /**
+   * @brief Returns the number of characters consumed and the parsed Move. If it
+   * was not possible to parse a Move, then the number of characters consumed
+   * will be zero.
+   */
+  static std::pair<size_t, Move> parse(const std::string& str);
 };
