@@ -56,7 +56,7 @@ std::string toStr(const Face& face) {
 
 std::pair<size_t, Face> parseFace(const std::string& str) {
   if (str.empty()) return {0, {}};
-  char first_char = str[0];
+  const char& first_char = str[0];
   if (first_char == 'U')
     return {1, Face::U};
   else if (first_char == 'F')
