@@ -5,6 +5,7 @@
 #include <utility>
 #include <vector>
 
+// TODO: replace composition with inheritance
 struct Algorithm {
   std::vector<Move> moves;
 
