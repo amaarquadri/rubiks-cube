@@ -23,12 +23,12 @@ std::pair<size_t, Turn> Turn::parse(const std::string& str) {
     std::tie(consumed, slice) = parseSlice(str);
     if (consumed == 0) {
       // not possible to parse
-      return {0, Turn{Face{}, {}}};
+      return {0, {}};
     }
     is_slice_turn = true;
   }
   std::string remaining = str.substr(consumed, str.size() - consumed);
-  auto [consumed_for_rotation_amount, rotation_amount] =
+  const auto [consumed_for_rotation_amount, rotation_amount] =
       parseRotationAmount(remaining);
   return {consumed + consumed_for_rotation_amount,
           is_slice_turn ? Turn{slice, rotation_amount}
