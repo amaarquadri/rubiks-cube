@@ -3,11 +3,12 @@
 #include <algorithm>
 #include <array>
 #include <cstdint>
-#include <exception>
+#include <numeric>
 #include <random>
+#include <stdexcept>
 #include <utility>
 
-template <int n>
+template <size_t n>
 class Permutation {
  private:
   std::array<uint8_t, n> values;
@@ -20,7 +21,7 @@ class Permutation {
   static Permutation<n> randomPermutation(URNG&& g) {
     if (n < 2) throw std::invalid_argument("Error: n < 2");
     std::array<uint8_t, n> values;
-    for (size_t i = 0; i < n; i++) values[i] = i;
+    std::iota(values.begin(), values.end(), 0);
     std::shuffle(values.begin(), values.end(), g);
     return Permutation{values};
   }
@@ -28,7 +29,7 @@ class Permutation {
   [[nodiscard]] bool isOdd() const {
     std::array<bool, n> visited{};
     bool parity = false;
-    for (int startingIndex = 0; startingIndex < n; startingIndex++) {
+    for (size_t startingIndex = 0; startingIndex < n; startingIndex++) {
       if (!visited[startingIndex]) {
         visited[startingIndex] = true;
         uint8_t cycle_index = values[startingIndex];
@@ -48,8 +49,8 @@ class Permutation {
 
   template <typename T>
   std::array<T, n> apply(const std::array<T, n>& items) const {
-    std::array<T, n> permutedItems;
-    for (size_t i = 0; i < n; i++) permutedItems[i] = items[values[i]];
-    return permutedItems;
+    std::array<T, n> permuted_items;
+    for (size_t i = 0; i < n; i++) permuted_items[i] = items[values[i]];
+    return permuted_items;
   }
 };
