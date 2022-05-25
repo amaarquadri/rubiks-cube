@@ -187,8 +187,8 @@ static std::tuple<int, Turn, int> parseExpandedTurns(const std::string& str) {
     }
     turn.is_slice_turn = true;
   }
-  std::string remaining = str.substr(consumed, str.size() - consumed);
-  auto [consumed_for_rotation_amount, clockwise, rotation_amount] =
+  const std::string remaining = str.substr(consumed, str.size() - consumed);
+  const auto [consumed_for_rotation_amount, clockwise, rotation_amount] =
       parseExpandedRotationAmount(remaining);
   turn.rotationAmount =
       clockwise ? RotationAmount::Clockwise : RotationAmount::Counterclockwise;
