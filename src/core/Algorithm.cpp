@@ -147,10 +147,10 @@ Algorithm Algorithm::parse(const std::string& alg) {
  */
 static std::tuple<size_t, bool, size_t> parseExpandedRotationAmount(
     const std::string& str) {
+  size_t consumed = 0;
   bool clockwise = true;
-  unsigned int rotation_amount = 0;
-  int consumed = 0;
-  for (char chr : str) {
+  size_t rotation_amount = 0;
+  for (const char& chr : str) {
     if (chr >= '0' && chr <= '9') {
       const size_t digit = chr - '0';
       rotation_amount = 10 * rotation_amount + digit;
@@ -177,10 +177,7 @@ static std::tuple<size_t, Turn, size_t> parseExpandedTurns(
   if (consumed == 0) {
     // cannot parse a Face, try parsing a Slice instead
     std::tie(consumed, turn.slice) = parseSlice(str);
-    if (consumed == 0) {
-      // not possible to parse
-      return {0, turn, 0};
-    }
+    if (consumed == 0) return {0, turn, 0};  // not possible to parse
     turn.is_slice_turn = true;
   }
   const std::string remaining = str.substr(consumed, str.size() - consumed);
