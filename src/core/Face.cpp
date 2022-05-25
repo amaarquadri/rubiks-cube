@@ -26,7 +26,7 @@ Face getOpposite(const Face& face) {
 }
 
 Face getLeft(const Face& top, const Face& front) {
-  for (CornerLocation corner : Cube::CORNER_LOCATION_ORDER) {
+  for (const CornerLocation& corner : Cube::CORNER_LOCATION_ORDER) {
     if (top == corner.first && front == corner.second) return corner.third;
     if (top == corner.second && front == corner.third) return corner.first;
     if (top == corner.third && front == corner.first) return corner.second;
