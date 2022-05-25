@@ -75,8 +75,8 @@ void Cube::apply(const Turn& turn) {
     apply(Turn{getRotationFace(turn.slice), -turn.rotationAmount});
     apply(Turn{getOpposite(getRotationFace(turn.slice)), turn.rotationAmount});
     auto [rotationAxis, reverse] = getRotationAxis(turn.slice);
-    apply(CubeRotation{rotationAxis, reverse ? -turn.rotationAmount
-                                             : turn.rotationAmount});
+    apply(CubeRotation{rotationAxis,
+                       reverse ? -turn.rotationAmount : turn.rotationAmount});
     return;
   }
 
