@@ -24,7 +24,7 @@ struct Algorithm : public std::vector<Move> {
   static Algorithm parse(const std::string& alg);
 
   /**
-   * @brief Parses the provided string, breaking apart all moves into half
+   * @brief Parses the provided string, breaking apart all moves into quarter
    * turns.
    */
   static Algorithm parseExpanded(const std::string& alg);
