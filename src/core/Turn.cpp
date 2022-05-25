@@ -2,8 +2,8 @@
 #include <tuple>
 
 Turn Turn::inv() const {
-  return is_slice_turn ? Turn{slice, ::inv(rotationAmount)}
-                       : Turn{face, ::inv(rotationAmount)};
+  return is_slice_turn ? Turn{slice, -rotationAmount}
+                       : Turn{face, -rotationAmount};
 }
 
 std::string Turn::toStr() const {

@@ -12,12 +12,16 @@ enum class RotationAmount : uint8_t {
   COUNTERCLOCKWISE
 };
 
-RotationAmount inv(const RotationAmount& rotationAmount);
-
 std::string toStr(const RotationAmount& rotationAmount);
 
 RotationAmount operator+(const RotationAmount& first,
                          const RotationAmount& second);
+
+RotationAmount operator-(const RotationAmount& first, const RotationAmount& second);
+
+RotationAmount operator+(const RotationAmount& rotation_amount);
+
+RotationAmount operator-(const RotationAmount& rotation_amount);
 
 /**
  * @brief Returns the number of characters consumed and the parsed

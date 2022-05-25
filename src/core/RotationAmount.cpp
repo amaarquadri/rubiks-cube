@@ -1,21 +1,6 @@
 #include "RotationAmount.h"
 #include <stdexcept>
 
-RotationAmount inv(const RotationAmount& rotationAmount) {
-  switch (rotationAmount) {
-    case RotationAmount::NONE:
-      return RotationAmount::NONE;
-    case RotationAmount::CLOCKWISE:
-      return RotationAmount::COUNTERCLOCKWISE;
-    case RotationAmount::HALF_TURN:
-      return RotationAmount::HALF_TURN;
-    case RotationAmount::COUNTERCLOCKWISE:
-      return RotationAmount::CLOCKWISE;
-    default:
-      throw std::logic_error("Unknown enum value!");
-  }
-}
-
 std::string toStr(const RotationAmount& rotationAmount) {
   switch (rotationAmount) {
     case RotationAmount::NONE:
@@ -32,9 +17,26 @@ std::string toStr(const RotationAmount& rotationAmount) {
 
 RotationAmount operator+(const RotationAmount& first,
                          const RotationAmount& second) {
-  uint8_t clockwiseTurns =
+  const uint8_t clockwise_turns =
       (static_cast<uint8_t>(first) + static_cast<uint8_t>(second)) % 4;
-  return static_cast<RotationAmount>(clockwiseTurns);
+  return static_cast<RotationAmount>(clockwise_turns);
+}
+
+RotationAmount operator-(const RotationAmount& first,
+                         const RotationAmount& second) {
+  const uint8_t clockwise_turns =
+      (4 + static_cast<uint8_t>(first) - static_cast<uint8_t>(second)) % 4;
+  return static_cast<RotationAmount>(clockwise_turns);
+}
+
+RotationAmount operator+(const RotationAmount& rotation_amount) {
+  return rotation_amount;
+}
+
+RotationAmount operator-(const RotationAmount& rotation_amount) {
+  const uint8_t clockwise_turns =
+      (4 - static_cast<uint8_t>(rotation_amount)) % 4;
+  return static_cast<RotationAmount>(clockwise_turns);
 }
 
 std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
