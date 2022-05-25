@@ -40,23 +40,23 @@ RotationAmount operator-(const RotationAmount& rotation_amount) {
 }
 
 std::pair<int, RotationAmount> parseRotationAmount(const std::string& str) {
-  int rotationAmount = 1;  // default to a single CLOCKWISE RotationAmount
+  int rotation_amount = 1;  // default to a single CLOCKWISE RotationAmount
   int consumed = 0;
   for (const char& chr : str) {
     if (chr >= '0' && chr <= '9') {
       int digit = chr - '0';
-      rotationAmount =
-          consumed == 0 ? digit % 4 : (2 * rotationAmount + digit) % 4;
+      rotation_amount =
+          consumed == 0 ? digit % 4 : (2 * rotation_amount + digit) % 4;
       consumed++;
     } else if (chr == '\'') {
-      rotationAmount = (4 - rotationAmount) % 4;
+      rotation_amount = (4 - rotation_amount) % 4;
       consumed++;
       break;
     } else
       break;
   }
 
-  switch (rotationAmount) {
+  switch (rotation_amount) {
     case 0:
       return {consumed,
               consumed == 0 ? RotationAmount::CLOCKWISE : RotationAmount::NONE};
