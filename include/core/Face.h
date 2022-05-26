@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RotationAxis.h"
 #include <cstddef>
 #include <cstdint>
 #include <string>
@@ -13,6 +14,13 @@ Face getLeft(const Face& top, const Face& front);
 
 Face getRight(const Face& top, const Face& right);
 
+/**
+ * @brief Computes the RotationAxis that results from applying a wide turn on
+ * this Face with a RotationAmount of Clockwise. If the bool is true, then the
+ * RotationAxis is in the opposite direction.
+ */
+std::pair<RotationAxis, bool> getRotationAxis(const Face& face);
+
 std::string toStr(const Face& face);
 
 /**
@@ -21,3 +29,5 @@ std::string toStr(const Face& face);
  * be zero.
  */
 std::pair<size_t, Face> parseFace(const std::string& str);
+
+std::pair<size_t, Face> parseWideFace(const std::string& str);

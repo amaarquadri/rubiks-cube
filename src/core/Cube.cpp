@@ -71,6 +71,14 @@ ConstCornerPieceProxy Cube::operator[](
 void Cube::apply(const Turn& turn) {
   if (turn.rotationAmount == RotationAmount::None) return;
 
+  if (turn.is_wide_turn) {
+    apply(Turn{getOpposite(turn.face), turn.rotationAmount});
+    const auto [rotation_axis, reverse] = getRotationAxis(turn.face);
+    apply(CubeRotation{rotation_axis,
+                       reverse ? -turn.rotationAmount : turn.rotationAmount});
+    return;
+  }
+
   if (turn.is_slice_turn) {
     apply(Turn{getRotationFace(turn.slice), -turn.rotationAmount});
     apply(Turn{getOpposite(getRotationFace(turn.slice)), turn.rotationAmount});

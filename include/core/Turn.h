@@ -7,6 +7,8 @@
 #include <utility>
 
 struct Turn {
+  // only one of the following two flags can be true
+  bool is_wide_turn;
   bool is_slice_turn;
   union {
     Face face;
@@ -15,13 +17,28 @@ struct Turn {
   RotationAmount rotationAmount;
 
   Turn()
-      : is_slice_turn(false), face(Face{}), rotationAmount(RotationAmount{}) {}
+      : is_wide_turn(false),
+        is_slice_turn(false),
+        face(Face{}),
+        rotationAmount(RotationAmount{}) {}
 
   Turn(const Face& face, const RotationAmount& rotationAmount)
-      : is_slice_turn(false), face(face), rotationAmount(rotationAmount) {}
+      : is_wide_turn(false),
+        is_slice_turn(false),
+        face(face),
+        rotationAmount(rotationAmount) {}
 
   Turn(const Slice& slice, const RotationAmount& rotationAmount)
-      : is_slice_turn(true), slice(slice), rotationAmount(rotationAmount) {}
+      : is_wide_turn(false),
+        is_slice_turn(true),
+        slice(slice),
+        rotationAmount(rotationAmount) {}
+
+  static Turn makeWide(const Face& face, const RotationAmount& rotation_amount) {
+    Turn t{face, rotation_amount};
+    t.is_wide_turn = true;
+    return t;
+  }
 
   [[nodiscard]] Turn inv() const;
 

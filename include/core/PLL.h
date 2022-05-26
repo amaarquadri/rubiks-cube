@@ -20,11 +20,11 @@ const Algorithm F_PERM =
 const Algorithm Ga_PERM =
     Algorithm::parse("R2 U R' U R' U' R U' R2 D U' R' U R D' U'");
 const Algorithm Gb_PERM =
-    Algorithm::parse("R' U' R Y R2 D Y R' U R U' R D' Y' R2");
+    Algorithm::parse("R' U' R Y R2 u R' U R U' R u' R2");
 const Algorithm Gc_PERM =
     Algorithm::parse("R2 F2 R U2 R U2 R' F R U R' U' R' F R2");
 const Algorithm Gd_PERM =
-    Algorithm::parse("R U R' Y' R2 D' Y' R U' R' U R' D Y R2");
+    Algorithm::parse("R U R' Y' R2 u' R U' R' U R' u R2");
 const Algorithm Ja_PERM = Algorithm::parse("L' U2 L U L' U2 R U' L U R'");
 const Algorithm Jb_PERM =
     Algorithm::parse("R U R' F' R U R' U' R' F R2 U' R' U'");
@@ -37,6 +37,6 @@ const Algorithm Rb_PERM =
 const Algorithm T_PERM =
     Algorithm::parse("R U R' U' R' F R2 U' R' U' R U R' F'");
 const Algorithm V_PERM =
-    Algorithm::parse("R' U R' U' Y R' F' R2 U' R' U R' F R F");
+    Algorithm::parse("R' U R' d' R' F' R2 U' R' U R' F R F");
 const Algorithm Y_PERM =
     Algorithm::parse("F R U' R' U' R U R' F' R U R' U' R' F R F'");
