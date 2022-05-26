@@ -37,8 +37,8 @@ static int mergeTurns(
 
   if (original_last_turn.face == original_second_last_turn.face) {
     RotationAmount new_rotation_amount =
-        original_second_last_turn.rotationAmount +
-        original_last_turn.rotationAmount;
+        original_second_last_turn.rotation_amount +
+        original_last_turn.rotation_amount;
     if (new_rotation_amount == RotationAmount::None) {
       // remove both moves from moves and previousTurns
       moves.erase(moves.begin() + last_pair.first);
@@ -48,7 +48,7 @@ static int mergeTurns(
       return 2;
     } else {
       // update moves
-      moves[second_last_pair.first].turn.rotationAmount = new_rotation_amount;
+      moves[second_last_pair.first].turn.rotation_amount = new_rotation_amount;
       // remove second move from moves and previousTurns
       moves.erase(moves.begin() + last_pair.first);
       previousTurns.erase(previousTurns.end() - 1);
@@ -183,7 +183,7 @@ static std::tuple<size_t, Turn, size_t> parseExpandedTurns(
   const std::string remaining = str.substr(consumed, str.size() - consumed);
   const auto [consumed_for_rotation_amount, clockwise, rotation_amount] =
       parseExpandedRotationAmount(remaining);
-  turn.rotationAmount =
+  turn.rotation_amount =
       clockwise ? RotationAmount::Clockwise : RotationAmount::Counterclockwise;
   return {consumed + consumed_for_rotation_amount, turn, rotation_amount};
 }

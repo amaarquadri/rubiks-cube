@@ -14,25 +14,25 @@ struct Turn {
     Face face;
     Slice slice;
   };
-  RotationAmount rotationAmount;
+  RotationAmount rotation_amount;
 
   Turn()
       : is_wide_turn(false),
         is_slice_turn(false),
         face(Face{}),
-        rotationAmount(RotationAmount{}) {}
+        rotation_amount(RotationAmount{}) {}
 
   Turn(const Face& face, const RotationAmount& rotationAmount)
       : is_wide_turn(false),
         is_slice_turn(false),
         face(face),
-        rotationAmount(rotationAmount) {}
+        rotation_amount(rotationAmount) {}
 
   Turn(const Slice& slice, const RotationAmount& rotationAmount)
       : is_wide_turn(false),
         is_slice_turn(true),
         slice(slice),
-        rotationAmount(rotationAmount) {}
+        rotation_amount(rotationAmount) {}
 
   static Turn makeWide(const Face& face, const RotationAmount& rotation_amount) {
     Turn t{face, rotation_amount};

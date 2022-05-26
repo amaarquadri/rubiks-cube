@@ -2,8 +2,8 @@
 #include <tuple>
 
 Turn Turn::inv() const {
-  return is_slice_turn ? Turn{slice, -rotationAmount}
-                       : Turn{face, -rotationAmount};
+  return is_slice_turn ? Turn{slice, -rotation_amount}
+                       : Turn{face, -rotation_amount};
 }
 
 std::string Turn::toStr() const {
@@ -11,7 +11,7 @@ std::string Turn::toStr() const {
   // of recursion Not sure why this is needed since the functions have different
   // signatures
   return (is_slice_turn ? ::toStr(slice) : ::toStr(face)) +
-         ::toStr(rotationAmount);
+         ::toStr(rotation_amount);
 }
 
 std::pair<size_t, Turn> Turn::parse(const std::string& str) {

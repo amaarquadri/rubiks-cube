@@ -83,9 +83,9 @@ Turn CubeOrientation::apply(const Turn& turn) const {
   if (turn.is_slice_turn) {
     auto [new_slice, reversed] = apply(turn.slice);
     return Turn{new_slice,
-                reversed ? -turn.rotationAmount : turn.rotationAmount};
+                reversed ? -turn.rotation_amount : turn.rotation_amount};
   } else {
-    return Turn{apply(turn.face), turn.rotationAmount};
+    return Turn{apply(turn.face), turn.rotation_amount};
   }
 }
 

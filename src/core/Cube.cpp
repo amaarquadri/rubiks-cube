@@ -69,74 +69,76 @@ ConstCornerPieceProxy Cube::operator[](
 }
 
 void Cube::apply(const Turn& turn) {
-  if (turn.rotationAmount == RotationAmount::None) return;
+  if (turn.rotation_amount == RotationAmount::None) return;
 
   if (turn.is_wide_turn) {
-    apply(Turn{getOpposite(turn.face), turn.rotationAmount});
+    apply(Turn{getOpposite(turn.face), turn.rotation_amount});
     const auto [rotation_axis, reverse] = getRotationAxis(turn.face);
     apply(CubeRotation{rotation_axis,
-                       reverse ? -turn.rotationAmount : turn.rotationAmount});
+                       reverse ? -turn.rotation_amount : turn.rotation_amount});
     return;
   }
 
   if (turn.is_slice_turn) {
-    apply(Turn{getRotationFace(turn.slice), -turn.rotationAmount});
-    apply(Turn{getOpposite(getRotationFace(turn.slice)), turn.rotationAmount});
-    auto [rotationAxis, reverse] = getRotationAxis(turn.slice);
-    apply(CubeRotation{rotationAxis,
-                       reverse ? -turn.rotationAmount : turn.rotationAmount});
+    apply(Turn{getRotationFace(turn.slice), -turn.rotation_amount});
+    apply(Turn{getOpposite(getRotationFace(turn.slice)), turn.rotation_amount});
+    const auto [rotation_axis, reverse] = getRotationAxis(turn.slice);
+    apply(CubeRotation{rotation_axis,
+                       reverse ? -turn.rotation_amount : turn.rotation_amount});
     return;
   }
 
-  std::array<EdgeLocation, 4> edgeCycle{};
-  std::array<CornerLocation, 4> cornerCycle{};
+  std::array<EdgeLocation, 4> edge_cycle{};
+  std::array<CornerLocation, 4> corner_cycle{};
 
   using Face::U, Face::F, Face::R, Face::B, Face::L, Face::D;
   switch (orientation.apply(turn.face)) {
     case U:
-      edgeCycle = {{{U, B}, {U, R}, {U, F}, {U, L}}};
-      cornerCycle = {{{U, L, B}, {U, B, R}, {U, R, F}, {U, F, L}}};
+      edge_cycle = {{{U, B}, {U, R}, {U, F}, {U, L}}};
+      corner_cycle = {{{U, L, B}, {U, B, R}, {U, R, F}, {U, F, L}}};
       break;
     case F:
-      edgeCycle = {{{F, U}, {F, R}, {F, D}, {F, L}}};
-      cornerCycle = {{{F, L, U}, {F, U, R}, {F, R, D}, {F, D, L}}};
+      edge_cycle = {{{F, U}, {F, R}, {F, D}, {F, L}}};
+      corner_cycle = {{{F, L, U}, {F, U, R}, {F, R, D}, {F, D, L}}};
       break;
     case R:
-      edgeCycle = {{{R, U}, {R, B}, {R, D}, {R, F}}};
-      cornerCycle = {{{R, F, U}, {R, U, B}, {R, B, D}, {R, D, F}}};
+      edge_cycle = {{{R, U}, {R, B}, {R, D}, {R, F}}};
+      corner_cycle = {{{R, F, U}, {R, U, B}, {R, B, D}, {R, D, F}}};
       break;
     case B:
-      edgeCycle = {{{B, U}, {B, L}, {B, D}, {B, R}}};
-      cornerCycle = {{{B, R, U}, {B, U, L}, {B, L, D}, {B, D, R}}};
+      edge_cycle = {{{B, U}, {B, L}, {B, D}, {B, R}}};
+      corner_cycle = {{{B, R, U}, {B, U, L}, {B, L, D}, {B, D, R}}};
       break;
     case L:
-      edgeCycle = {{{L, U}, {L, F}, {L, D}, {L, B}}};
-      cornerCycle = {{{L, B, U}, {L, U, F}, {L, F, D}, {L, D, B}}};
+      edge_cycle = {{{L, U}, {L, F}, {L, D}, {L, B}}};
+      corner_cycle = {{{L, B, U}, {L, U, F}, {L, F, D}, {L, D, B}}};
       break;
     case D:
-      edgeCycle = {{{D, F}, {D, R}, {D, B}, {D, L}}};
-      cornerCycle = {{{D, L, F}, {D, F, R}, {D, R, B}, {D, B, L}}};
+      edge_cycle = {{{D, F}, {D, R}, {D, B}, {D, L}}};
+      corner_cycle = {{{D, L, F}, {D, F, R}, {D, R, B}, {D, B, L}}};
       break;
   }
-  switch (turn.rotationAmount) {
+  switch (turn.rotation_amount) {
     case RotationAmount::Clockwise:
-      cycleEdges<4>({edgeCycle[0], edgeCycle[1], edgeCycle[2], edgeCycle[3]});
+      cycleEdges<4>(
+          {edge_cycle[0], edge_cycle[1], edge_cycle[2], edge_cycle[3]});
       cycleCorners<4>(
-          {cornerCycle[0], cornerCycle[1], cornerCycle[2], cornerCycle[3]});
+          {corner_cycle[0], corner_cycle[1], corner_cycle[2], corner_cycle[3]});
       break;
     case RotationAmount::Counterclockwise:
-      cycleEdges<4>({edgeCycle[0], edgeCycle[3], edgeCycle[2], edgeCycle[1]});
+      cycleEdges<4>(
+          {edge_cycle[0], edge_cycle[3], edge_cycle[2], edge_cycle[1]});
       cycleCorners<4>(
-          {cornerCycle[0], cornerCycle[3], cornerCycle[2], cornerCycle[1]});
+          {corner_cycle[0], corner_cycle[3], corner_cycle[2], corner_cycle[1]});
       break;
     case RotationAmount::HalfTurn:
-      cycleEdges<2>({edgeCycle[0], edgeCycle[2]});
-      cycleEdges<2>({edgeCycle[1], edgeCycle[3]});
-      cycleCorners<2>({cornerCycle[0], cornerCycle[2]});
-      cycleCorners<2>({cornerCycle[1], cornerCycle[3]});
+      cycleEdges<2>({edge_cycle[0], edge_cycle[2]});
+      cycleEdges<2>({edge_cycle[1], edge_cycle[3]});
+      cycleCorners<2>({corner_cycle[0], corner_cycle[2]});
+      cycleCorners<2>({corner_cycle[1], corner_cycle[3]});
       break;
     case RotationAmount::None:
-      throw std::logic_error("turn.rotationAmount became None!");
+      throw std::logic_error("turn.rotation_amount became None!");
   }
 }
 
