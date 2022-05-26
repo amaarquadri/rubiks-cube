@@ -25,6 +25,7 @@ class CycleSequenceIterator {
  public:
   CycleSequenceIterator(const std::vector<std::vector<T>>& cycles)
       : cycles(cycles), current(std::vector<std::vector<T>>{cycles.size()}) {
+    if (cycles.empty()) return;
     permutation.reserve(cycles.size());
     counters.reserve(cycles.size());
     const size_t max_cycle_length =
