@@ -4,6 +4,7 @@
 #include "tests/blindsolving/TestCornerCycleSequenceIterator.h"
 #include "tests/blindsolving/TestEdgeCycleSequenceIterator.h"
 #include "tests/blindsolving/TestReconstructionIterator.h"
+#include "tests/core/TestPLLs.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -15,14 +16,19 @@ static std::pair<Algorithm, Algorithm> loadInput(const std::string& file_name) {
   return Algorithm::parseScrambleSolve(buffer.str());
 }
 
+template <size_t count = 1>
 static void runTests() {
-  Cube cube{};
-  cube.scramble();
-
+  testPLLs();
   testBlindsolvingMoveHash();
   testEdgeCycleSequenceIterator();
   testCornerCycleSequenceIterator();
-  testReconstructionIterator(cube);
+
+  for (size_t i = 0; i < count; ++i) {
+    Cube cube{};
+    cube.scramble();
+    testReconstructionIterator(cube);
+  }
+
   std::cout << "Passed all tests!\n";
 }
 
@@ -45,7 +51,7 @@ static void viewReconstruction(const std::string& file_name) {
 }
 
 int main() {
-  runTests();
+  runTests<10>();
   viewReconstruction("tests/blindsolve3.txt");
   return 0;
 }
