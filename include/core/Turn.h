@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Face.h"
+#include "RandomUtils.h"
 #include "RotationAmount.h"
 #include "Slice.h"
 #include <string>
@@ -39,6 +40,16 @@ struct Turn {
     Turn t{face, rotation_amount};
     t.is_wide_turn = true;
     return t;
+  }
+
+  /**
+   * @return A random Turn that is neither a slice turn nor a wide turn.
+   */
+  static Turn random() {
+    const uint8_t rand = utility::randomInt<18>();
+    return Turn{static_cast<Face>(rand % 6),
+                // add 1 to exclude RotationAmount::None
+                static_cast<RotationAmount>(1 + rand / 6)};
   }
 
   [[nodiscard]] constexpr Turn inv() const {
