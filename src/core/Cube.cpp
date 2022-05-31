@@ -127,9 +127,9 @@ void Cube::apply(const Turn& turn) {
       break;
     case RotationAmount::Counterclockwise:
       cycleEdges<4>(
-          {edge_cycle[0], edge_cycle[3], edge_cycle[2], edge_cycle[1]});
+          {edge_cycle[3], edge_cycle[2], edge_cycle[1], edge_cycle[0]});
       cycleCorners<4>(
-          {corner_cycle[0], corner_cycle[3], corner_cycle[2], corner_cycle[1]});
+          {corner_cycle[3], corner_cycle[2], corner_cycle[1], corner_cycle[0]});
       break;
     case RotationAmount::HalfTurn:
       cycleEdges<2>({edge_cycle[0], edge_cycle[2]});
