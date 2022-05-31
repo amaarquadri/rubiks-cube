@@ -13,7 +13,6 @@ add_executable(rubiks_cube
         src/core/Colour.cpp
         src/core/CornerLocation.cpp
         src/core/CornerPiece.cpp
-        src/core/CornerRotationAmount.cpp
         src/core/Cube.cpp
         src/core/CubeOrientation.cpp
         src/core/CubeRotation.cpp
