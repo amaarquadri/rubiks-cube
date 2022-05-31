@@ -19,30 +19,6 @@ std::string toStr(const RotationAmount& rotationAmount) {
   }
 }
 
-constexpr RotationAmount operator+(const RotationAmount& first,
-                                   const RotationAmount& second) {
-  const uint8_t clockwise_turns =
-      (static_cast<uint8_t>(first) + static_cast<uint8_t>(second)) % 4;
-  return static_cast<RotationAmount>(clockwise_turns);
-}
-
-constexpr RotationAmount operator-(const RotationAmount& first,
-                                   const RotationAmount& second) {
-  const uint8_t clockwise_turns =
-      (4 + static_cast<uint8_t>(first) - static_cast<uint8_t>(second)) % 4;
-  return static_cast<RotationAmount>(clockwise_turns);
-}
-
-constexpr RotationAmount operator+(const RotationAmount& rotation_amount) {
-  return rotation_amount;
-}
-
-constexpr RotationAmount operator-(const RotationAmount& rotation_amount) {
-  const uint8_t clockwise_turns =
-      (4 - static_cast<uint8_t>(rotation_amount)) % 4;
-  return static_cast<RotationAmount>(clockwise_turns);
-}
-
 std::pair<size_t, RotationAmount> parseRotationAmount(const std::string& str) {
   size_t consumed = 0;
   size_t rotation_amount = 1;  // default to a single Clockwise RotationAmount
