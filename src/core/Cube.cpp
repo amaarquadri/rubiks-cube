@@ -1,21 +1,9 @@
 #include "Cube.h"
 #include "Permutation.h"
+#include "RandomUtils.h"
 #include <array>
-#include <chrono>
-#include <random>
 #include <stdexcept>
 #include <string>
-
-static const unsigned seed =  // NOLINT(cert-err58-cpp)
-    std::chrono::system_clock::now().time_since_epoch().count();
-static auto random_engine =  // NOLINT(cert-err58-cpp)
-    std::default_random_engine(seed);
-static std::uniform_int_distribution<uint8_t>
-    bool_distribution  // NOLINT(cert-err58-cpp)
-    (0, 1);
-static std::uniform_int_distribution<uint8_t>
-    three_distribution  // NOLINT(cert-err58-cpp)
-    (0, 2);
 
 EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
   const EdgeLocation flipped_location = edge_location.flip();
@@ -160,11 +148,10 @@ void Cube::apply(const Algorithm& algorithm) {
 
 void Cube::scramble() {
   const auto edge_permutation =
-      Permutation<EDGE_LOCATION_ORDER.size()>::randomPermutation(random_engine);
+      Permutation<EDGE_LOCATION_ORDER.size()>::randomPermutation();
   const auto corner_permutation = [&]() {
     auto corner_perm =
-        Permutation<CORNER_LOCATION_ORDER.size()>::randomPermutation(
-            random_engine);
+        Permutation<CORNER_LOCATION_ORDER.size()>::randomPermutation();
     if (edge_permutation.isOdd() != corner_perm.isOdd())
       corner_perm.flipParity();
     return corner_perm;
@@ -175,7 +162,7 @@ void Cube::scramble() {
 
   bool edge_flip_parity = false;
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; i++) {
-    if (bool_distribution(random_engine)) {
+    if (utility::randomBool()) {
       edges[i] = edges[i].flip();
       edge_flip_parity = !edge_flip_parity;
     }
@@ -184,7 +171,7 @@ void Cube::scramble() {
 
   uint8_t corner_rotation_parity = 0;
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; i++) {
-    const uint8_t rotation = three_distribution(random_engine);
+    const uint8_t rotation = utility::randomInt<3>();
     if (rotation == 1)
       corners[i] = corners[i].rotateClockwise();
     else if (rotation == 2)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "RandomUtils.h"
 #include <algorithm>
 #include <array>
 #include <cstdint>
@@ -17,12 +18,11 @@ class Permutation {
       : values(std::move(values)) {}
 
  public:
-  template <typename URNG>
-  static Permutation<n> randomPermutation(URNG&& g) {
+  static Permutation<n> randomPermutation() {
     if (n < 2) throw std::invalid_argument("Error: n < 2");
     std::array<uint8_t, n> values;
     std::iota(values.begin(), values.end(), 0);
-    std::shuffle(values.begin(), values.end(), g);
+    std::shuffle(values.begin(), values.end(), utility::random_engine);
     return Permutation{values};
   }
 
