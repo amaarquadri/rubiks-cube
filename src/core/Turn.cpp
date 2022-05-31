@@ -1,11 +1,6 @@
 #include "Turn.h"
 #include <tuple>
 
-Turn Turn::inv() const {
-  return is_slice_turn ? Turn{slice, -rotation_amount}
-                       : Turn{face, -rotation_amount};
-}
-
 std::string Turn::toStr() const {
   // This syntax tells C++ to use the functions in the global namespace instead
   // of recursion Not sure why this is needed since the functions have different
