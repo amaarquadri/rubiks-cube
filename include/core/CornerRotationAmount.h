@@ -4,12 +4,14 @@
 
 enum class CornerRotationAmount : uint8_t { NONE, CLOCKWISE, COUNTERCLOCKWISE };
 
-CornerRotationAmount operator+(const CornerRotationAmount& first,
-                               const CornerRotationAmount& second);
+constexpr CornerRotationAmount operator+(const CornerRotationAmount& first,
+                                         const CornerRotationAmount& second);
 
-CornerRotationAmount operator-(const CornerRotationAmount& first,
-                               const CornerRotationAmount& second);
+constexpr CornerRotationAmount operator-(const CornerRotationAmount& first,
+                                         const CornerRotationAmount& second);
 
-CornerRotationAmount operator+(const CornerRotationAmount& rotation_amount);
+constexpr CornerRotationAmount operator+(
+    const CornerRotationAmount& rotation_amount);
 
-CornerRotationAmount operator-(const CornerRotationAmount& rotation_amount);
+constexpr CornerRotationAmount operator-(
+    const CornerRotationAmount& rotation_amount);
