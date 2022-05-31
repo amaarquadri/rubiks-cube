@@ -14,15 +14,15 @@ enum class RotationAmount : uint8_t {
 
 std::string toStr(const RotationAmount& rotationAmount);
 
-RotationAmount operator+(const RotationAmount& first,
-                         const RotationAmount& second);
+constexpr RotationAmount operator+(const RotationAmount& first,
+                                   const RotationAmount& second);
 
-RotationAmount operator-(const RotationAmount& first,
-                         const RotationAmount& second);
+constexpr RotationAmount operator-(const RotationAmount& first,
+                                   const RotationAmount& second);
 
-RotationAmount operator+(const RotationAmount& rotation_amount);
+constexpr RotationAmount operator+(const RotationAmount& rotation_amount);
 
-RotationAmount operator-(const RotationAmount& rotation_amount);
+constexpr RotationAmount operator-(const RotationAmount& rotation_amount);
 
 /**
  * @brief Returns the number of characters consumed and the parsed
