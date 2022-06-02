@@ -1,0 +1,114 @@
+#pragma once
+
+#include <array>
+#include <cassert>
+#include <cstddef>
+
+namespace utility {
+template <typename T, size_t capacity>
+class StaticVector {
+ private:
+  static constexpr auto getSizeType() {
+    if constexpr (capacity < (1 << 8))
+      return (unsigned char){};
+    else if constexpr (capacity < (1 << 16))
+      return (unsigned short){};
+    else if constexpr (capacity < (1ull << 32))
+      return (unsigned int){};
+    else
+      return size_t{};
+  }
+
+ public:
+  using size_type = decltype(getSizeType());
+  using iterator = typename std::array<T, capacity>::iterator;
+  using const_iterator = typename std::array<T, capacity>::const_iterator;
+  using reverse_iterator = typename std::array<T, capacity>::reverse_iterator;
+  using const_reverse_iterator =
+      typename std::array<T, capacity>::const_reverse_iterator;
+
+ private:
+  std::array<T, capacity> values{};
+  size_type size{0};
+
+ public:
+  constexpr size_type getSize() const { return size; }
+
+  constexpr bool isEmpty() const { return size == 0; }
+
+  constexpr bool isFull() const { return size == capacity; }
+
+  constexpr const T& operator[](const size_type& idx) const {
+    assert(size > idx);
+    return values[idx];
+  }
+
+  constexpr T& operator[](const size_type& idx) {
+    assert(size > idx);
+    return values[idx];
+  }
+
+  constexpr const_iterator cbegin() const { return values.begin(); }
+
+  constexpr const_iterator begin() const { return values.begin(); }
+
+  constexpr iterator begin() { return values.begin(); }
+
+  constexpr const_iterator cend() const { return values.begin() + size; }
+
+  constexpr const_iterator end() const { return values.begin() + size; }
+
+  constexpr iterator end() { return values.begin() + size; }
+
+  constexpr const_reverse_iterator crbegin() const {
+    return values.crbegin() + (capacity - size);
+  }
+
+  constexpr const_reverse_iterator rbegin() const {
+    return values.rbegin() + (capacity - size);
+  }
+
+  constexpr reverse_iterator rbegin() {
+    return values.rbegin() + (capacity - size);
+  }
+
+  constexpr const_reverse_iterator crend() const { return values.crend(); }
+
+  constexpr const_reverse_iterator rend() const { return values.rend(); }
+
+  constexpr reverse_iterator rend() { return values.rend(); }
+
+  constexpr const T& front() const {
+    assert(!isEmpty());
+    return values.front();
+  }
+
+  constexpr T& front() {
+    assert(!isEmpty());
+    return values.front();
+  }
+
+  constexpr const T& back() const {
+    assert(!isEmpty());
+    return values[size - 1];
+  }
+
+  constexpr T& back() {
+    assert(!isEmpty());
+    return values[size - 1];
+  }
+
+  constexpr void push_back(const T& t) {
+    assert(!isFull());
+    values[size] = t;
+    ++size;
+  }
+
+  constexpr void pop_back() {
+    assert(!isEmpty());
+    --size;
+  }
+
+  constexpr void clear() { size = 0; }
+};
+}  // namespace utility
