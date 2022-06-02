@@ -3,10 +3,14 @@ project(rubiks_cube)
 
 set(CMAKE_CXX_STANDARD 20)
 
+# increase allowed amount of work in compile time constexpr evaluations
+set(CMAKE_CXX_FLAGS "-fconstexpr-ops-limit=42000000 ${CMAKE_CXX_FLAGS}")
+
 include_directories(./include)
 include_directories(./include/core)
 include_directories(./include/utility)
 include_directories(./include/blindsolving)
+include_directories(./include/solvers)
 
 add_executable(rubiks_cube
         src/core/Algorithm.cpp
@@ -33,4 +37,5 @@ add_executable(rubiks_cube
         src/blindsolving/Reconstruction.cpp
         src/blindsolving/ReconstructionIterator.cpp
         src/blindsolving/SolveData.cpp
+        src/solvers/EdgeOrientationSolver.cpp
         main.cpp)
