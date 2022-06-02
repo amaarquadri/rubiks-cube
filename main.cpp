@@ -5,6 +5,7 @@
 #include "tests/blindsolving/TestEdgeCycleSequenceIterator.h"
 #include "tests/blindsolving/TestReconstructionIterator.h"
 #include "tests/core/TestPLLs.h"
+#include "tests/solvers/TestEdgeOrientationSolver.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -22,6 +23,7 @@ static void runTests() {
   testBlindsolvingMoveHash();
   testEdgeCycleSequenceIterator();
   testCornerCycleSequenceIterator();
+  testEdgeOrientationSolver();
 
   for (size_t i = 0; i < count; ++i) {
     Cube cube{};
