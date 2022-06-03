@@ -3,6 +3,7 @@
 #include <array>
 #include <cassert>
 #include <cstddef>
+#include <cstdint>
 
 namespace utility {
 template <typename T, size_t capacity>
@@ -10,13 +11,13 @@ class StaticVector {
  private:
   static constexpr auto getSizeType() {
     if constexpr (capacity < (1 << 8))
-      return (unsigned char){};
+      return uint8_t{};
     else if constexpr (capacity < (1 << 16))
-      return (unsigned short){};
+      return uint16_t{};
     else if constexpr (capacity < (1ull << 32))
-      return (unsigned int){};
+      return uint32_t{};
     else
-      return size_t{};
+      return uint64_t{};
   }
 
  public:

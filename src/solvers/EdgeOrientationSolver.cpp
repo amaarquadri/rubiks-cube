@@ -10,7 +10,7 @@
 namespace solvers {
 struct OptimalMove {
   Turn turn;
-  unsigned short next_edge_orientation;
+  uint16_t next_edge_orientation;
 };
 
 static constexpr std::array<Turn, 18> getPossibleTurns() {
@@ -28,7 +28,7 @@ static constexpr std::array<Turn, 18> getPossibleTurns() {
 static constexpr std::array<Turn, 18> PossibleTurns = getPossibleTurns();
 
 template <size_t n>
-static constexpr void cycleEdges(unsigned short& edge_orientation,
+static constexpr void cycleEdges(uint16_t& edge_orientation,
                                  const std::array<uint8_t, n>& edge_cycle) {
   if constexpr (n < 2)
     throw std::invalid_argument("Must cycle at least 2 edges!");
@@ -49,7 +49,7 @@ static constexpr void cycleEdges(unsigned short& edge_orientation,
   set_next_bit(edge_cycle.front());
 }
 
-static constexpr unsigned short applyTurn(unsigned short edge_orientation,
+static constexpr uint16_t applyTurn(uint16_t edge_orientation,
                                           const Turn& turn) {
   if (turn.is_wide_turn || turn.is_slice_turn)
     throw std::invalid_argument("Turn cannot be a wide turn or a slice turn!");
@@ -106,20 +106,20 @@ static constexpr unsigned short applyTurn(unsigned short edge_orientation,
 }
 
 static constexpr std::array<OptimalMove, 2048> getOptimalMoves() {
-  constexpr unsigned short UnknownSentinel = 2048;
+  constexpr uint16_t UnknownSentinel = 2048;
 
   std::array<OptimalMove, 2048> optimal_moves{};
   for (size_t i = 0; i < 2048; ++i)
     optimal_moves[i].next_edge_orientation = UnknownSentinel;
 
-  utility::StaticVector<unsigned short, 2048> current{};
+  utility::StaticVector<uint16_t, 2048> current{};
   current.push_back(0);
-  utility::StaticVector<unsigned short, 2048> next{};
+  utility::StaticVector<uint16_t, 2048> next{};
 
   while (current.getSize() > 0) {
-    for (const unsigned short& idx : current) {
+    for (const uint16_t& idx : current) {
       for (const Turn& turn : PossibleTurns) {
-        const unsigned short next_idx = applyTurn(idx, turn);
+        const uint16_t next_idx = applyTurn(idx, turn);
         if (next_idx != 0 &&
             optimal_moves[next_idx].next_edge_orientation == UnknownSentinel) {
           optimal_moves[next_idx].turn = turn.inv();
@@ -137,15 +137,15 @@ static constexpr std::array<OptimalMove, 2048> getOptimalMoves() {
 static constexpr std::array<OptimalMove, 2048> OptimalMoves = getOptimalMoves();
 
 /**
- * Computes an unsigned short whose lower 11 bits represent whether or not the
+ * Computes an uint16_t whose lower 11 bits represent whether or not the
  * corresponding edges of the given cube are flipped or not. The edge piece at
  * Cube::EDGE_LOCATION_ORDER[i] corresponds to the (0-indexed) i-th lowest bit
  * of the result. The bit will be 1 if and only if the corresponding edge is
  * incorrectly oriented. The 12th bit can be inferred using the following
  * expression: std::popcount(edge_orientation) % 2 == 1.
  */
-static unsigned short getEdgeOrientation(const Cube& cube) {
-  unsigned short edge_orientation = 0;
+static uint16_t getEdgeOrientation(const Cube& cube) {
+  uint16_t edge_orientation = 0;
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; ++i) {
     const EdgeLocation& target = (i == 5 || i == 7)
                                      ? Cube::EDGE_LOCATION_ORDER[i].flip()
@@ -165,7 +165,7 @@ bool areEdgesOriented(const Cube& cube) {
 
 Algorithm solveEdgeOrientation(const Cube& cube) {
   Algorithm alg;
-  unsigned short edge_orientation = getEdgeOrientation(cube);
+  uint16_t edge_orientation = getEdgeOrientation(cube);
   while (edge_orientation != 0) {
     const OptimalMove& optimal_move = OptimalMoves[edge_orientation];
     alg.push_back(Move{optimal_move.turn});
@@ -189,7 +189,7 @@ void testApplyTurn() {
 
   for (size_t i = 0; i < count; ++i) {
     const Algorithm alg = Algorithm::random(20);
-    unsigned short edge_orientation = 0;
+    uint16_t edge_orientation = 0;
     for (const Move& move : alg)
       edge_orientation = applyTurn(edge_orientation, move.turn);
     if (edge_orientation != getEdgeOrientation(Cube{alg}))
