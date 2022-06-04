@@ -25,6 +25,7 @@ static constexpr std::array<Turn, 18> getPossibleTurns() {
          {RotationAmount::Clockwise, RotationAmount::HalfTurn,
           RotationAmount::Counterclockwise})
       possible_turns[i++] = Turn{face, rotation_amount};
+  assert(i == 18);
   return possible_turns;
 }
 
