@@ -1,7 +1,9 @@
 #include "EdgeOrientationSolver.h"
 #include "Algorithm.h"
 #include "Cube.h"
+#include "Move.h"
 #include "StaticVector.h"
+#include "Turn.h"
 #include <array>
 #include <bit>
 #include <cstdint>
@@ -50,7 +52,7 @@ static constexpr void cycleEdges(uint16_t& edge_orientation,
 }
 
 static constexpr uint16_t applyTurn(uint16_t edge_orientation,
-                                          const Turn& turn) {
+                                    const Turn& turn) {
   if (turn.is_wide_turn || turn.is_slice_turn)
     throw std::invalid_argument("Turn cannot be a wide turn or a slice turn!");
   if (turn.rotation_amount == RotationAmount::None) return edge_orientation;
