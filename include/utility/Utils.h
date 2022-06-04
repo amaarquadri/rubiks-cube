@@ -1,7 +1,9 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cstddef>
+#include <type_traits>
 #include <vector>
 
 namespace utility {
@@ -18,6 +20,20 @@ std::vector<T> flatten(const std::vector<std::vector<T>>& deep_vec) {
   for (const auto& vec : deep_vec)
     for (const auto& v : vec) flattened.push_back(v);
   return flattened;
+}
+
+template <typename T1, size_t n, typename T2, size_t k>
+constexpr void cycleArray(std::array<T1, n>& array,
+                          const std::array<T2, k>& cycle) {
+  static_assert(std::is_integral_v<T2>, "T2 must be integral!");
+  static_assert(k >= 2, "Must cycle at least 2 elements!");
+  T1 next = array[cycle.front()];
+  for (size_t i = 1; i < cycle.size(); ++i) {
+    const T1 temp = array[cycle[i]];
+    array[cycle[i]] = next;
+    next = temp;
+  }
+  array[cycle.front()] = next;
 }
 
 /***
