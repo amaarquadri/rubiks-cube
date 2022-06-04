@@ -23,6 +23,8 @@ std::pair<RotationAxis, bool> getRotationAxis(const Face& face);
 
 std::string toStr(const Face& face);
 
+std::string toStrLower(const Face& face);
+
 /**
  * @brief Returns the number of characters consumed and the parsed Face. If it
  * was not possible to parse a Face, then the number of characters consumed will

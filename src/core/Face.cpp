@@ -77,6 +77,25 @@ std::string toStr(const Face& face) {
   }
 }
 
+std::string toStrLower(const Face& face) {
+  switch (face) {
+    case Face::U:
+      return "u";
+    case Face::F:
+      return "f";
+    case Face::R:
+      return "r";
+    case Face::B:
+      return "b";
+    case Face::L:
+      return "l";
+    case Face::D:
+      return "d";
+    default:
+      throw std::logic_error("Unknown enum value!");
+  }
+}
+
 std::pair<size_t, Face> parseFace(const std::string& str) {
   if (str.empty()) return {0, {}};
   const char& first_char = str[0];
