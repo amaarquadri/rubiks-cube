@@ -1,3 +1,5 @@
+// #define NDEBUG // uncomment to disable asserts
+
 #include "Algorithm.h"
 #include "Blindsolving.h"
 #include "tests/blindsolving/TestBlindsolvingMoveHash.h"
