@@ -2,6 +2,7 @@
 #include "Algorithm.h"
 #include "Cube.h"
 #include "Move.h"
+#include "SolverUtils.h"
 #include "StaticVector.h"
 #include "Turn.h"
 #include <array>
@@ -60,24 +61,7 @@ static constexpr uint16_t applyTurn(uint16_t edge_orientation,
   // temporarily add explicit 12th bit
   if (std::popcount(edge_orientation) % 2 == 1) edge_orientation |= (1 << 11);
 
-  const std::array<uint8_t, 4> edge_cycle = [&]() {
-    switch (turn.face) {
-      case Face::U:
-        return std::array<uint8_t, 4>{0, 1, 2, 3};
-      case Face::F:
-        return std::array<uint8_t, 4>{2, 4, 8, 7};
-      case Face::R:
-        return std::array<uint8_t, 4>{1, 5, 9, 4};
-      case Face::B:
-        return std::array<uint8_t, 4>{0, 6, 10, 5};
-      case Face::L:
-        return std::array<uint8_t, 4>{3, 7, 11, 6};
-      case Face::D:
-        return std::array<uint8_t, 4>{8, 9, 10, 11};
-      default:
-        throw std::logic_error("Unknown enum value!");
-    }
-  }();
+  const std::array<uint8_t, 4> edge_cycle = getEdgeCycle(turn.face);
 
   switch (turn.rotation_amount) {
     case RotationAmount::Clockwise:
