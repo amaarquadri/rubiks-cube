@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <random>
 
 namespace utility {
@@ -14,7 +15,7 @@ static auto random_engine =  // NOLINT(cert-err58-cpp)
  */
 template <size_t n>
 static size_t randomInt() {
-  static std::uniform_int_distribution<uint8_t> distribution(0, n - 1);
+  static std::uniform_int_distribution<size_t> distribution(0, n - 1);
   return distribution(random_engine);
 }
 
