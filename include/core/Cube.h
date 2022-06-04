@@ -10,7 +10,6 @@
 #include "Move.h"
 #include "Turn.h"
 #include <array>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -114,8 +113,7 @@ class Cube {
 
   template <size_t n>
   void cycleEdges(const std::array<EdgeLocation, n>& edge_locations) {
-    if constexpr (n < 2)
-      throw std::invalid_argument("Must cycle at least 2 edges!");
+    static_assert(n >= 2, "Must cycle at least 2 edges!");
     EdgePiece next_edge_piece = (*this)[edge_locations.front()];
     for (size_t i = 1; i < edge_locations.size(); i++) {
       const EdgePiece temp = (*this)[edge_locations[i]];
@@ -127,8 +125,7 @@ class Cube {
 
   template <size_t n>
   void cycleCorners(const std::array<CornerLocation, n>& corner_locations) {
-    if constexpr (n < 2)
-      throw std::invalid_argument("Must cycle at least 2 edges!");
+    static_assert(n >= 2, "Must cycle at least 2 corners!");
     CornerPiece next_corner_piece = (*this)[corner_locations.front()];
     for (size_t i = 1; i < corner_locations.size(); i++) {
       const CornerPiece temp = (*this)[corner_locations[i]];
