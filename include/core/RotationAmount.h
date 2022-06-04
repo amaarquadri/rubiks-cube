@@ -1,7 +1,9 @@
 #pragma once
 
+#include "CornerRotationAmount.h"
 #include <cstddef>
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -13,6 +15,23 @@ enum class RotationAmount : uint8_t {
 };
 
 std::string toStr(const RotationAmount& rotationAmount);
+
+constexpr CornerRotationAmount toCornerRotationAmount(
+    const RotationAmount& rotation_amount) {
+  switch (rotation_amount) {
+    case RotationAmount::None:
+      return CornerRotationAmount::None;
+    case RotationAmount::Clockwise:
+      return CornerRotationAmount::Clockwise;
+    case RotationAmount::HalfTurn:
+      throw std::invalid_argument(
+          "HalfTurn does not correspond to any CornerRotationAmount!");
+    case RotationAmount::Counterclockwise:
+      return CornerRotationAmount::Counterclockwise;
+    default:
+      throw std::logic_error("Unknown enum value!");
+  }
+}
 
 constexpr RotationAmount operator+(const RotationAmount& first,
                                    const RotationAmount& second) {
