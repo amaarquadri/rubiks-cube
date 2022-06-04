@@ -29,12 +29,12 @@ CornerPieceProxy Cube::operator[](const CornerLocation& corner_location) {
       corner_location.rotateCounterclockwise();
   for (size_t i = 0; i < CORNER_LOCATION_ORDER.size(); i++) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
-      return {corners[i], CornerRotationAmount::NONE};
+      return {corners[i], CornerRotationAmount::None};
     // rotate the resulting CornerPieceProxy in the opposite direction
     if (CORNER_LOCATION_ORDER[i] == clockwise_location)
-      return {corners[i], CornerRotationAmount::COUNTERCLOCKWISE};
+      return {corners[i], CornerRotationAmount::Counterclockwise};
     if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
-      return {corners[i], CornerRotationAmount::CLOCKWISE};
+      return {corners[i], CornerRotationAmount::Clockwise};
   }
   throw std::invalid_argument("CornerLocation not found!");
 }
@@ -46,12 +46,12 @@ ConstCornerPieceProxy Cube::operator[](
       corner_location.rotateCounterclockwise();
   for (size_t i = 0; i < CORNER_LOCATION_ORDER.size(); i++) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
-      return {corners[i], CornerRotationAmount::NONE};
+      return {corners[i], CornerRotationAmount::None};
     // rotate the resulting ConstCornerPieceProxy in the opposite direction
     if (CORNER_LOCATION_ORDER[i] == clockwise_location)
-      return {corners[i], CornerRotationAmount::COUNTERCLOCKWISE};
+      return {corners[i], CornerRotationAmount::Counterclockwise};
     if (CORNER_LOCATION_ORDER[i] == counterclockwise_location)
-      return {corners[i], CornerRotationAmount::CLOCKWISE};
+      return {corners[i], CornerRotationAmount::Clockwise};
   }
   throw std::invalid_argument("CornerLocation not found!");
 }

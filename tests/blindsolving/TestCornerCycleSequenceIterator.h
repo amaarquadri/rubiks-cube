@@ -22,8 +22,8 @@ void testCornerCycleSequenceIterator() {
   cycles.push_back({'D', 'G', 'U'});
   cycles.push_back({'Z', 'K'});
   std::vector<CornerRotationAmount> rotation_amounts{
-      CornerRotationAmount::NONE, CornerRotationAmount::CLOCKWISE,
-      CornerRotationAmount::COUNTERCLOCKWISE};
+      CornerRotationAmount::None, CornerRotationAmount::Clockwise,
+      CornerRotationAmount::Counterclockwise};
   blindsolving::CornerCycleSequenceIterator it{cycles, rotation_amounts};
   const Cube cube = applyCornerAlgs(*it);
   while (++it)

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-enum class CornerRotationAmount : uint8_t { NONE, CLOCKWISE, COUNTERCLOCKWISE };
+enum class CornerRotationAmount : uint8_t { None, Clockwise, Counterclockwise };
 
 constexpr CornerRotationAmount operator+(const CornerRotationAmount& first,
                                          const CornerRotationAmount& second) {

@@ -15,13 +15,13 @@ CornerCycleSequenceIterator::CornerCycleSequenceIterator(
     : it(CycleSequenceIterator<char>{cycles}),
       rotation_amounts(rotation_amounts),
       modifications(std::vector<CornerRotationAmount>{
-          cycles.size(), CornerRotationAmount::NONE}) {}
+          cycles.size(), CornerRotationAmount::None}) {}
 
 bool CornerCycleSequenceIterator::operator++() {
   // attempt to increment the set of CornerRotationAmounts
   for (CornerRotationAmount& rot : modifications) {
-    rot = rot + CornerRotationAmount::CLOCKWISE;
-    if (rot != CornerRotationAmount::NONE) return true;
+    rot = rot + CornerRotationAmount::Clockwise;
+    if (rot != CornerRotationAmount::None) return true;
   }
   // otherwise, increment the parent iterator
   return ++it;
@@ -35,11 +35,11 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
   const std::vector<size_t>& permutation = it.getPermutation();
   for (size_t i = 0; i < current.size(); i++) {
     switch (rotation_amounts[permutation[i]]) {
-      case CornerRotationAmount::NONE:
+      case CornerRotationAmount::None:
         // just add the final cycle-closing target
         current[i].push_back(current[i][0]);
         break;
-      case CornerRotationAmount::CLOCKWISE:
+      case CornerRotationAmount::Clockwise:
         // rotate the last counters[permutations[i]] elements clockwise (which
         // wrap around to the end)
         for (size_t j = current[i].size() - counters[permutation[i]];
@@ -48,7 +48,7 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
         // add the final cycle-closing target
         current[i].push_back(rotateClockwise(current[i][0]));
         break;
-      case CornerRotationAmount::COUNTERCLOCKWISE:
+      case CornerRotationAmount::Counterclockwise:
         // rotate the last counters[permutations[i]] elements counterclockwise
         // (which wrap around to the end)
         for (size_t j = current[i].size() - counters[permutation[i]];
@@ -64,12 +64,12 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
   // modify the correct cycles
   for (size_t i = 0; i < modifications.size(); i++) {
     switch (modifications[i]) {
-      case CornerRotationAmount::NONE:
+      case CornerRotationAmount::None:
         break;
-      case CornerRotationAmount::CLOCKWISE:
+      case CornerRotationAmount::Clockwise:
         for (char& c : current[i]) c = rotateClockwise(c);
         break;
-      case CornerRotationAmount::COUNTERCLOCKWISE:
+      case CornerRotationAmount::Counterclockwise:
         for (char& c : current[i]) c = rotateCounterclockwise(c);
         break;
     }
@@ -86,6 +86,6 @@ size_t CornerCycleSequenceIterator::getPeriod() const {
 void CornerCycleSequenceIterator::reset() {
   it.reset();
   std::fill(modifications.begin(), modifications.end(),
-            CornerRotationAmount::NONE);
+            CornerRotationAmount::None);
 }
 }  // namespace blindsolving

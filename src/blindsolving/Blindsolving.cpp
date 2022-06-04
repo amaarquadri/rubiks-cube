@@ -275,12 +275,12 @@ ReconstructionIterator getReconstructionIterator(Cube cube) {
     if (!found_unsolved_corner) break;
     solve_corner_cycle(corner_cycle);
     if (corner_cycle.back() == corner_cycle.front())
-      rotation_amounts.push_back(CornerRotationAmount::NONE);
+      rotation_amounts.push_back(CornerRotationAmount::None);
     else if (corner_cycle.back() == rotateClockwise(corner_cycle.front()))
-      rotation_amounts.push_back(CornerRotationAmount::CLOCKWISE);
+      rotation_amounts.push_back(CornerRotationAmount::Clockwise);
     else if (corner_cycle.back() ==
              rotateCounterclockwise(corner_cycle.front()))
-      rotation_amounts.push_back(CornerRotationAmount::COUNTERCLOCKWISE);
+      rotation_amounts.push_back(CornerRotationAmount::Counterclockwise);
     else
       throw std::logic_error(
           "Last target in cycle doesn't match first target!");

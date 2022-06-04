@@ -21,11 +21,11 @@ CornerLocation CornerLocation::rotateCounterclockwise() const {
 CornerLocation CornerLocation::rotate(
     const CornerRotationAmount& rotation_amount) const {
   switch (rotation_amount) {
-    case CornerRotationAmount::NONE:
+    case CornerRotationAmount::None:
       return *this;
-    case CornerRotationAmount::CLOCKWISE:
+    case CornerRotationAmount::Clockwise:
       return rotateClockwise();
-    case CornerRotationAmount::COUNTERCLOCKWISE:
+    case CornerRotationAmount::Counterclockwise:
       return rotateCounterclockwise();
     default:
       throw std::logic_error("Unknown enum value!");
