@@ -1,18 +1,9 @@
 #pragma once
 
+#include "EdgeOrientationSolver.h"
 #include <iostream>
 
-namespace solvers {
-extern void testGetEdgeOrientation();
-
-extern void testApplyTurn();
-
-extern void testSolveEdgeOrientation();
-}  // namespace solvers
-
 void testEdgeOrientationSolver() {
-  solvers::testGetEdgeOrientation();
-  solvers::testApplyTurn();
-  solvers::testSolveEdgeOrientation();
+  solvers::runEdgeOrientationSolverTests();
   std::cout << "Passed all tests for EdgeOrientationSolver!\n";
 }

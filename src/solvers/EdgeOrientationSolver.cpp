@@ -163,7 +163,7 @@ Algorithm solveEdgeOrientation(const Cube& cube) {
 
 // Test functions
 
-void testGetEdgeOrientation() {
+static void testGetEdgeOrientation() {
   if (getEdgeOrientation(Cube{}) != 0 ||
       getEdgeOrientation(Cube{Algorithm::parse("F")}) != 404 ||
       getEdgeOrientation(Cube{Algorithm::parse("F R")}) != 390 ||
@@ -171,7 +171,7 @@ void testGetEdgeOrientation() {
     throw std::logic_error("Incorrect edge orientation!");
 }
 
-void testApplyTurn() {
+static void testApplyTurn() {
   static constexpr size_t count = 1000;
 
   for (size_t i = 0; i < count; ++i) {
@@ -184,7 +184,7 @@ void testApplyTurn() {
   }
 }
 
-void testSolveEdgeOrientation() {
+static void testSolveEdgeOrientation() {
   static constexpr size_t count = 1000;
 
   for (size_t i = 0; i < count; ++i) {
@@ -195,5 +195,11 @@ void testSolveEdgeOrientation() {
     if (getEdgeOrientation(cube) != 0)
       throw std::logic_error("Edge orientation was not solved!");
   }
+}
+
+void runEdgeOrientationSolverTests() {
+  testGetEdgeOrientation();
+  testApplyTurn();
+  testSolveEdgeOrientation();
 }
 }  // namespace solvers

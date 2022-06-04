@@ -7,4 +7,6 @@ namespace solvers {
 bool areEdgesOriented(const Cube& cube);
 
 Algorithm solveEdgeOrientation(const Cube& cube);
+
+void runEdgeOrientationSolverTests();
 }  // namespace solvers
