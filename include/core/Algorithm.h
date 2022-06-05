@@ -17,7 +17,11 @@ struct Algorithm : public std::vector<Move> {
   static Algorithm random(const size_t& size) {
     Algorithm alg{};
     alg.reserve(size);
-    for (size_t i = 0; i < size; i++) alg.push_back(Move{Turn::random()});
+    while (alg.size() < size) {
+      for (size_t i = 0; i < size - alg.size(); i++)
+        alg.push_back(Move{Turn::random()});
+      alg.cancelMoves();
+    }
     return alg;
   }
 
