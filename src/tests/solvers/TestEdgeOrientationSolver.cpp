@@ -1,5 +1,4 @@
-#pragma once
-
+#include "TestEdgeOrientationSolver.h"
 #include "EdgeOrientationSolver.h"
 #include <iostream>
 

@@ -2,12 +2,7 @@
 
 #include "Algorithm.h"
 #include "Blindsolving.h"
-#include "tests/blindsolving/TestBlindsolvingMoveHash.h"
-#include "tests/blindsolving/TestCornerCycleSequenceIterator.h"
-#include "tests/blindsolving/TestEdgeCycleSequenceIterator.h"
-#include "tests/blindsolving/TestReconstructionIterator.h"
-#include "tests/core/TestPLLs.h"
-#include "tests/solvers/TestEdgeOrientationSolver.h"
+#include "RunTests.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -17,23 +12,6 @@ static std::pair<Algorithm, Algorithm> loadInput(const std::string& file_name) {
   std::stringstream buffer;
   buffer << file.rdbuf();
   return Algorithm::parseScrambleSolve(buffer.str());
-}
-
-template <size_t count = 1>
-static void runTests() {
-  testPLLs();
-  testBlindsolvingMoveHash();
-  testEdgeCycleSequenceIterator();
-  testCornerCycleSequenceIterator();
-  testEdgeOrientationSolver();
-
-  for (size_t i = 0; i < count; ++i) {
-    Cube cube{};
-    cube.scramble();
-    testReconstructionIterator(cube);
-  }
-
-  std::cout << "Passed all tests!\n";
 }
 
 static void viewReconstruction(const std::string& file_name) {
@@ -55,7 +33,7 @@ static void viewReconstruction(const std::string& file_name) {
 }
 
 int main() {
-  runTests<10>();
+  runTests();
   viewReconstruction("tests/blindsolve3.txt");
   return 0;
 }

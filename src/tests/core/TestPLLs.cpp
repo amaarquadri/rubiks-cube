@@ -1,9 +1,9 @@
-#pragma once
-
+#include "TestPLLs.h"
 #include "Cube.h"
 #include "PLL.h"
 #include <cstddef>
 #include <iostream>
+#include <stdexcept>
 
 void testPLLs() {
   const auto verify_alg = [](const Algorithm& alg, const size_t& iterations) {

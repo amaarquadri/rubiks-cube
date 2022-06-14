@@ -1,5 +1,4 @@
-#pragma once
-
+#include "TestBlindsolvingMoveHash.h"
 #include "BlindsolvingMove.h"
 #include <cstddef>
 #include <iostream>

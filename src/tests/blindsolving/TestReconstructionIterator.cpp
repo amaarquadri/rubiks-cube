@@ -1,5 +1,4 @@
-#pragma once
-
+#include "TestReconstructionIterator.h"
 #include "Algorithm.h"
 #include "Blindsolving.h"
 #include "Cube.h"

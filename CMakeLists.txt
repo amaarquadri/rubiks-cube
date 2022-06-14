@@ -12,6 +12,11 @@ include_directories(./include/utility)
 include_directories(./include/blindsolving)
 include_directories(./include/solvers)
 
+include_directories(./include/tests)
+include_directories(./include/tests/core)
+include_directories(./include/tests/blindsolving)
+include_directories(./include/tests/solvers)
+
 add_executable(rubiks_cube
         src/core/Algorithm.cpp
         src/core/Colour.cpp

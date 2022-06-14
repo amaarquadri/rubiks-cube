@@ -1,11 +1,11 @@
-#pragma once
-
+#include "TestCornerCycleSequenceIterator.h"
 #include "Blindsolving.h"
 #include "CornerCycleSequenceIterator.h"
 #include "CornerRotationAmount.h"
 #include "Cube.h"
 #include "Utils.h"
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 static Cube applyCornerAlgs(const std::vector<char>& chars) {

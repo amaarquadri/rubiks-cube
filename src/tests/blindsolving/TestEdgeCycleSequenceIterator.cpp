@@ -1,10 +1,10 @@
-#pragma once
-
+#include "TestEdgeCycleSequenceIterator.h"
 #include "Blindsolving.h"
 #include "Cube.h"
 #include "EdgeCycleSequenceIterator.h"
 #include "Utils.h"
 #include <iostream>
+#include <stdexcept>
 #include <vector>
 
 static Cube applyEdgeAlgs(const std::vector<char>& chars) {
