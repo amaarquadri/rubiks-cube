@@ -43,4 +43,11 @@ add_executable(rubiks_cube
         src/blindsolving/ReconstructionIterator.cpp
         src/blindsolving/SolveData.cpp
         src/solvers/EdgeOrientationSolver.cpp
+        src/tests/RunTests.cpp
+        src/tests/core/TestPLLs.cpp
+        src/tests/blindsolving/TestBlindsolvingMoveHash.cpp
+        src/tests/blindsolving/TestCornerCycleSequenceIterator.cpp
+        src/tests/blindsolving/TestEdgeCycleSequenceIterator.cpp
+        src/tests/blindsolving/TestReconstructionIterator.cpp
+        src/tests/solvers/TestEdgeOrientationSolver.cpp
         main.cpp)
