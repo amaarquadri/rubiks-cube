@@ -12,8 +12,7 @@ std::string Algorithm::toStr() const {
 }
 
 bool Algorithm::operator==(const Algorithm& other) const {
-  Cube test_cube{*this};
-  test_cube.apply(other.inv());
+  const Cube test_cube{(*this) + other.inv()};
   return test_cube.isSolved() && test_cube.isStandardOrientation();
 }
 
