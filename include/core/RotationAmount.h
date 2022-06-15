@@ -40,11 +40,19 @@ constexpr RotationAmount operator+(const RotationAmount& first,
   return static_cast<RotationAmount>(clockwise_turns);
 }
 
+constexpr void operator+=(RotationAmount& first, const RotationAmount& second) {
+  first = first + second;
+}
+
 constexpr RotationAmount operator-(const RotationAmount& first,
                                    const RotationAmount& second) {
   const uint8_t clockwise_turns =
       (4 + static_cast<uint8_t>(first) - static_cast<uint8_t>(second)) % 4;
   return static_cast<RotationAmount>(clockwise_turns);
+}
+
+constexpr void operator-=(RotationAmount& first, const RotationAmount& second) {
+  first = first - second;
 }
 
 constexpr RotationAmount operator+(const RotationAmount& rotation_amount) {
