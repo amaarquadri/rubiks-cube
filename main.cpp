@@ -3,20 +3,17 @@
 #include "Algorithm.h"
 #include "Blindsolving.h"
 #include "RunTests.h"
-#include <fstream>
+#include "SolveAttemptParsingUtils.h"
 #include <iostream>
-#include <sstream>
-
-static std::pair<Algorithm, Algorithm> loadInput(const std::string& file_name) {
-  std::ifstream file(file_name);
-  std::stringstream buffer;
-  buffer << file.rdbuf();
-  return Algorithm::parseScrambleSolve(buffer.str());
-}
 
 static void viewReconstruction(const std::string& file_name) {
   using namespace blindsolving;
-  const auto [scramble, solve] = loadInput(file_name);
+  const auto [scramble_str, solve_str] = utility::loadScrambleSolve(file_name);
+  const Algorithm scramble = Algorithm::parse(scramble_str);
+  // use parseExpanded for the attempted solution so that the division between
+  // blindsolving moves can easily be determined
+  const Algorithm solve = Algorithm::parseExpanded(solve_str);
+
   const Reconstruction reconstruction = parseSolveAttempt(solve);
   std::cout << "Attempt reconstruction:\n" << toStr(reconstruction) << '\n';
   ReconstructionIterator it = getReconstructionIterator(Cube{scramble});

@@ -213,23 +213,6 @@ Algorithm Algorithm::parseExpanded(const std::string& alg) {
   return moves;
 }
 
-std::pair<Algorithm, Algorithm> Algorithm::parseScrambleSolve(
-    const std::string& alg) {
-  size_t scramble_length = 0;
-  while (scramble_length < alg.size() && alg[scramble_length] != '\n')
-    scramble_length++;
-
-  if (scramble_length == alg.size())
-    throw std::invalid_argument(
-        "No new line characters! Cannot distinguish scramble from solve");
-
-  // use parseExpanded for the attempted solution so that the division between
-  // blindsolving moves can easily be determined
-  return {parse(alg.substr(0, scramble_length)),
-          parseExpanded(alg.substr(scramble_length + 1,
-                                   alg.size() - scramble_length - 1))};
-}
-
 Algorithm Algorithm::inv() const {
   Algorithm inverse_moves{size()};
   std::transform(rbegin(), rend(), inverse_moves.begin(),
