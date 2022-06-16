@@ -1,4 +1,5 @@
 #include "RunTests.h"
+#include "TestAlgorithm.h"
 #include "TestBlindsolvingMoveHash.h"
 #include "TestCornerCycleSequenceIterator.h"
 #include "TestCubeOrientation.h"
@@ -10,6 +11,7 @@
 #include <iostream>
 
 void runTests() {
+  testAlgorithm();
   testSolveCubeOrientation();
   testPLLs();
   testBlindsolvingMoveHash();
