@@ -64,7 +64,8 @@ class Cube {
        {Colour::Yellow, Colour::Green, Colour::Red},
        {Colour::Yellow, Colour::Red, Colour::Blue},
        {Colour::Yellow, Colour::Blue, Colour::Orange}}};
-  static constexpr CubeOrientation STARTING_ORIENTATION{Face::U, Face::F};
+  static constexpr CubeOrientation STARTING_ORIENTATION =
+      CubeOrientation::identity();
 
  private:
   std::array<EdgePiece, 12> edges;
