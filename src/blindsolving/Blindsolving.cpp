@@ -318,8 +318,8 @@ getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
   }
 
   const auto comparator =
-      [](const std::pair<BlindsolvingReconstruction, unsigned int>& first,
-         const std::pair<BlindsolvingReconstruction, unsigned int>& second) {
+      [](const std::pair<BlindsolvingReconstruction, size_t>& first,
+         const std::pair<BlindsolvingReconstruction, size_t>& second) {
         return first.second < second.second;
       };
   std::sort(best_reconstructions.begin(), best_reconstructions.end(),
@@ -328,7 +328,7 @@ getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
   if (period == max) return best_reconstructions;
 
   do {
-    std::pair<BlindsolvingReconstruction, unsigned int> reconstruction;
+    std::pair<BlindsolvingReconstruction, size_t> reconstruction;
     reconstruction.first = *it;
     reconstruction.second =
         utility::levEditDistance(baseline, reconstruction.first);
