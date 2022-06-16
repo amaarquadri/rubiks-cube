@@ -2,8 +2,11 @@
 
 #include "CubeRotation.h"
 #include "Face.h"
+#include "Move.h"
 #include "Slice.h"
+#include "SliceTurn.h"
 #include "Turn.h"
+#include "WideTurn.h"
 #include <cstddef>
 #include <optional>
 #include <utility>
@@ -65,7 +68,21 @@ struct CubeOrientation {
    */
   [[nodiscard]] Turn apply(const Turn& turn) const;
 
+  /**
+   * @brief Converts the given Turn in this CubeOrientation to the equivalent
+   * Turn in the identity CubeOrientation
+   */
+  [[nodiscard]] SliceTurn apply(const SliceTurn& slice_turn) const;
+
+  /**
+   * @brief Converts the given Turn in this CubeOrientation to the equivalent
+   * Turn in the identity CubeOrientation
+   */
+  [[nodiscard]] WideTurn apply(const WideTurn& wide_turn) const;
+
   [[nodiscard]] CubeRotation apply(const CubeRotation& cubeRotation) const;
+
+  [[nodiscard]] Move apply(const Move& move) const;
 };
 
 namespace std {

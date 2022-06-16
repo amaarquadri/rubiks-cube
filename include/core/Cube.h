@@ -8,8 +8,11 @@
 #include "EdgeLocation.h"
 #include "EdgePiece.h"
 #include "Move.h"
+#include "SliceTurn.h"
 #include "Turn.h"
+#include "WideTurn.h"
 #include <array>
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -77,6 +80,10 @@ class Cube {
   explicit Cube(const Algorithm& scramble) : Cube() { apply(scramble); }
 
   void apply(const Turn& turn);
+
+  void apply(const SliceTurn& slice_turn);
+
+  void apply(const WideTurn& wide_turn);
 
   void apply(const CubeRotation& cubeRotation);
 

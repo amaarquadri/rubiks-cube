@@ -55,8 +55,6 @@ static constexpr void cycleEdges(uint16_t& edge_orientation,
 
 static constexpr uint16_t applyTurn(uint16_t edge_orientation,
                                     const Turn& turn) {
-  if (turn.is_wide_turn || turn.is_slice_turn)
-    throw std::invalid_argument("Turn cannot be a wide turn or a slice turn!");
   if (turn.rotation_amount == RotationAmount::None) return edge_orientation;
 
   // temporarily add explicit 12th bit
@@ -178,7 +176,7 @@ static void testApplyTurn() {
     const Algorithm alg = Algorithm::random(20);
     uint16_t edge_orientation = 0;
     for (const Move& move : alg)
-      edge_orientation = applyTurn(edge_orientation, move.turn);
+      edge_orientation = applyTurn(edge_orientation, move.getTurn());
     if (edge_orientation != getEdgeOrientation(Cube{alg}))
       throw std::logic_error("Edge orientation mismatch!");
   }

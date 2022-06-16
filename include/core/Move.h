@@ -1,26 +1,36 @@
 #pragma once
 
 #include "CubeRotation.h"
+#include "SliceTurn.h"
 #include "Turn.h"
+#include "WideTurn.h"
 #include <string>
+#include <variant>
 
-struct Move {
-  bool isTurn;
-  union {
-    Turn turn;
-    CubeRotation cubeRotation;
-  };
+struct Move : public std::variant<Turn, SliceTurn, WideTurn, CubeRotation> {
+  [[nodiscard]] bool isTurn() const;
 
-  Move() : isTurn(false), turn(Turn{}) {}
+  [[nodiscard]] bool isSliceTurn() const;
 
-  Move(const Move& other);
+  [[nodiscard]] bool isWideTurn() const;
 
-  explicit Move(const Turn& turn) : isTurn(true), turn(turn) {}
+  [[nodiscard]] bool isCubeRotation() const;
 
-  explicit Move(const CubeRotation& cubeRotation)
-      : isTurn(false), cubeRotation(cubeRotation) {}
+  [[nodiscard]] const Turn& getTurn() const;
 
-  Move& operator=(const Move& other);
+  [[nodiscard]] Turn& getTurn();
+
+  [[nodiscard]] const SliceTurn& getSliceTurn() const;
+
+  [[nodiscard]] SliceTurn& getSliceTurn();
+
+  [[nodiscard]] const WideTurn& getWideTurn() const;
+
+  [[nodiscard]] WideTurn& getWideTurn();
+
+  [[nodiscard]] const CubeRotation& getCubeRotation() const;
+
+  [[nodiscard]] CubeRotation& getCubeRotation();
 
   [[nodiscard]] Move inv() const;
 

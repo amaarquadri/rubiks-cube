@@ -11,8 +11,7 @@ struct Algorithm : public std::vector<Move> {
   Algorithm(const Algorithm::size_type& size) : std::vector<Move>(size) {}
 
   /**
-   * Creates a random Algorithm with the given size consisting solely of Turns
-   * which are neither wide turns nor slice turns.
+   * Creates a random Algorithm with the given size consisting solely of Turns.
    */
   static Algorithm random(const size_t& size);
 

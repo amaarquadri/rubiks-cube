@@ -2,7 +2,10 @@
 #include "Cube.h"
 #include "CubeOrientation.h"
 #include "Face.h"
-#include <algorithm>
+#include "Move.h"
+#include "SliceTurn.h"
+#include "Turn.h"
+#include "WideTurn.h"
 #include <cassert>
 #include <tuple>
 
@@ -181,30 +184,58 @@ static std::tuple<size_t, bool, size_t> parseExpandedRotationAmount(
 }
 
 /**
- * @return Tuple of (number of characters consumed, the turn, the number of
- * times the turn should be repeated)
+ * @return Tuple of (number of characters consumed, the Move, the number of
+ * times the Move should be repeated)
  */
-static std::tuple<size_t, Turn, size_t> parseExpandedTurns(
+static std::tuple<size_t, Move, size_t> parseExpandedMove(
     const std::string& str) {
   size_t consumed;
-  Turn turn{};
+
+  const auto finisher = [&](RotationAmount& rotation_amount) {
+    const std::string remaining = str.substr(consumed, str.size() - consumed);
+    const auto [consumed_for_rotation_amount, clockwise, iterations] =
+        parseExpandedRotationAmount(remaining);
+    consumed += consumed_for_rotation_amount;
+    rotation_amount = clockwise ? RotationAmount::Clockwise
+                                : RotationAmount::Counterclockwise;
+    return iterations;
+  };
+
+  Turn turn;
   std::tie(consumed, turn.face) = parseFace(str);
-  if (consumed == 0) {
-    // cannot parse a Face, try parsing a Slice instead
-    std::tie(consumed, turn.slice) = parseSlice(str);
-    if (consumed == 0) return {0, turn, 0};  // not possible to parse
-    turn.is_slice_turn = true;
+  if (consumed != 0) {
+    const size_t iterations = finisher(turn.rotation_amount);
+    return {consumed, Move{turn}, iterations};
   }
-  const std::string remaining = str.substr(consumed, str.size() - consumed);
-  const auto [consumed_for_rotation_amount, clockwise, rotation_amount] =
-      parseExpandedRotationAmount(remaining);
-  turn.rotation_amount =
-      clockwise ? RotationAmount::Clockwise : RotationAmount::Counterclockwise;
-  return {consumed + consumed_for_rotation_amount, turn, rotation_amount};
+
+  // cannot parse a Face, try parsing a Slice instead
+  SliceTurn slice_turn;
+  std::tie(consumed, slice_turn.slice) = parseSlice(str);
+  if (consumed != 0) {
+    const size_t iterations = finisher(slice_turn.rotation_amount);
+    return {consumed, Move{slice_turn}, iterations};
+  }
+
+  // cannot parse a Slice, try parsing a wide Face instead
+  WideTurn wide_turn;
+  std::tie(consumed, wide_turn.face) = parseWideFace(str);
+  if (consumed != 0) {
+    const size_t iterations = finisher(wide_turn.rotation_amount);
+    return {consumed, Move{wide_turn}, iterations};
+  }
+
+  // cannot parse a wide Face, try parsing a RotationAxis instead
+  CubeRotation cube_rotation;
+  std::tie(consumed, cube_rotation.rotationAxis) = parseRotationAxis(str);
+  if (consumed != 0) {
+    const size_t iterations = finisher(cube_rotation.rotationAmount);
+    return {consumed, Move{cube_rotation}, iterations};
+  }
+
+  return {0, {}, 0};  // not possible to parse
 }
 
 Algorithm Algorithm::parseExpanded(const std::string& alg) {
-  // TODO: reduce code duplication for the parseExpanded functions
   size_t total_consumed = 0;
   const auto get_remaining_alg = [&]() {
     return alg.substr(total_consumed, alg.size() - total_consumed);
@@ -212,19 +243,11 @@ Algorithm Algorithm::parseExpanded(const std::string& alg) {
   Algorithm moves;
   while (total_consumed < alg.size()) {
     total_consumed += consumeSeparators(get_remaining_alg());
-    const auto [consumed_for_turn, turn, rotation_amount] =
-        parseExpandedTurns(get_remaining_alg());
-    if (consumed_for_turn != 0) {
-      for (size_t i = 0; i < rotation_amount; i++) moves.emplace_back(turn);
-      total_consumed += consumed_for_turn;
-    } else {
-      // couldn't parse a Turn, try parsing a CubeRotation instead
-      const auto [consumed_for_cube_rotation, cubeRotation] =
-          CubeRotation::parse(get_remaining_alg());
-      if (consumed_for_cube_rotation == 0) break;
-      moves.emplace_back(cubeRotation);
-      total_consumed += consumed_for_cube_rotation;
-    }
+    const auto [consumed_for_move, move, iterations] =
+        parseExpandedMove(get_remaining_alg());
+    if (consumed_for_move == 0) break;
+    for (size_t i = 0; i < iterations; i++) moves.push_back(move);
+    total_consumed += consumed_for_move;
   }
   return moves;
 }

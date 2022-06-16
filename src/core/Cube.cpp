@@ -2,6 +2,8 @@
 #include "Permutation.h"
 #include "RandomUtils.h"
 #include <array>
+#include <cassert>
+#include <cstddef>
 #include <stdexcept>
 #include <string>
 
@@ -59,23 +61,6 @@ ConstCornerPieceProxy Cube::operator[](
 void Cube::apply(const Turn& turn) {
   if (turn.rotation_amount == RotationAmount::None) return;
 
-  if (turn.is_wide_turn) {
-    apply(Turn{getOpposite(turn.face), turn.rotation_amount});
-    const auto [rotation_axis, reverse] = getRotationAxis(turn.face);
-    apply(CubeRotation{rotation_axis,
-                       reverse ? -turn.rotation_amount : turn.rotation_amount});
-    return;
-  }
-
-  if (turn.is_slice_turn) {
-    apply(Turn{getRotationFace(turn.slice), -turn.rotation_amount});
-    apply(Turn{getOpposite(getRotationFace(turn.slice)), turn.rotation_amount});
-    const auto [rotation_axis, reverse] = getRotationAxis(turn.slice);
-    apply(CubeRotation{rotation_axis,
-                       reverse ? -turn.rotation_amount : turn.rotation_amount});
-    return;
-  }
-
   std::array<EdgeLocation, 4> edge_cycle{};
   std::array<CornerLocation, 4> corner_cycle{};
 
@@ -130,16 +115,35 @@ void Cube::apply(const Turn& turn) {
   }
 }
 
+void Cube::apply(const SliceTurn& slice_turn) {
+  const auto [turn1, turn2, cube_rotation] = slice_turn.expand();
+  apply(turn1);
+  apply(turn2);
+  apply(cube_rotation);
+}
+
+void Cube::apply(const WideTurn& wide_turn) {
+  const auto [turn, cube_rotation] = wide_turn.expand();
+  apply(turn);
+  apply(cube_rotation);
+}
+
 void Cube::apply(const CubeRotation& cubeRotation) {
   // don't actually move any pieces, just track the net orientation
   orientation *= cubeRotation;
 }
 
 void Cube::apply(const Move& move) {
-  if (move.isTurn)
-    apply(move.turn);
-  else
-    apply(move.cubeRotation);
+  if (move.isTurn())
+    apply(move.getTurn());
+  else if (move.isSliceTurn())
+    apply(move.getSliceTurn());
+  else if (move.isWideTurn())
+    apply(move.getWideTurn());
+  else {
+    assert(move.isCubeRotation());
+    apply(move.getCubeRotation());
+  }
 }
 
 void Cube::apply(const Algorithm& algorithm) {

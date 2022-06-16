@@ -4,7 +4,9 @@
 #include "Move.h"
 #include "RandomUtils.h"
 #include "Slice.h"
+#include "SliceTurn.h"
 #include "Turn.h"
+#include "WideTurn.h"
 #include <cassert>
 #include <cstddef>
 #include <optional>
@@ -177,12 +179,29 @@ std::pair<Slice, bool> CubeOrientation::apply(const Slice& slice) const {
 }
 
 Turn CubeOrientation::apply(const Turn& turn) const {
-  if (turn.is_slice_turn) {
-    auto [new_slice, reversed] = apply(turn.slice);
-    return Turn{new_slice,
-                reversed ? -turn.rotation_amount : turn.rotation_amount};
-  } else {
-    return Turn{apply(turn.face), turn.rotation_amount};
+  return Turn{apply(turn.face), turn.rotation_amount};
+}
+
+SliceTurn CubeOrientation::apply(const SliceTurn& slice_turn) const {
+  const auto [new_slice, reversed] = apply(slice_turn.slice);
+  return SliceTurn{new_slice, reversed ? -slice_turn.rotation_amount
+                                       : slice_turn.rotation_amount};
+}
+
+WideTurn CubeOrientation::apply(const WideTurn& wide_turn) const {
+  return WideTurn{apply(wide_turn.face), wide_turn.rotation_amount};
+}
+
+Move CubeOrientation::apply(const Move& move) const {
+  if (move.isTurn())
+    return Move{apply(move.getTurn())};
+  else if (move.isSliceTurn())
+    return Move{apply(move.getSliceTurn())};
+  else if (move.isWideTurn())
+    return Move{apply(move.getWideTurn())};
+  else {
+    assert(move.isCubeRotation());
+    return Move{apply(move.getCubeRotation())};
   }
 }
 

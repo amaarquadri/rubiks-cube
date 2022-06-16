@@ -33,7 +33,9 @@ add_executable(rubiks_cube
         src/core/RotationAmount.cpp
         src/core/RotationAxis.cpp
         src/core/Slice.cpp
+        src/core/SliceTurn.cpp
         src/core/Turn.cpp
+        src/core/WideTurn.cpp
         src/blindsolving/Blindsolving.cpp
         src/blindsolving/BlindsolvingMove.cpp
         src/blindsolving/BlindsolvingReconstruction.cpp
