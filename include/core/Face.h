@@ -8,6 +8,7 @@
 
 enum class Face : uint8_t { U, F, R, B, L, D };
 
+// TODO: make these functions constexpr
 Face getOpposite(const Face& face);
 
 Face getLeft(const Face& top, const Face& front);

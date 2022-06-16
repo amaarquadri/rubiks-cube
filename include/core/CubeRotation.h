@@ -6,6 +6,7 @@
 #include <utility>
 
 struct CubeRotation {
+  // TODO: fix naming
   RotationAxis rotationAxis;
   RotationAmount rotationAmount;
 
