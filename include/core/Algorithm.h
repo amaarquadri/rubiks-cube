@@ -14,16 +14,7 @@ struct Algorithm : public std::vector<Move> {
    * Creates a random Algorithm with the given size consisting solely of Turns
    * which are neither wide turns nor slice turns.
    */
-  static Algorithm random(const size_t& size) {
-    Algorithm alg{};
-    alg.reserve(size);
-    while (alg.size() < size) {
-      for (size_t i = 0; i < size - alg.size(); i++)
-        alg.push_back(Move{Turn::random()});
-      alg.cancelMoves();
-    }
-    return alg;
-  }
+  static Algorithm random(const size_t& size);
 
   [[nodiscard]] std::string toStr() const;
 
