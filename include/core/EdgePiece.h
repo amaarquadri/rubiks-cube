@@ -24,6 +24,8 @@ struct EdgePiece {
   bool operator!=(const EdgePiece& other) const;
 
   [[nodiscard]] EdgePiece flip() const;
+
+  void flipInPlace();
 };
 
 class EdgePieceProxy {

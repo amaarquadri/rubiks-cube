@@ -1,5 +1,6 @@
 #include "EdgePiece.h"
 #include "Colour.h"
+#include <algorithm>
 
 EdgePiece::EdgePiece(const EdgePieceProxy& proxy)
     : first(proxy.first()), second(proxy.second()) {}
@@ -16,6 +17,8 @@ bool EdgePiece::operator!=(const EdgePiece& other) const {
 }
 
 EdgePiece EdgePiece::flip() const { return {second, first}; }
+
+void EdgePiece::flipInPlace() { std::swap(first, second); }
 
 EdgePieceProxy::EdgePieceProxy(EdgePiece& edge_piece, const bool& is_flipped)
     : edge_piece(edge_piece), is_flipped(is_flipped) {}
