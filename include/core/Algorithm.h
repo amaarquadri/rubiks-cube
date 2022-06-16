@@ -26,6 +26,17 @@ struct Algorithm : public std::vector<Move> {
 
   [[nodiscard]] bool operator!=(const Algorithm& other) const;
 
+  /**
+   * Converts this Algorithm to standard form which consists entirely of Turns
+   * with the exception of at most 2 CubeRotations at the start.
+   */
+  void toStandardForm();
+
+  bool isStandardForm() const;
+
+  /**
+   * Note that this converts this Algorithm to standard form.
+   */
   void cancelMoves();
 
   static Algorithm parse(const std::string& alg);

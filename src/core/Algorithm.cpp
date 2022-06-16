@@ -35,90 +35,78 @@ bool Algorithm::operator!=(const Algorithm& other) const {
   return !((*this) == other);
 }
 
-static int mergeTurns(
-    Algorithm& moves,
-    std::vector<std::pair<int, CubeOrientation>>& previousTurns) {
-  // merges any turns resulting from the last element in previousTurns, and
-  // updates both vectors returns the number of moves that were cancelled
-  if (previousTurns.size() < 2) return 0;
-
-  std::pair<int, CubeOrientation> last_pair =
-      previousTurns[previousTurns.size() - 1];
-  std::pair<int, CubeOrientation> second_last_pair =
-      previousTurns[previousTurns.size() - 2];
-  Turn original_last_turn = last_pair.second.apply(
-      moves[last_pair.first]
-          .turn);  // equivalent last turn from original CubeRotation
-  Turn original_second_last_turn = second_last_pair.second.apply(
-      moves[second_last_pair.first]
-          .turn);  // equivalent second last turn from original CubeRotation
-
-  if (original_last_turn.face == original_second_last_turn.face) {
-    RotationAmount new_rotation_amount =
-        original_second_last_turn.rotation_amount +
-        original_last_turn.rotation_amount;
-    if (new_rotation_amount == RotationAmount::None) {
-      // remove both moves from moves and previousTurns
-      moves.erase(moves.begin() + last_pair.first);
-      moves.erase(moves.begin() + second_last_pair.first);
-      previousTurns.erase(previousTurns.end() - 1);
-      previousTurns.erase(previousTurns.end() - 1);
-      return 2;
-    } else {
-      // update moves
-      moves[second_last_pair.first].turn.rotation_amount = new_rotation_amount;
-      // remove second move from moves and previousTurns
-      moves.erase(moves.begin() + last_pair.first);
-      previousTurns.erase(previousTurns.end() - 1);
-      return 1;
-    }
-  } else if (getOpposite(original_last_turn.face) ==
-                 original_second_last_turn.face &&
-             previousTurns.size() >= 3) {
-    std::pair<int, CubeOrientation> third_last_pair =
-        previousTurns[previousTurns.size() - 3];
-    Turn original_third_last_turn = third_last_pair.second.apply(
-        moves[third_last_pair.first]
-            .turn);  // equivalent third last turn from original CubeRotation
-    if (original_last_turn.face == original_third_last_turn.face) {
-      // temporarily remove second_last_pair, recurse to combine the last and
-      // 3rd last pairs, then add it back
-      previousTurns.erase(previousTurns.end() - 2);
-      int merged_turns = mergeTurns(moves, previousTurns);
-      previousTurns.push_back(second_last_pair);
-      return merged_turns;
-    }
-  }
-  return 0;
-}
-
 void Algorithm::cancelMoves() {
   if (empty()) return;
+  toStandardForm();
 
-  // first pass, combine any adjacent CubeRotations with the same RotationAxis
-  for (auto it = begin() + 1; it < end();) {
-    if (!(it - 1)->isTurn && !it->isTurn &&
-        (it - 1)->cubeRotation.rotationAxis == it->cubeRotation.rotationAxis) {
-      (it - 1)->cubeRotation.rotationAmount =
-          (it - 1)->cubeRotation.rotationAmount +
-          it->cubeRotation.rotationAmount;
-      it = erase(it);
+  // use i + 1 < size() instead of i < size() - 1 to avoid underflow
+  for (size_t i = 0; i + 1 < size();) {
+    Move& move = (*this)[i];
+    if (move.isCubeRotation()) {
+      ++i;
+      continue;
+    }
+    Move& next_move = (*this)[i + 1];
+
+    if (move.getTurn().face == next_move.getTurn().face) {
+      move.getTurn().rotation_amount += next_move.getTurn().rotation_amount;
+      erase(begin() + (i + 1));
+      if (move.getTurn().rotation_amount == RotationAmount::None) {
+        erase(begin() + i);
+        if (i > 0) --i;
+      }
     } else
-      it++;
+      ++i;
   }
+}
 
-  std::vector<std::pair<int, CubeOrientation>>
-      previousTurns;  // index, CubeOrientation at index
-  CubeOrientation orientation = CubeOrientation::identity();
-  for (int index = 0; index < size(); index++) {
-    Move move = (*this)[index];
-    if (move.isTurn) {
-      previousTurns.emplace_back(index, orientation);
-      index -= mergeTurns(*this, previousTurns);
-    } else {
-      orientation *= move.cubeRotation;
+void Algorithm::toStandardForm() {
+  // replace SliceTurns and WideTurns with their expansions
+  for (size_t i = 0; i < size(); ++i) {
+    Move& move = (*this)[i];
+    if (move.isSliceTurn()) {
+      const auto [turn1, turn2, cube_rotation] = move.getSliceTurn().expand();
+      move = Move{turn1};
+      insert(begin() + (i + 1), Move{turn2});
+      insert(begin() + (i + 2), Move{cube_rotation});
+      i += 2;  // skip next 2 elements since they are known not to be SliceTurns
+               // or WideTurns
+    } else if (move.isWideTurn()) {
+      const auto [turn, cube_rotation] = move.getWideTurn().expand();
+      move = Move{turn};
+      insert(begin() + (i + 1), Move{cube_rotation});
+      ++i;  // skip next element since it is known not to be a SliceTurn or a
+            // WideTurn
     }
   }
+
+  CubeOrientation cube_orientation = CubeOrientation::identity();
+  for (size_t i = size(); i-- > 0;) {  // iterate from i - 1 to 0 inclusive
+    Move& move = (*this)[i];
+    if (move.isCubeRotation()) {
+      cube_orientation *= move.getCubeRotation().inv();
+      erase(begin() + i);
+    } else {
+      assert(move.isTurn());
+      move = cube_orientation.apply(move);
+    }
+  }
+  const auto [first, second] = cube_orientation.solve();
+  if (first) {
+    insert(begin(), Move{first.value()});
+    if (second) insert(begin() + 1, Move{second.value()});
+  }
+}
+
+bool Algorithm::isStandardForm() const {
+  if (empty()) return true;
+  if (!front().isTurn() && !front().isCubeRotation()) return false;
+  if (size() == 1) return true;
+  if (!(*this)[1].isTurn() && !(*this)[1].isCubeRotation()) return false;
+  if (front().isTurn() && (*this)[1].isCubeRotation()) return false;
+  for (size_t i = 2; i < size(); ++i)
+    if (!(*this)[i].isTurn()) return false;
+  return true;
 }
 
 static size_t consumeSeparators(const std::string& alg) {
