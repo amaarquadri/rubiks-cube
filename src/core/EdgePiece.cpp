@@ -27,13 +27,9 @@ EdgePiece EdgePieceProxy::value() const {
   return is_flipped ? edge_piece.flip() : edge_piece;
 }
 
-Colour EdgePieceProxy::first() const {
-  return value().first;
-}
+Colour EdgePieceProxy::first() const { return value().first; }
 
-Colour EdgePieceProxy::second() const {
-  return value().second;
-}
+Colour EdgePieceProxy::second() const { return value().second; }
 
 void EdgePieceProxy::operator=(const EdgePiece& other) {
   if (is_flipped)
@@ -41,6 +37,10 @@ void EdgePieceProxy::operator=(const EdgePiece& other) {
   else
     edge_piece = other;
 }
+
+EdgePiece EdgePieceProxy::flip() const { return value().flip(); }
+
+void EdgePieceProxy::flipInPlace() { edge_piece.flipInPlace(); }
 
 ConstEdgePieceProxy::ConstEdgePieceProxy(const EdgePiece& edge_piece,
                                          const bool& is_flipped)
@@ -50,10 +50,8 @@ EdgePiece ConstEdgePieceProxy::value() const {
   return is_flipped ? edge_piece.flip() : edge_piece;
 }
 
-Colour ConstEdgePieceProxy::first() const {
-  return value().first;
-}
+Colour ConstEdgePieceProxy::first() const { return value().first; }
 
-Colour ConstEdgePieceProxy::second() const {
-  return value().second;
-}
+Colour ConstEdgePieceProxy::second() const { return value().second; }
+
+EdgePiece ConstEdgePieceProxy::flip() const { return value().flip(); }
