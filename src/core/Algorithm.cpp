@@ -3,6 +3,7 @@
 #include "CubeOrientation.h"
 #include "Face.h"
 #include <algorithm>
+#include <cassert>
 #include <tuple>
 
 std::string Algorithm::toStr() const {
@@ -222,6 +223,8 @@ Algorithm Algorithm::inv() const {
 
 Algorithm Algorithm::subAlgorithm(const size_t& start,
                                   const size_t& end) const {
+  assert(start <= end);
+  assert(end <= size());
   Algorithm sub_moves{end - start};
   for (size_t i = 0; i < sub_moves.size(); i++)
     sub_moves[i] = (*this)[start + i];
