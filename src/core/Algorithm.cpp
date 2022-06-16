@@ -28,6 +28,10 @@ bool Algorithm::operator==(const Algorithm& other) const {
   return test_cube.isSolved() && test_cube.isStandardOrientation();
 }
 
+bool Algorithm::operator!=(const Algorithm& other) const {
+  return !((*this) == other);
+}
+
 static int mergeTurns(
     Algorithm& moves,
     std::vector<std::pair<int, CubeOrientation>>& previousTurns) {

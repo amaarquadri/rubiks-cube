@@ -25,6 +25,8 @@ struct Algorithm : public std::vector<Move> {
    */
   [[nodiscard]] bool operator==(const Algorithm& other) const;
 
+  [[nodiscard]] bool operator!=(const Algorithm& other) const;
+
   void cancelMoves();
 
   static Algorithm parse(const std::string& alg);
