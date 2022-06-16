@@ -24,7 +24,7 @@ std::pair<size_t, RotationAmount> parseRotationAmount(const std::string& str) {
   size_t rotation_amount = 1;  // default to a single Clockwise RotationAmount
   for (const char& chr : str) {
     if (chr >= '0' && chr <= '9') {
-      int digit = chr - '0';
+      const char digit = chr - '0';
       rotation_amount =
           consumed == 0 ? digit % 4 : (2 * rotation_amount + digit) % 4;
       consumed++;
