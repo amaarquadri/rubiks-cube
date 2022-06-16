@@ -1,11 +1,11 @@
 #include "CubeRotation.h"
 
 CubeRotation CubeRotation::inv() const {
-  return {rotationAxis, -rotationAmount};
+  return {rotation_axis, -rotation_amount};
 }
 
 std::string CubeRotation::toStr() const {
-  return ::toStr(rotationAxis) + ::toStr(rotationAmount);
+  return ::toStr(rotation_axis) + ::toStr(rotation_amount);
 }
 
 std::pair<size_t, CubeRotation> CubeRotation::parse(const std::string& str) {

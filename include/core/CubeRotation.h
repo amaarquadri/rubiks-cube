@@ -6,9 +6,8 @@
 #include <utility>
 
 struct CubeRotation {
-  // TODO: fix naming
-  RotationAxis rotationAxis;
-  RotationAmount rotationAmount;
+  RotationAxis rotation_axis;
+  RotationAmount rotation_amount;
 
   [[nodiscard]] CubeRotation inv() const;
 

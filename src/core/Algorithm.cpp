@@ -214,9 +214,9 @@ static std::tuple<size_t, Move, size_t> parseExpandedMove(
 
   // cannot parse a wide Face, try parsing a RotationAxis instead
   CubeRotation cube_rotation;
-  std::tie(consumed, cube_rotation.rotationAxis) = parseRotationAxis(str);
+  std::tie(consumed, cube_rotation.rotation_axis) = parseRotationAxis(str);
   if (consumed != 0) {
-    const size_t iterations = finisher(cube_rotation.rotationAmount);
+    const size_t iterations = finisher(cube_rotation.rotation_amount);
     return {consumed, Move{cube_rotation}, iterations};
   }
 

@@ -63,9 +63,9 @@ CubeOrientation CubeOrientation::inv() const {
 CubeOrientation CubeOrientation::operator*(
     const CubeRotation& cubeRotation) const {
   CubeOrientation product{top, front};
-  for (size_t i = 0; i < static_cast<uint8_t>(cubeRotation.rotationAmount);
+  for (size_t i = 0; i < static_cast<uint8_t>(cubeRotation.rotation_amount);
        i++) {
-    switch (cubeRotation.rotationAxis) {
+    switch (cubeRotation.rotation_axis) {
       case RotationAxis::X: {
         Face new_top = product.front;
         Face new_front = product.getBottomFace();
