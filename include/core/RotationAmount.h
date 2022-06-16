@@ -71,6 +71,4 @@ constexpr RotationAmount operator-(const RotationAmount& rotation_amount) {
  * number of characters consumed will be zero and the RotationAmount will be
  * Clockwise.
  */
-// TODO: use size_t instead of int for number of characters consumed throughout
-//  the codebase
 std::pair<size_t, RotationAmount> parseRotationAmount(const std::string& str);
