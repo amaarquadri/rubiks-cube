@@ -163,11 +163,11 @@ void Cube::scramble() {
   bool edge_flip_parity = false;
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; i++) {
     if (utility::randomBool()) {
-      edges[i] = edges[i].flip();
+      edges[i].flipInPlace();
       edge_flip_parity = !edge_flip_parity;
     }
   }
-  if (edge_flip_parity) edges.back() = edges.back().flip();
+  if (edge_flip_parity) edges.back().flipInPlace();
 
   uint8_t corner_rotation_parity = 0;
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; i++) {
