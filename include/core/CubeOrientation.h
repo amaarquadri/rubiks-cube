@@ -4,11 +4,15 @@
 #include "Face.h"
 #include "Slice.h"
 #include "Turn.h"
+#include <cstddef>
+#include <optional>
 #include <utility>
 
 struct CubeOrientation {
   Face top;    // the face that is now on top
   Face front;  // the face that is now in the front
+
+  bool isValid() const;
 
   bool operator==(const CubeOrientation& other) const;
 
@@ -20,7 +24,9 @@ struct CubeOrientation {
 
   [[nodiscard]] Face getBottomFace() const;
 
-  static CubeOrientation identity();
+  static constexpr CubeOrientation identity() { return {Face::U, Face::F}; }
+
+  static CubeOrientation random();
 
   [[nodiscard]] CubeOrientation inv() const;
 
@@ -32,6 +38,13 @@ struct CubeOrientation {
       const CubeRotation& cubeRotation) const;
 
   void operator*=(const CubeRotation& cubeRotation);
+
+  /**
+   * Computes the CubeRotation(s) that would transform this CubeOrientation to
+   * the identity CubeOrientation.
+   */
+  std::pair<std::optional<CubeRotation>, std::optional<CubeRotation>> solve()
+      const;
 
   /**
    * @brief Converts the given Face in this CubeOrientation to the equivalent
