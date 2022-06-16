@@ -29,17 +29,15 @@ class Permutation {
   [[nodiscard]] bool isOdd() const {
     std::array<bool, n> visited{};
     bool parity = false;
-    for (size_t startingIndex = 0; startingIndex < n; startingIndex++) {
-      if (!visited[startingIndex]) {
-        visited[startingIndex] = true;
-        uint8_t cycle_index = values[startingIndex];
-        bool cycle_parity = false;
-        while (cycle_index != startingIndex) {
+    for (size_t starting_index = 0; starting_index < n; starting_index++) {
+      if (!visited[starting_index]) {
+        visited[starting_index] = true;
+        uint8_t cycle_index = values[starting_index];
+        while (cycle_index != starting_index) {
           visited[cycle_index] = true;
           cycle_index = values[cycle_index];
-          cycle_parity = !cycle_parity;
+          parity = !parity;
         }
-        parity ^= cycle_parity;
       }
     }
     return parity;
