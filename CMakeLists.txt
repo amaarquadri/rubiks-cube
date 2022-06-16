@@ -47,6 +47,7 @@ add_executable(rubiks_cube
         src/blindsolving/SolveData.cpp
         src/solvers/EdgeOrientationSolver.cpp
         src/tests/RunTests.cpp
+        src/tests/core/TestAlgorithm.cpp
         src/tests/core/TestCubeOrientation.cpp
         src/tests/core/TestPLLs.cpp
         src/tests/blindsolving/TestBlindsolvingMoveHash.cpp
