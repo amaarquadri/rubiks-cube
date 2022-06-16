@@ -1,4 +1,5 @@
 #include "BlindsolvingReconstruction.h"
+#include <cstddef>
 #include <string>
 
 namespace blindsolving {
@@ -7,7 +8,7 @@ void BlindsolvingReconstruction::applyTo(Cube& cube) const {
 }
 
 std::string BlindsolvingReconstruction::toStr() const {
-  unsigned int consumed = 0;
+  size_t consumed = 0;
   std::string result;
   while (consumed < size()) {
     if ((*this)[consumed].is_parity) {

@@ -1,8 +1,10 @@
 #include "Reconstruction.h"
+#include <cstddef>
+#include <string>
 
 namespace blindsolving {
 std::string toStr(const Reconstruction& reconstruction) {
-  unsigned int consumed = 0;
+  size_t consumed = 0;
   std::string result;
   while (consumed < reconstruction.size()) {
     if (!reconstruction[consumed].is_parsed) {
