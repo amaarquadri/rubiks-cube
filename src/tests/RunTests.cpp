@@ -15,8 +15,8 @@ void runTests() {
   testSolveCubeOrientation();
   testPLLs();
   testBlindsolvingMoveHash();
-  testEdgeCycleSequenceIterator();
   testCornerCycleSequenceIterator();
+  testEdgeCycleSequenceIterator();
   testEdgeOrientationSolver();
 
   static constexpr size_t Count = 10;
