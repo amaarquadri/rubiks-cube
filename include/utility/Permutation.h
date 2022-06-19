@@ -3,6 +3,7 @@
 #include "RandomUtils.h"
 #include <algorithm>
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <numeric>
 #include <random>
@@ -16,11 +17,12 @@ class Permutation : public std::array<uint8_t, n> {
     if (n < 2) throw std::invalid_argument("Error: n < 2");
     Permutation<n> permutation;
     std::iota(permutation.begin(), permutation.end(), 0);
-    std::shuffle(permutation.begin(), permutation.end(), utility::random_engine);
+    std::shuffle(permutation.begin(), permutation.end(),
+                 utility::random_engine);
     return permutation;
   }
 
-  [[nodiscard]] bool isOdd() const {
+  constexpr bool isOdd() const {
     std::array<bool, n> visited{};
     bool parity = false;
     for (size_t starting_index = 0; starting_index < n; ++starting_index) {
@@ -37,10 +39,10 @@ class Permutation : public std::array<uint8_t, n> {
     return parity;
   }
 
-  void flipParity() { std::swap(this->front(), (*this)[1]); }
+  constexpr void flipParity() { std::swap(this->front(), (*this)[1]); }
 
   template <typename T>
-  std::array<T, n> apply(const std::array<T, n>& items) const {
+  constexpr std::array<T, n> apply(const std::array<T, n>& items) const {
     std::array<T, n> permuted_items;
     for (size_t i = 0; i < n; ++i) permuted_items[i] = items[(*this)[i]];
     return permuted_items;
