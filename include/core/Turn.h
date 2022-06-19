@@ -16,6 +16,8 @@ struct Turn {
   constexpr Turn(const Face& face, const RotationAmount& rotationAmount)
       : face(face), rotation_amount(rotationAmount) {}
 
+  bool operator==(const Turn& other) const = default;
+
   /**
    * @return A random Turn that is neither a slice turn nor a wide turn.
    */
