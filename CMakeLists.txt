@@ -16,6 +16,7 @@ include_directories(./include/tests)
 include_directories(./include/tests/core)
 include_directories(./include/tests/blindsolving)
 include_directories(./include/tests/solvers)
+include_directories(./include/tests/utility)
 
 add_executable(rubiks_cube
         src/utility/SolveAttemptParsingUtils.cpp
@@ -55,4 +56,5 @@ add_executable(rubiks_cube
         src/tests/blindsolving/TestEdgeCycleSequenceIterator.cpp
         src/tests/blindsolving/TestReconstructionIterator.cpp
         src/tests/solvers/TestEdgeOrientationSolver.cpp
+        src/tests/utility/TestCombination.cpp
         main.cpp)
