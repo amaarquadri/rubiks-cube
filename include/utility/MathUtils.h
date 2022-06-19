@@ -21,13 +21,17 @@ constexpr auto pow(const T1& base, const T2& exponent) {
   return result;
 }
 
+/**
+ * Returns zero if n < k and returns one if n == k.
+ */
 template <typename T1, typename T2>
-constexpr auto nChooseK(const T1& n, const T2& k) {
+constexpr std::common_type_t<T1, T2> nChooseK(const T1& n, const T2& k) {
   using R = std::common_type_t<T1, T2>;
-  R result = static_cast<R>(1);
-  for (R i = static_cast<R>(0); i < k; ++i) {
+  if (n < k) return 0;
+  R result = 1;
+  for (R i = 0; i < k; ++i) {
     result *= (n - i);
-    result /= (i + static_cast<R>(1));
+    result /= (i + 1);
   }
   return result;
 }
@@ -36,4 +40,5 @@ constexpr auto nChooseK(const T1& n, const T2& k) {
 static_assert(factorial(5) == 120);
 static_assert(pow(3, 7) == 2187);
 static_assert(nChooseK(12, 4) == 495);
+static_assert(nChooseK(8, 4) == 70);
 }  // namespace utility
