@@ -7,25 +7,6 @@
 #include <string>
 #include <utility>
 
-Face getOpposite(const Face& face) {
-  switch (face) {
-    case Face::U:
-      return Face::D;
-    case Face::F:
-      return Face::B;
-    case Face::R:
-      return Face::L;
-    case Face::B:
-      return Face::F;
-    case Face::L:
-      return Face::R;
-    case Face::D:
-      return Face::U;
-    default:
-      throw std::logic_error("Unknown enum value!");
-  }
-}
-
 Face getLeft(const Face& top, const Face& front) {
   for (const CornerLocation& corner : Cube::CORNER_LOCATION_ORDER) {
     if (top == corner.first && front == corner.second) return corner.third;

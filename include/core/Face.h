@@ -3,14 +3,32 @@
 #include "RotationAxis.h"
 #include <cstddef>
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 #include <utility>
 
 enum class Face : uint8_t { U, F, R, B, L, D };
 
-// TODO: make these functions constexpr
-Face getOpposite(const Face& face);
+constexpr Face getOpposite(const Face& face) {
+  switch (face) {
+    case Face::U:
+      return Face::D;
+    case Face::F:
+      return Face::B;
+    case Face::R:
+      return Face::L;
+    case Face::B:
+      return Face::F;
+    case Face::L:
+      return Face::R;
+    case Face::D:
+      return Face::U;
+    default:
+      throw std::logic_error("Unknown enum value!");
+  }
+}
 
+// TODO: make these functions constexpr
 Face getLeft(const Face& top, const Face& front);
 
 Face getRight(const Face& top, const Face& right);
