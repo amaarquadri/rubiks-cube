@@ -102,6 +102,8 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
     SolveData solve_data{};
     Cube test_transformation{};
     for (size_t i = consumed; i < moves.size(); i++) {
+      // TODO: check all 3 RotationAmounts for this Move to allow for detecting
+      //       BlindSolvingMoves where turns are cancelled
       test_transformation.apply(orientation.apply(moves[i]));
 
       for (auto [chr, transformation] : edge_alg_transformations) {
