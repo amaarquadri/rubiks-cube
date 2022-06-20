@@ -23,7 +23,7 @@ class CycleSequenceIterator {
   mutable bool is_current_valid = false;
 
  public:
-  CycleSequenceIterator(const std::vector<std::vector<T>>& cycles)
+  explicit CycleSequenceIterator(const std::vector<std::vector<T>>& cycles)
       : cycles(cycles), current(std::vector<std::vector<T>>{cycles.size()}) {
     if (cycles.empty()) return;
     permutation.reserve(cycles.size());

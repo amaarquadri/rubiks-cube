@@ -10,9 +10,11 @@ struct CornerLocation {
   Face second;
   Face third;
 
-  [[nodiscard]] bool operator==(const CornerLocation& other) const;
+  [[nodiscard]] constexpr bool operator==(const CornerLocation& other) const =
+      default;
 
-  [[nodiscard]] bool operator!=(const CornerLocation& other) const;
+  [[nodiscard]] constexpr bool operator!=(const CornerLocation& other) const =
+      default;
 
   /**
    * @return The CornerLocation that is a clockwise rotation from this
