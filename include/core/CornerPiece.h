@@ -56,7 +56,7 @@ class CornerPieceProxy {
 
   Colour third() const;
 
-  void operator=(const CornerPiece& other);
+  CornerPieceProxy& operator=(const CornerPiece& other);
 };
 
 class ConstCornerPieceProxy {

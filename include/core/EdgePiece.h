@@ -42,7 +42,7 @@ class EdgePieceProxy {
 
   Colour second() const;
 
-  void operator=(const EdgePiece& other);
+  EdgePieceProxy& operator=(const EdgePiece& other);
 
   [[nodiscard]] EdgePiece flip() const;
 

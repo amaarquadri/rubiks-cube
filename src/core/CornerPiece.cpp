@@ -45,10 +45,11 @@ Colour CornerPieceProxy::second() const { return value().second; }
 
 Colour CornerPieceProxy::third() const { return value().third; }
 
-void CornerPieceProxy::operator=(const CornerPiece& other) {
+CornerPieceProxy& CornerPieceProxy::operator=(const CornerPiece& other) {
   // instead of rotating this piece, rotate the other piece in the opposite
   // direction
   corner_piece = other.rotate(-rotation_amount);
+  return *this;
 }
 
 ConstCornerPieceProxy::ConstCornerPieceProxy(
