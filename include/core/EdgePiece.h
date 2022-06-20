@@ -19,9 +19,9 @@ struct EdgePiece {
 
   EdgePiece(const ConstEdgePieceProxy& proxy);
 
-  bool operator==(const EdgePiece& other) const;
+  constexpr bool operator==(const EdgePiece& other) const = default;
 
-  bool operator!=(const EdgePiece& other) const;
+  constexpr bool operator!=(const EdgePiece& other) const = default;
 
   [[nodiscard]] EdgePiece flip() const;
 

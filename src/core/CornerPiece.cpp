@@ -9,14 +9,6 @@ CornerPiece::CornerPiece(const CornerPieceProxy& proxy)
 CornerPiece::CornerPiece(const ConstCornerPieceProxy& proxy)
     : first(proxy.first()), second(proxy.second()), third(proxy.third()) {}
 
-bool CornerPiece::operator==(const CornerPiece& other) const {
-  return first == other.first && second == other.second && third == other.third;
-}
-
-bool CornerPiece::operator!=(const CornerPiece& other) const {
-  return !(*this == other);
-}
-
 CornerPiece CornerPiece::rotateClockwise() const {
   return {second, third, first};
 }

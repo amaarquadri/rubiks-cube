@@ -23,9 +23,9 @@ struct CornerPiece {
 
   CornerPiece(const ConstCornerPieceProxy& proxy);
 
-  bool operator==(const CornerPiece& other) const;
+  constexpr bool operator==(const CornerPiece& other) const = default;
 
-  bool operator!=(const CornerPiece& other) const;
+  constexpr bool operator!=(const CornerPiece& other) const = default;
 
   [[nodiscard]] CornerPiece rotateClockwise() const;
 
