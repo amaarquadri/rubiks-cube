@@ -40,24 +40,24 @@ class StaticVector {
   constexpr bool isFull() const { return size == capacity; }
 
   constexpr const T& operator[](const size_type& idx) const {
-    assert(size > idx);
+    assert(idx < size);
     return values[idx];
   }
 
   constexpr T& operator[](const size_type& idx) {
-    assert(size > idx);
+    assert(idx < size);
     return values[idx];
   }
 
-  constexpr const_iterator cbegin() const { return values.begin(); }
+  constexpr const_iterator cbegin() const { return values.cbegin(); }
 
-  constexpr const_iterator begin() const { return values.begin(); }
+  constexpr const_iterator begin() const { return values.cbegin(); }
 
   constexpr iterator begin() { return values.begin(); }
 
-  constexpr const_iterator cend() const { return values.begin() + size; }
+  constexpr const_iterator cend() const { return values.cbegin() + size; }
 
-  constexpr const_iterator end() const { return values.begin() + size; }
+  constexpr const_iterator end() const { return values.cbegin() + size; }
 
   constexpr iterator end() { return values.begin() + size; }
 
@@ -66,7 +66,7 @@ class StaticVector {
   }
 
   constexpr const_reverse_iterator rbegin() const {
-    return values.rbegin() + (capacity - size);
+    return values.crbegin() + (capacity - size);
   }
 
   constexpr reverse_iterator rbegin() {
@@ -75,7 +75,7 @@ class StaticVector {
 
   constexpr const_reverse_iterator crend() const { return values.crend(); }
 
-  constexpr const_reverse_iterator rend() const { return values.rend(); }
+  constexpr const_reverse_iterator rend() const { return values.crend(); }
 
   constexpr reverse_iterator rend() { return values.rend(); }
 
