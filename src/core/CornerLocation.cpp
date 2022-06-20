@@ -2,14 +2,6 @@
 #include "CornerRotationAmount.h"
 #include <stdexcept>
 
-bool CornerLocation::operator==(const CornerLocation& other) const {
-  return first == other.first && second == other.second && third == other.third;
-}
-
-bool CornerLocation::operator!=(const CornerLocation& other) const {
-  return !(*this == other);
-}
-
 CornerLocation CornerLocation::rotateClockwise() const {
   return {second, third, first};
 }

@@ -8,7 +8,8 @@
 struct Algorithm : public std::vector<Move> {
   Algorithm() = default;
 
-  Algorithm(const Algorithm::size_type& size) : std::vector<Move>(size) {}
+  explicit Algorithm(const Algorithm::size_type& size)
+      : std::vector<Move>(size) {}
 
   /**
    * Creates a random Algorithm with the given size consisting solely of Turns.
@@ -32,7 +33,7 @@ struct Algorithm : public std::vector<Move> {
    */
   void toStandardForm();
 
-  bool isStandardForm() const;
+  [[nodiscard]] bool isStandardForm() const;
 
   /**
    * Note that this converts this Algorithm to standard form.
