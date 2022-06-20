@@ -36,11 +36,11 @@ class EdgePieceProxy {
  public:
   EdgePieceProxy(EdgePiece& edge_piece, const bool& is_flipped);
 
-  EdgePiece value() const;
+  [[nodiscard]] EdgePiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
   EdgePieceProxy& operator=(const EdgePiece& other);
 
@@ -57,11 +57,11 @@ class ConstEdgePieceProxy {
  public:
   ConstEdgePieceProxy(const EdgePiece& edge_piece, const bool& is_flipped);
 
-  EdgePiece value() const;
+  [[nodiscard]] EdgePiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
   [[nodiscard]] EdgePiece flip() const;
 };

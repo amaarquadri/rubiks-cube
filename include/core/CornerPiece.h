@@ -48,13 +48,13 @@ class CornerPieceProxy {
   CornerPieceProxy(CornerPiece& corner_piece,
                    const CornerRotationAmount& rotationAmount);
 
-  CornerPiece value() const;
+  [[nodiscard]] CornerPiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
-  Colour third() const;
+  [[nodiscard]] Colour third() const;
 
   CornerPieceProxy& operator=(const CornerPiece& other);
 };
@@ -68,13 +68,13 @@ class ConstCornerPieceProxy {
   ConstCornerPieceProxy(const CornerPiece& corner_piece,
                         const CornerRotationAmount& rotationAmount);
 
-  CornerPiece value() const;
+  [[nodiscard]] CornerPiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
-  Colour third() const;
+  [[nodiscard]] Colour third() const;
 };
 
 namespace std {
