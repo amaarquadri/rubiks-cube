@@ -3,8 +3,10 @@
 #include "RandomUtils.h"
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <numeric>
 #include <random>
 #include <stdexcept>
@@ -13,6 +15,15 @@
 template <size_t n>
 class Permutation : public std::array<uint8_t, n> {
  public:
+  constexpr bool isValid() const {
+    std::array<bool, n> found{};
+    for (const uint8_t& value : (*this)) {
+      if (value >= n || found[value]) return false;
+      found[value] = true;
+    }
+    return std::all_of(found.begin(), found.end(), std::identity{});
+  }
+
   static Permutation<n> randomPermutation() {
     if (n < 2) throw std::invalid_argument("Error: n < 2");
     Permutation<n> permutation;
@@ -23,6 +34,7 @@ class Permutation : public std::array<uint8_t, n> {
   }
 
   constexpr bool isOdd() const {
+    assert(isValid());
     std::array<bool, n> visited{};
     bool parity = false;
     for (size_t starting_index = 0; starting_index < n; ++starting_index) {
@@ -43,6 +55,7 @@ class Permutation : public std::array<uint8_t, n> {
 
   template <typename T>
   constexpr std::array<T, n> apply(const std::array<T, n>& items) const {
+    assert(isValid());
     std::array<T, n> permuted_items;
     for (size_t i = 0; i < n; ++i) permuted_items[i] = items[(*this)[i]];
     return permuted_items;
