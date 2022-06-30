@@ -49,7 +49,7 @@ CubeOrientation CubeOrientation::random() {
 }
 
 CubeOrientation CubeOrientation::inv() const {
-  using Face::U, Face::F, Face::R, Face::B, Face::L, Face::D;
+  using enum Face;
   Face inv_top, inv_front;
   for (Face face : {U, F, R, B, L, D}) {
     if (apply(face) == U)

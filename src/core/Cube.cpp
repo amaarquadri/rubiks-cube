@@ -64,7 +64,7 @@ void Cube::apply(const Turn& turn) {
   std::array<EdgeLocation, 4> edge_cycle{};
   std::array<CornerLocation, 4> corner_cycle{};
 
-  using Face::U, Face::F, Face::R, Face::B, Face::L, Face::D;
+  using enum Face;
   switch (orientation.apply(turn.face)) {
     case U:
       edge_cycle = {{{U, B}, {U, R}, {U, F}, {U, L}}};
