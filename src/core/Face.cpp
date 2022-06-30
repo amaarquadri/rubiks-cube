@@ -7,6 +7,8 @@
 #include <string>
 #include <utility>
 
+using enum Face;
+
 Face getLeft(const Face& top, const Face& front) {
   for (const CornerLocation& corner : Cube::CORNER_LOCATION_ORDER) {
     if (top == corner.first && front == corner.second) return corner.third;
@@ -22,17 +24,17 @@ Face getRight(const Face& top, const Face& front) {
 
 std::pair<RotationAxis, bool> getRotationAxis(const Face& face) {
   switch (face) {
-    case Face::U:
+    case U:
       return {RotationAxis::Y, false};
-    case Face::F:
+    case F:
       return {RotationAxis::Z, false};
-    case Face::R:
+    case R:
       return {RotationAxis::X, false};
-    case Face::B:
+    case B:
       return {RotationAxis::Z, true};
-    case Face::L:
+    case L:
       return {RotationAxis::X, true};
-    case Face::D:
+    case D:
       return {RotationAxis::Y, true};
     default:
       throw std::logic_error("Unknown enum value!");
@@ -41,17 +43,17 @@ std::pair<RotationAxis, bool> getRotationAxis(const Face& face) {
 
 std::string toStr(const Face& face) {
   switch (face) {
-    case Face::U:
+    case U:
       return "U";
-    case Face::F:
+    case F:
       return "F";
-    case Face::R:
+    case R:
       return "R";
-    case Face::B:
+    case B:
       return "B";
-    case Face::L:
+    case L:
       return "L";
-    case Face::D:
+    case D:
       return "D";
     default:
       throw std::logic_error("Unknown enum value!");
@@ -60,17 +62,17 @@ std::string toStr(const Face& face) {
 
 std::string toStrLower(const Face& face) {
   switch (face) {
-    case Face::U:
+    case U:
       return "u";
-    case Face::F:
+    case F:
       return "f";
-    case Face::R:
+    case R:
       return "r";
-    case Face::B:
+    case B:
       return "b";
-    case Face::L:
+    case L:
       return "l";
-    case Face::D:
+    case D:
       return "d";
     default:
       throw std::logic_error("Unknown enum value!");
@@ -79,38 +81,40 @@ std::string toStrLower(const Face& face) {
 
 std::pair<size_t, Face> parseFace(const std::string& str) {
   if (str.empty()) return {0, {}};
-  const char& first_char = str[0];
-  if (first_char == 'U')
-    return {1, Face::U};
-  else if (first_char == 'F')
-    return {1, Face::F};
-  else if (first_char == 'R')
-    return {1, Face::R};
-  else if (first_char == 'B')
-    return {1, Face::B};
-  else if (first_char == 'L')
-    return {1, Face::L};
-  else if (first_char == 'D')
-    return {1, Face::D};
-  else
-    return {0, {}};
+  switch (str[0]) {
+    case 'U':
+      return {1, U};
+    case 'F':
+      return {1, F};
+    case 'R':
+      return {1, R};
+    case 'B':
+      return {1, B};
+    case 'L':
+      return {1, L};
+    case 'D':
+      return {1, D};
+    default:
+      return {0, {}};
+  }
 }
 
 std::pair<size_t, Face> parseWideFace(const std::string& str) {
   if (str.empty()) return {0, {}};
-  const char& first_char = str[0];
-  if (first_char == 'u')
-    return {1, Face::U};
-  else if (first_char == 'f')
-    return {1, Face::F};
-  else if (first_char == 'r')
-    return {1, Face::R};
-  else if (first_char == 'b')
-    return {1, Face::B};
-  else if (first_char == 'l')
-    return {1, Face::L};
-  else if (first_char == 'd')
-    return {1, Face::D};
-  else
-    return {0, {}};
+  switch (str[0]) {
+    case 'u':
+      return {1, U};
+    case 'f':
+      return {1, F};
+    case 'r':
+      return {1, R};
+    case 'b':
+      return {1, B};
+    case 'l':
+      return {1, L};
+    case 'd':
+      return {1, D};
+    default:
+      return {0, {}};
+  }
 }

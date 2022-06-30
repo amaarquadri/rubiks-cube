@@ -10,19 +10,20 @@
 enum class Face : uint8_t { U, F, R, B, L, D };
 
 constexpr Face getOpposite(const Face& face) {
+  using enum Face;
   switch (face) {
-    case Face::U:
-      return Face::D;
-    case Face::F:
-      return Face::B;
-    case Face::R:
-      return Face::L;
-    case Face::B:
-      return Face::F;
-    case Face::L:
-      return Face::R;
-    case Face::D:
-      return Face::U;
+    case U:
+      return D;
+    case F:
+      return B;
+    case R:
+      return L;
+    case B:
+      return F;
+    case L:
+      return R;
+    case D:
+      return U;
     default:
       throw std::logic_error("Unknown enum value!");
   }
