@@ -19,9 +19,9 @@ struct EdgePiece {
 
   EdgePiece(const ConstEdgePieceProxy& proxy);
 
-  bool operator==(const EdgePiece& other) const;
+  constexpr bool operator==(const EdgePiece& other) const = default;
 
-  bool operator!=(const EdgePiece& other) const;
+  constexpr bool operator!=(const EdgePiece& other) const = default;
 
   [[nodiscard]] EdgePiece flip() const;
 
@@ -36,13 +36,13 @@ class EdgePieceProxy {
  public:
   EdgePieceProxy(EdgePiece& edge_piece, const bool& is_flipped);
 
-  EdgePiece value() const;
+  [[nodiscard]] EdgePiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
-  void operator=(const EdgePiece& other);
+  EdgePieceProxy& operator=(const EdgePiece& other);
 
   [[nodiscard]] EdgePiece flip() const;
 
@@ -57,11 +57,11 @@ class ConstEdgePieceProxy {
  public:
   ConstEdgePieceProxy(const EdgePiece& edge_piece, const bool& is_flipped);
 
-  EdgePiece value() const;
+  [[nodiscard]] EdgePiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
   [[nodiscard]] EdgePiece flip() const;
 };

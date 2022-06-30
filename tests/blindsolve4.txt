@@ -1,0 +1,5 @@
+F' B2 D2 B L' B' U2 B' R U' B2 R2 F2 D2 R2 U' R2 D B2 U' R2 D' // Scramble
+z R R' D B' D' B E2 B' D B D' B' D' B E2 B' D B E' R2' E' R2' D R D' R' E2 R // Cross
+D R' D' U' B U B' E2 B U' B' U B U B' E2 B U' B' U U' U U' U' R' U R E2 R' U' R U E2 R D R' E2 R D' R' E2 L R D2 R' E R D2 R' E' L' R' U R E2 R' U' M F2 L S2' L' F2' L D B R' B' R' B R B' D' B R B' R' B' D B D' L2 B R' B' R' B R B' D' B R B' R' B' D B L3 B R' B' R' B R B' D' B R B' R' B' D B L' B2 R' B' R' B R B' D' B R B' R' B' D x // F2L Slot 1
+R' U' R2' U R U' R2' D R' U R D' R D' D F D R' D' R' D R D' F' D R D' R' D' F D F' // F2L Slot 2
+D' F D R' D' R' D R D' F' D R D' R' D' F D F' D2 R' D' R' D R D' F' D R D' R' D' F D L D2 F D R' D' R' D R D' F' D R D' R' D' F D F' D2' L' // F2L Slot 3

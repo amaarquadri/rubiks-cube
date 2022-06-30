@@ -3,6 +3,7 @@
 #include "Algorithm.h"
 #include "BlindsolvingMove.h"
 #include <string>
+#include <utility>
 
 namespace blindsolving {
 struct SolveData {
@@ -12,13 +13,13 @@ struct SolveData {
 
   SolveData() : is_parsed(true) {}
 
-  explicit SolveData(const Algorithm& moves, const bool& is_edge,
+  explicit SolveData(Algorithm  moves, const bool& is_edge,
                      const char& alg)
-      : moves(moves),
+      : moves(std::move(moves)),
         is_parsed(true),
         blindsolving_move(BlindsolvingMove{is_edge, alg}) {}
 
-  explicit SolveData(const Algorithm& moves) : is_parsed(false), moves(moves) {}
+  explicit SolveData(Algorithm  moves) : is_parsed(false), moves(std::move(moves)) {}
 
   SolveData(const SolveData& other);
 

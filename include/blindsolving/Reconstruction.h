@@ -5,7 +5,8 @@
 #include <vector>
 
 namespace blindsolving {
-using Reconstruction = std::vector<SolveData>;
-
-std::string toStr(const Reconstruction& reconstruction);
+class Reconstruction : public std::vector<SolveData> {
+ public:
+  [[nodiscard]] std::string toStr() const;
+};
 }  // namespace blindsolving

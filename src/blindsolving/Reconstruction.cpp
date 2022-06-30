@@ -3,41 +3,35 @@
 #include <string>
 
 namespace blindsolving {
-std::string toStr(const Reconstruction& reconstruction) {
+std::string Reconstruction::toStr() const {
   size_t consumed = 0;
   std::string result;
-  while (consumed < reconstruction.size()) {
-    if (!reconstruction[consumed].is_parsed) {
-      result += reconstruction[consumed].toStr() + ", ";
+  while (consumed < size()) {
+    if (!(*this)[consumed].is_parsed) {
+      result += (*this)[consumed].toStr() + ", ";
       consumed++;
       continue;
     }
-    if (reconstruction[consumed].blindsolving_move.is_parity) {
+    if ((*this)[consumed].blindsolving_move.is_parity) {
       result += "Parity, ";
       consumed++;
       continue;
     }
-    if (reconstruction[consumed].blindsolving_move.is_edge) {
+    if ((*this)[consumed].blindsolving_move.is_edge) {
       result += "Edges: [";
-      while (consumed < reconstruction.size() &&
-             reconstruction[consumed].is_parsed &&
-             !reconstruction[consumed].blindsolving_move.is_parity &&
-             reconstruction[consumed].blindsolving_move.is_edge) {
-        result +=
-            std::string(1, reconstruction[consumed].blindsolving_move.alg) +
-            " ";
+      while (consumed < size() && (*this)[consumed].is_parsed &&
+             !(*this)[consumed].blindsolving_move.is_parity &&
+             (*this)[consumed].blindsolving_move.is_edge) {
+        result += std::string(1, (*this)[consumed].blindsolving_move.alg) + " ";
         consumed++;
       }
       result += "], ";
     } else {
       result += "Corners: [";
-      while (consumed < reconstruction.size() &&
-             reconstruction[consumed].is_parsed &&
-             !reconstruction[consumed].blindsolving_move.is_parity &&
-             !reconstruction[consumed].blindsolving_move.is_edge) {
-        result +=
-            std::string(1, reconstruction[consumed].blindsolving_move.alg) +
-            " ";
+      while (consumed < size() && (*this)[consumed].is_parsed &&
+             !(*this)[consumed].blindsolving_move.is_parity &&
+             !(*this)[consumed].blindsolving_move.is_edge) {
+        result += std::string(1, (*this)[consumed].blindsolving_move.alg) + " ";
         consumed++;
       }
       result += "], ";

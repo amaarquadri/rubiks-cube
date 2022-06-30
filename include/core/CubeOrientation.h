@@ -15,7 +15,7 @@ struct CubeOrientation {
   Face top;    // the face that is now on top
   Face front;  // the face that is now in the front
 
-  bool isValid() const;
+  [[nodiscard]] bool isValid() const;
 
   bool operator==(const CubeOrientation& other) const;
 
@@ -46,8 +46,9 @@ struct CubeOrientation {
    * Computes the CubeRotation(s) that would transform this CubeOrientation to
    * the identity CubeOrientation.
    */
-  std::pair<std::optional<CubeRotation>, std::optional<CubeRotation>> solve()
-      const;
+  [[nodiscard]] std::pair<std::optional<CubeRotation>,
+                          std::optional<CubeRotation>>
+  solve() const;
 
   /**
    * @brief Converts the given Face in this CubeOrientation to the equivalent

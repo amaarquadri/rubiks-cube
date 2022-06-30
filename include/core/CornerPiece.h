@@ -23,9 +23,9 @@ struct CornerPiece {
 
   CornerPiece(const ConstCornerPieceProxy& proxy);
 
-  bool operator==(const CornerPiece& other) const;
+  constexpr bool operator==(const CornerPiece& other) const = default;
 
-  bool operator!=(const CornerPiece& other) const;
+  constexpr bool operator!=(const CornerPiece& other) const = default;
 
   [[nodiscard]] CornerPiece rotateClockwise() const;
 
@@ -48,15 +48,15 @@ class CornerPieceProxy {
   CornerPieceProxy(CornerPiece& corner_piece,
                    const CornerRotationAmount& rotationAmount);
 
-  CornerPiece value() const;
+  [[nodiscard]] CornerPiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
-  Colour third() const;
+  [[nodiscard]] Colour third() const;
 
-  void operator=(const CornerPiece& other);
+  CornerPieceProxy& operator=(const CornerPiece& other);
 };
 
 class ConstCornerPieceProxy {
@@ -68,13 +68,13 @@ class ConstCornerPieceProxy {
   ConstCornerPieceProxy(const CornerPiece& corner_piece,
                         const CornerRotationAmount& rotationAmount);
 
-  CornerPiece value() const;
+  [[nodiscard]] CornerPiece value() const;
 
-  Colour first() const;
+  [[nodiscard]] Colour first() const;
 
-  Colour second() const;
+  [[nodiscard]] Colour second() const;
 
-  Colour third() const;
+  [[nodiscard]] Colour third() const;
 };
 
 namespace std {

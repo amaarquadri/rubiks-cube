@@ -8,14 +8,6 @@ EdgePiece::EdgePiece(const EdgePieceProxy& proxy)
 EdgePiece::EdgePiece(const ConstEdgePieceProxy& proxy)
     : first(proxy.first()), second(proxy.second()) {}
 
-bool EdgePiece::operator==(const EdgePiece& other) const {
-  return first == other.first && second == other.second;
-}
-
-bool EdgePiece::operator!=(const EdgePiece& other) const {
-  return !(*this == other);
-}
-
 EdgePiece EdgePiece::flip() const { return {second, first}; }
 
 void EdgePiece::flipInPlace() { std::swap(first, second); }
@@ -31,11 +23,12 @@ Colour EdgePieceProxy::first() const { return value().first; }
 
 Colour EdgePieceProxy::second() const { return value().second; }
 
-void EdgePieceProxy::operator=(const EdgePiece& other) {
+EdgePieceProxy& EdgePieceProxy::operator=(const EdgePiece& other) {
   if (is_flipped)
     edge_piece = other.flip();
   else
     edge_piece = other;
+  return *this;
 }
 
 EdgePiece EdgePieceProxy::flip() const { return value().flip(); }

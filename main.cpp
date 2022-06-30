@@ -15,7 +15,7 @@ static void viewReconstruction(const std::string& file_name) {
   const Algorithm solve = Algorithm::parseExpanded(solve_str);
 
   const Reconstruction reconstruction = parseSolveAttempt(solve);
-  std::cout << "Attempt reconstruction:\n" << toStr(reconstruction) << '\n';
+  std::cout << "Attempt reconstruction:\n" << reconstruction.toStr() << '\n';
   ReconstructionIterator it = getReconstructionIterator(Cube{scramble});
 
   std::cout << "Processing " << it.getPeriod() << " reconstructions...\n";

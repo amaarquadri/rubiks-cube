@@ -7,9 +7,11 @@ struct EdgeLocation {
   Face first;
   Face second;
 
-  [[nodiscard]] bool operator==(const EdgeLocation& other) const;
+  [[nodiscard]] constexpr bool operator==(const EdgeLocation& other) const =
+      default;
 
-  [[nodiscard]] bool operator!=(const EdgeLocation& other) const;
+  [[nodiscard]] constexpr bool operator!=(const EdgeLocation& other) const =
+      default;
 
   [[nodiscard]] EdgeLocation flip() const;
 };
