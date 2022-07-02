@@ -6,8 +6,8 @@
 #include <stdexcept>
 
 void testSolveCubeOrientation() {
-  static constexpr std::array<Face, 6> Faces{Face::U, Face::F, Face::R,
-                                             Face::B, Face::L, Face::D};
+  using enum Face;
+  static constexpr std::array<Face, 6> Faces{U, F, R, B, L, D};
   for (const Face& top : Faces)
     for (const Face& front : Faces) {
       CubeOrientation orientation{top, front};
