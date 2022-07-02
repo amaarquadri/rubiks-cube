@@ -14,6 +14,9 @@
 
 template <size_t n>
 class Permutation : public std::array<uint8_t, n> {
+  static_assert(n >= 2);
+  static_assert(n <= (1 << 8));
+
  public:
   constexpr bool isValid() const {
     std::array<bool, n> found{};
@@ -25,7 +28,6 @@ class Permutation : public std::array<uint8_t, n> {
   }
 
   static Permutation<n> randomPermutation() {
-    if (n < 2) throw std::invalid_argument("Error: n < 2");
     Permutation<n> permutation;
     std::iota(permutation.begin(), permutation.end(), 0);
     std::shuffle(permutation.begin(), permutation.end(),
