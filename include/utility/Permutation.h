@@ -16,6 +16,21 @@ template <size_t n>
 class Permutation : public std::array<uint8_t, n> {
   static_assert(n >= 2);
   static_assert(n <= (1 << 8));
+  // TODO: check that n! fits in a size_t
+
+ private:
+  /**
+   * @return An std::array containing {(n - 1)!, (n - 2)!, ..., 2!, 1!, 0!}.
+   */
+  static constexpr std::array<size_t, n> getFactorialCoefficients() {
+    std::array<size_t, n> factorials;
+    factorials.back() = 1;  // zero factorial
+    for (uint8_t i = 1; i < n; ++i)
+      factorials[n - 1 - i] = i * factorials[n - i];  // i factorial
+    return factorials;
+  }
+  static constexpr std::array<size_t, n> FactorialCoefficients =
+      getFactorialCoefficients();
 
  public:
   constexpr bool isValid() const {
@@ -32,6 +47,43 @@ class Permutation : public std::array<uint8_t, n> {
     std::iota(permutation.begin(), permutation.end(), 0);
     std::shuffle(permutation.begin(), permutation.end(),
                  utility::random_engine);
+    return permutation;
+  }
+
+  constexpr size_t getRank() const {
+    assert(isValid());
+    size_t rank = 0;
+    for (size_t i = 0; i < n; ++i) {
+      const uint8_t d =
+          (*this)[i] - std::count_if(this->begin(), this->begin() + i,
+                                     [&](const uint8_t& value) {
+                                       return value < (*this)[i];
+                                     });
+      rank += FactorialCoefficients[i] * d;
+    }
+
+    return rank;
+  }
+
+  static constexpr Permutation<n> parseRank(size_t rank) {
+    assert(rank < n * FactorialCoefficients[0]);  // check that rank < n!
+    Permutation<n> permutation;
+    std::array<bool, n>
+        used_elements{};  // used_elements[i] is true if i is in permutation
+    for (size_t i = 0; i < n; ++i) {
+      // remainder and integer quotient will be computed via a single
+      // instruction
+      uint8_t d = rank / FactorialCoefficients[i];
+      rank = rank % FactorialCoefficients[i];
+
+      for (size_t j = 0; j <= d; ++j) {
+        assert(j < n);
+        if (used_elements[j]) ++d;
+      }
+      assert(d < n);
+      permutation[i] = d;
+      used_elements[d] = true;
+    }
     return permutation;
   }
 
