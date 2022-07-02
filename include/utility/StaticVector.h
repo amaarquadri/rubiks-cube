@@ -8,8 +8,8 @@
 namespace utility {
 template <typename T, size_t capacity>
 class StaticVector {
- private:
-  static constexpr auto getSizeType() {
+ public:
+  using size_type = decltype([]() {
     if constexpr (capacity < (1 << 8))
       return uint8_t{};
     else if constexpr (capacity < (1 << 16))
@@ -18,10 +18,7 @@ class StaticVector {
       return uint32_t{};
     else
       return uint64_t{};
-  }
-
- public:
-  using size_type = decltype(getSizeType());
+  }());
   using iterator = typename std::array<T, capacity>::iterator;
   using const_iterator = typename std::array<T, capacity>::const_iterator;
   using reverse_iterator = typename std::array<T, capacity>::reverse_iterator;

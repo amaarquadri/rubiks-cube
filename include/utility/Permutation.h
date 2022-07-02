@@ -20,17 +20,15 @@ class Permutation : public std::array<uint8_t, n> {
 
  private:
   /**
-   * @return An std::array containing {(n - 1)!, (n - 2)!, ..., 2!, 1!, 0!}.
+   * An std::array containing {(n - 1)!, (n - 2)!, ..., 2!, 1!, 0!}.
    */
-  static constexpr std::array<size_t, n> getFactorialCoefficients() {
+  static constexpr std::array<size_t, n> FactorialCoefficients = []() {
     std::array<size_t, n> factorials;
     factorials.back() = 1;  // zero factorial
     for (uint8_t i = 1; i < n; ++i)
       factorials[n - 1 - i] = i * factorials[n - i];  // i factorial
     return factorials;
-  }
-  static constexpr std::array<size_t, n> FactorialCoefficients =
-      getFactorialCoefficients();
+  }();
 
  public:
   constexpr bool isValid() const {
