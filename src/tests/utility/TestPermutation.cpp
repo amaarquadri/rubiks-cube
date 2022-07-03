@@ -17,7 +17,7 @@ static constexpr bool testConsistencyRecursive() {
   if constexpr (n == 2)
     return testRankConsistency<2>();
   else
-    return testRankConsistency<n>() && testRecursive<n - 1>();
+    return testRankConsistency<n>() && testConsistencyRecursive<n - 1>();
 }
 
 void testPermutation() {
