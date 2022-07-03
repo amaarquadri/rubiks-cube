@@ -9,13 +9,9 @@
 #include <bit>
 #include <cstdint>
 #include <stdexcept>
+#include <utility>
 
 namespace solvers {
-struct OptimalMove {
-  Turn turn;
-  uint16_t next_edge_orientation;
-};
-
 static constexpr std::array<Turn, 18> PossibleTurns = []() {
   using enum Face;
   using enum RotationAmount;
@@ -93,36 +89,34 @@ static constexpr uint16_t applyTurn(const uint16_t& edge_orientation,
   return new_edge_orientation;
 }
 
-static constexpr std::array<OptimalMove, 2048> getOptimalMoves() {
-  constexpr uint16_t UnknownSentinel = 2048;
+static constexpr std::array<uint16_t, DescriptorCount> CompressedOptimalMoves =
+    []() {
+      static_assert(PossibleTurns.size() * DescriptorCount < (1 << 16));
 
-  std::array<OptimalMove, 2048> optimal_moves{};
-  for (size_t i = 0; i < 2048; ++i)
-    optimal_moves[i].next_edge_orientation = UnknownSentinel;
+      /** static **/ constexpr std::array<std::pair<Turn, uint16_t>,
+                                          DescriptorCount>
+          optimal_moves = getOptimalMoves<uint16_t, DescriptorCount>(
+              PossibleTurns, applyTurn);
+      std::array<uint16_t, DescriptorCount> compressed_optimal_moves;
 
-  utility::StaticVector<uint16_t, 2048> current{};
-  current.push_back(0);
-  utility::StaticVector<uint16_t, 2048> next{};
+      /**
+       * This value should never be accessed, so it is given an invalid value to
+       * cause immediate failure.
+       */
+      compressed_optimal_moves[SolvedDescriptor] =
+          PossibleTurns.size() * DescriptorCount;
 
-  while (current.getSize() > 0) {
-    for (const uint16_t& idx : current) {
-      for (const Turn& turn : PossibleTurns) {
-        const uint16_t next_idx = applyTurn(idx, turn);
-        if (next_idx != 0 &&
-            optimal_moves[next_idx].next_edge_orientation == UnknownSentinel) {
-          optimal_moves[next_idx].turn = turn.inv();
-          optimal_moves[next_idx].next_edge_orientation = idx;
-          next.push_back(next_idx);
-        }
+      for (uint16_t i = 1; i < DescriptorCount; ++i) {  // skip SolvedDescriptor
+        const size_t possible_turns_index =
+            std::find(PossibleTurns.begin(), PossibleTurns.end(),
+                      optimal_moves[i].first) -
+            PossibleTurns.begin();
+        assert(possible_turns_index != PossibleTurns.size());
+        compressed_optimal_moves[i] =
+            DescriptorCount * possible_turns_index + optimal_moves[i].second;
       }
-    }
-    current = next;
-    next.clear();
-  }
-  return optimal_moves;
-}
-
-static constexpr std::array<OptimalMove, 2048> OptimalMoves = getOptimalMoves();
+      return compressed_optimal_moves;
+    }();
 
 /**
  * Computes an uint16_t whose lower 11 bits represent whether or not the
@@ -154,10 +148,12 @@ bool areEdgesOriented(const Cube& cube) {
 Algorithm solveEdgeOrientation(const Cube& cube) {
   Algorithm alg;
   uint16_t edge_orientation = getEdgeOrientation(cube);
-  while (edge_orientation != 0) {
-    const OptimalMove& optimal_move = OptimalMoves[edge_orientation];
-    alg.push_back(Move{optimal_move.turn});
-    edge_orientation = optimal_move.next_edge_orientation;
+  while (edge_orientation != SolvedDescriptor) {
+    const uint16_t& compressed_optimal_move =
+        CompressedOptimalMoves[edge_orientation];
+    alg.push_back(
+        Move{PossibleTurns[compressed_optimal_move / DescriptorCount]});
+    edge_orientation = compressed_optimal_move % DescriptorCount;
   }
   return alg;
 }
