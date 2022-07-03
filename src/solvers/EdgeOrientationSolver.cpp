@@ -16,18 +16,18 @@ struct OptimalMove {
   uint16_t next_edge_orientation;
 };
 
-static constexpr std::array<Turn, 18> getPossibleTurns() {
+static constexpr std::array<Turn, 18> PossibleTurns = []() {
+  using enum Face;
+  using enum RotationAmount;
   std::array<Turn, 18> possible_turns{};
   uint8_t i = 0;
-  for (const Face& face :
-       {Face::U, Face::F, Face::R, Face::B, Face::L, Face::D})
+  for (const Face& face : {U, F, R, B, L, D})
     for (const RotationAmount& rotation_amount :
-         {RotationAmount::Clockwise, RotationAmount::HalfTurn,
-          RotationAmount::Counterclockwise})
+         {Clockwise, HalfTurn, Counterclockwise})
       possible_turns[i++] = Turn{face, rotation_amount};
   assert(i == 18);
   return possible_turns;
-}
+}();
 
 static constexpr std::array<Turn, 18> PossibleTurns = getPossibleTurns();
 
