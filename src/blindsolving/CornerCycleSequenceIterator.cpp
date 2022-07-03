@@ -6,6 +6,7 @@
 #include "Utils.h"
 #include <algorithm>
 #include <array>
+#include <cassert>
 #include <vector>
 
 namespace blindsolving {
@@ -78,9 +79,8 @@ std::vector<char> CornerCycleSequenceIterator::operator*() const {
 }
 
 size_t CornerCycleSequenceIterator::getPeriod() const {
-  static constexpr std::array<size_t, Cube::CORNER_LOCATION_ORDER.size()>
-      POWERS_OF_3{1, 3, 9, 27, 81, 243, 729, 2187};
-  return it.getPeriod() * POWERS_OF_3[rotation_amounts.size()];
+  assert(rotation_amounts.size() < utility::PowersOf3.size());
+  return it.getPeriod() * utility::PowersOf3[rotation_amounts.size()];
 }
 
 void CornerCycleSequenceIterator::reset() {
