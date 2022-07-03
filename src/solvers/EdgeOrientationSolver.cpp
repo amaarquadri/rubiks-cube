@@ -101,7 +101,7 @@ static constexpr std::array<uint16_t, DescriptorCount> CompressedOptimalMoves =
 
       /**
        * This value should never be accessed, so it is given an invalid value to
-       * cause immediate failure.
+       * hopefully cause immediate failure if used.
        */
       compressed_optimal_moves[SolvedDescriptor] =
           PossibleTurns.size() * DescriptorCount;
