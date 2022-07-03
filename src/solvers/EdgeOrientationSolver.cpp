@@ -53,26 +53,28 @@ static constexpr void cycleEdges(uint16_t& edge_orientation,
   set_next_bit(edge_cycle.front());
 }
 
-static constexpr uint16_t applyTurn(uint16_t edge_orientation,
+static constexpr uint16_t applyTurn(const uint16_t& edge_orientation,
                                     const Turn& turn) {
   if (turn.rotation_amount == RotationAmount::None) return edge_orientation;
+  uint16_t new_edge_orientation = edge_orientation;
 
   // temporarily add explicit 12th bit
-  if (std::popcount(edge_orientation) % 2 == 1) edge_orientation |= (1 << 11);
+  if (std::popcount(edge_orientation) % 2 == 1)
+    new_edge_orientation |= (1 << 11);
 
   const std::array<uint8_t, 4> edge_cycle = getEdgeCycle(turn.face);
 
   switch (turn.rotation_amount) {
     case RotationAmount::Clockwise:
-      cycleEdges<4>(edge_orientation, edge_cycle);
+      cycleEdges<4>(new_edge_orientation, edge_cycle);
       break;
     case RotationAmount::HalfTurn:
-      cycleEdges<2>(edge_orientation, {edge_cycle[0], edge_cycle[2]});
-      cycleEdges<2>(edge_orientation, {edge_cycle[1], edge_cycle[3]});
+      cycleEdges<2>(new_edge_orientation, {edge_cycle[0], edge_cycle[2]});
+      cycleEdges<2>(new_edge_orientation, {edge_cycle[1], edge_cycle[3]});
       break;
     case RotationAmount::Counterclockwise:
-      cycleEdges<4>(edge_orientation, {edge_cycle[3], edge_cycle[2],
-                                       edge_cycle[1], edge_cycle[0]});
+      cycleEdges<4>(new_edge_orientation, {edge_cycle[3], edge_cycle[2],
+                                           edge_cycle[1], edge_cycle[0]});
       break;
     default:
       // RotationAmount::None was already checked for at the beginning
@@ -82,12 +84,12 @@ static constexpr uint16_t applyTurn(uint16_t edge_orientation,
   // for F, F', B, and B' flip the correct bits since the edge orientation flips
   if ((turn.face == Face::F || turn.face == Face::B) &&
       turn.rotation_amount != RotationAmount::HalfTurn)
-    for (const size_t& idx : edge_cycle) edge_orientation ^= (1 << idx);
+    for (const size_t& idx : edge_cycle) new_edge_orientation ^= (1 << idx);
 
   // remove temporary redundant 12th bit
-  edge_orientation &= ~(1 << 11);
+  new_edge_orientation &= ~(1 << 11);
 
-  return edge_orientation;
+  return new_edge_orientation;
 }
 
 static constexpr std::array<OptimalMove, 2048> getOptimalMoves() {
