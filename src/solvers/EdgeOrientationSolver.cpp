@@ -29,7 +29,8 @@ static constexpr std::array<Turn, 18> PossibleTurns = []() {
   return possible_turns;
 }();
 
-static constexpr std::array<Turn, 18> PossibleTurns = getPossibleTurns();
+static constexpr uint16_t DescriptorCount = 2048;
+static constexpr uint16_t SolvedDescriptor = 0;
 
 template <size_t n>
 static constexpr void cycleEdges(uint16_t& edge_orientation,
@@ -147,7 +148,7 @@ static uint16_t getEdgeOrientation(const Cube& cube) {
 }
 
 bool areEdgesOriented(const Cube& cube) {
-  return getEdgeOrientation(cube) == 0;
+  return getEdgeOrientation(cube) == SolvedDescriptor;
 }
 
 Algorithm solveEdgeOrientation(const Cube& cube) {
@@ -164,7 +165,7 @@ Algorithm solveEdgeOrientation(const Cube& cube) {
 // Test functions
 
 static void testGetEdgeOrientation() {
-  if (getEdgeOrientation(Cube{}) != 0 ||
+  if (getEdgeOrientation(Cube{}) != SolvedDescriptor ||
       getEdgeOrientation(Cube{Algorithm::parse("F")}) != 404 ||
       getEdgeOrientation(Cube{Algorithm::parse("F R")}) != 390 ||
       getEdgeOrientation(Cube{Algorithm::parse("F B L U D' B2 R2 F")}) != 2047)
@@ -176,7 +177,7 @@ static void testApplyTurn() {
 
   for (size_t i = 0; i < count; ++i) {
     const Algorithm alg = Algorithm::random(20);
-    uint16_t edge_orientation = 0;
+    uint16_t edge_orientation = SolvedDescriptor;
     for (const Move& move : alg)
       edge_orientation = applyTurn(edge_orientation, move.getTurn());
     if (edge_orientation != getEdgeOrientation(Cube{alg}))
