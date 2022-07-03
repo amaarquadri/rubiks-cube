@@ -9,12 +9,14 @@
 #include "TestPLLs.h"
 #include "TestPermutation.h"
 #include "TestReconstructionIterator.h"
+#include "TestUint24Array.h"
 #include <cstddef>
 #include <iostream>
 
 void runTests() {
   testCombination();
   testPermutation();
+  testUint24Array();
   testAlgorithm();
   testSolveCubeOrientation();
   testPLLs();
