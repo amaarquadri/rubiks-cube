@@ -192,7 +192,7 @@ static void testSolveEdgeOrientation() {
     Cube cube{scramble};
     const Algorithm solve = solveEdgeOrientation(cube);
     cube.apply(solve);
-    if (getEdgeOrientation(cube) != 0)
+    if (!areEdgesOriented(cube))
       throw std::logic_error("Edge orientation was not solved!");
   }
 }
