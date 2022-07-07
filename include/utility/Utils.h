@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <concepts>
 #include <cstddef>
 #include <type_traits>
 #include <vector>
@@ -25,10 +26,9 @@ std::vector<T> flatten(const std::vector<std::vector<T>>& deep_vec) {
   return flattened;
 }
 
-template <typename T1, size_t n, typename T2, size_t k>
+template <typename T1, size_t n, std::integral T2, size_t k>
 constexpr void cycleArray(std::array<T1, n>& array,
                           const std::array<T2, k>& cycle) {
-  static_assert(std::is_integral_v<T2>, "T2 must be integral!");
   static_assert(k >= 2, "Must cycle at least 2 elements!");
   T1 next = array[cycle.front()];
   for (size_t i = 1; i < cycle.size(); ++i) {
