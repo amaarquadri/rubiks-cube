@@ -11,6 +11,24 @@ namespace utility {
 static constexpr std::array<size_t, 8> PowersOf3{1,  3,   9,   27,
                                                  81, 243, 729, 2187};
 
+struct Break {};
+
+/**
+ * Loops while start != stop, calling ++start each time.
+ * For each iteration, f is called with a parameter of type
+ * std::integral_constant<decltype(start), start>.
+ * If f's return type is utility::Break, then the constexprFor loop will break.
+ */
+template <auto start, auto stop, typename F>
+[[gnu::always_inline]] constexpr void constexprFor(F&& f) {
+  if constexpr (start != stop) {
+    using loop_index = std::integral_constant<decltype(start), start>;
+    f(loop_index{});
+    if constexpr (std::is_same_v<decltype(f(loop_index{})), Break>) return;
+    constexprFor<++start, stop>(f);
+  }
+}
+
 template <typename T>
 size_t deepCount(const std::vector<std::vector<T>>& vec) {
   size_t total = 0;
