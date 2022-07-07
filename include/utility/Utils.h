@@ -31,11 +31,7 @@ constexpr void cycleArray(std::array<T1, n>& array,
                           const std::array<T2, k>& cycle) {
   static_assert(k >= 2, "Must cycle at least 2 elements!");
   T1 next = array[cycle.front()];
-  for (size_t i = 1; i < cycle.size(); ++i) {
-    const T1 temp = array[cycle[i]];
-    array[cycle[i]] = next;
-    next = temp;
-  }
+  for (size_t i = 1; i < cycle.size(); ++i) std::swap(array[cycle[i]], next);
   array[cycle.front()] = next;
 }
 
