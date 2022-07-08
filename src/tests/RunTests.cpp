@@ -7,16 +7,16 @@
 #include "TestEdgeCycleSequenceIterator.h"
 #include "TestEdgeOrientationSolver.h"
 #include "TestPLLs.h"
+#include "TestPackedBitsArray.h"
 #include "TestPermutation.h"
 #include "TestReconstructionIterator.h"
-#include "TestUint24Array.h"
 #include <cstddef>
 #include <iostream>
 
 void runTests() {
   testCombination();
   testPermutation();
-  testUint24Array();
+  testPackedBitsArray();
   testAlgorithm();
   testSolveCubeOrientation();
   testPLLs();
