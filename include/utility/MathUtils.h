@@ -4,6 +4,9 @@
 #include <type_traits>
 
 namespace utility {
+static constexpr std::array<size_t, 8> PowersOf3{1,  3,   9,   27,
+                                                 81, 243, 729, 2187};
+
 template <typename T>
 constexpr T factorial(const T& n) {
   T result = static_cast<T>(1);

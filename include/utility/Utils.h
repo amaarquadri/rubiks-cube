@@ -8,9 +8,6 @@
 #include <vector>
 
 namespace utility {
-static constexpr std::array<size_t, 8> PowersOf3{1,  3,   9,   27,
-                                                 81, 243, 729, 2187};
-
 struct Break {};
 
 /**

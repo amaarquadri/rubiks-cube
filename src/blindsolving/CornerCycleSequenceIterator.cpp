@@ -3,6 +3,7 @@
 #include "Cube.h"
 #include "CycleSequenceIterator.h"
 #include "Lettering.h"
+#include "MathUtils.h"
 #include "Utils.h"
 #include <algorithm>
 #include <array>
