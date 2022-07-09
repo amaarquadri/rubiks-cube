@@ -334,7 +334,7 @@ class PackedBitsArray {
   static constexpr uint8_t full_bytes = bits / 8;
   static constexpr uint8_t extra_bits = bits % 8;
 
-  std::array<uint8_t, (n * bits + 7) / 8> data;
+  std::array<uint8_t, (n * bits + 7) / 8> data;  // add 7 to round up
 
  public:
   using size_type = size_t;
