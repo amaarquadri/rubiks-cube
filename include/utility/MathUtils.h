@@ -13,17 +13,17 @@ static constexpr std::array<size_t, 8> PowersOf3{1,  3,   9,   27,
 
 template <typename T>
 constexpr T factorial(const T& n) {
-  T result = static_cast<T>(1);
+  T result = 1;
   // decrement instead of incrementing in the loop to avoid an infinite loop in
   // the case where n is the maximum value
-  for (T val = n; val >= static_cast<T>(2); --val) result *= val;
+  for (T val = n; val >= 2; --val) result *= val;
   return result;
 }
 
 template <typename T1, typename T2>
 constexpr auto pow(const T1& base, const T2& exponent) {
   using R = std::common_type_t<T1, T2>;
-  R result = static_cast<R>(1);
+  R result = 1;
   for (size_t i = 0; i < exponent; ++i) result *= base;
   return result;
 }
