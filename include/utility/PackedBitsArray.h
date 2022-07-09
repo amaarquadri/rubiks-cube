@@ -36,29 +36,29 @@ struct PackedBitsReference {
       : data(data), offset(offset) {}
 
  private:
-  static constexpr uint8_t trailing_ones(const uint8_t& count) {
+  static constexpr uint8_t trailingOnes(const uint8_t& count) {
     assert(count <= 8);
     return utility::pow(2, count) - 1;
   }
-  static_assert(trailing_ones(0) == 0 && trailing_ones(8) == 255);
+  static_assert(trailingOnes(0) == 0 && trailingOnes(8) == 255);
 
-  static constexpr uint8_t leading_ones(const uint8_t& count) {
+  static constexpr uint8_t leadingOnes(const uint8_t& count) {
     assert(count <= 8);
     // need to explicitly cast since ~ performs type promotion
-    return static_cast<uint8_t>(~trailing_ones(8 - count));
+    return static_cast<uint8_t>(~trailingOnes(8 - count));
   }
-  static_assert(leading_ones(0) == 0 && leading_ones(8) == 255);
+  static_assert(leadingOnes(0) == 0 && leadingOnes(8) == 255);
 
   template <uint8_t offset_>
   [[gnu::always_inline]] constexpr void write_data(const value_type& value) {
     static_assert(offset_ < 8);
     if constexpr (bits < (8 - offset_)) {
-      (*data) &= leading_ones(offset_) + trailing_ones(8 - offset_ - bits);
+      (*data) &= leadingOnes(offset_) + trailingOnes(8 - offset_ - bits);
       (*data) |= value << (8 - offset_ - bits);
       return;
     }
     // write the entire (8 - offset_) bits
-    (*data) &= leading_ones(offset_);
+    (*data) &= leadingOnes(offset_);
     (*data) |= static_cast<uint8_t>(value >> (bits - (8 - offset_)));
     if constexpr (bits == (8 - offset_)) return;
 
@@ -66,7 +66,7 @@ struct PackedBitsReference {
       static constexpr uint8_t bits_seen = 8 * (i + 1) - offset_;
       if constexpr (bits < bits_seen) {
         // erase the high bits and write the new high bits
-        (*(data + i)) &= trailing_ones(bits_seen - bits);
+        (*(data + i)) &= trailingOnes(bits_seen - bits);
         (*(data + i)) |= static_cast<uint8_t>(value << (bits_seen - bits));
         return Break{};
       } else {
@@ -81,10 +81,10 @@ struct PackedBitsReference {
   [[gnu::always_inline]] constexpr value_type read_data() const {
     static_assert(offset_ < 8);
     if constexpr (bits <= (8 - offset_))
-      return ((*data) & trailing_ones(8 - offset_)) >> (8 - bits - offset_);
+      return ((*data) & trailingOnes(8 - offset_)) >> (8 - bits - offset_);
 
     value_type result =
-        static_cast<value_type>((*data) & trailing_ones(8 - offset_))
+        static_cast<value_type>((*data) & trailingOnes(8 - offset_))
         << (bits - (8 - offset_));
     constexprFor<1, full_bytes + 1>([&](auto i) {
       static constexpr uint8_t bits_seen = 8 * (i + 1) - offset_;
