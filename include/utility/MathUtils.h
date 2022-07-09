@@ -61,6 +61,26 @@ constexpr uint8_t requiredBits(T value) {
 static_assert(requiredBits(32ull) == 5);
 static_assert(requiredBits(45ull) == 6);
 
+template <uint8_t bits>
+struct get_smallest_unsigned_int {
+  static_assert(bits <= 64);
+
+  using type = decltype([]() {
+    if constexpr (bits <= 8)
+      return uint8_t{};
+    else if constexpr (bits <= 16)
+      return uint16_t{};
+    else if constexpr (bits <= 32)
+      return uint32_t{};
+    else
+      return uint64_t{};
+  }());
+};
+
+template <uint8_t bits>
+using get_smallest_unsigned_int_t =
+    typename get_smallest_unsigned_int<bits>::type;
+
 // Test cases
 static_assert(factorial(5) == 120);
 static_assert(pow(3, 7) == 2187);

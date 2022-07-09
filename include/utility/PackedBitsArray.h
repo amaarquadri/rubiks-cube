@@ -21,18 +21,7 @@ struct PackedBitsReference {
   static constexpr uint8_t extra_bits = bits % 8;
 
  public:
-  using value_type = decltype([]() {
-    if constexpr (bits <= 8)
-      return uint8_t{};
-    else if constexpr (bits <= 16)
-      return uint16_t{};
-    else if constexpr (bits <= 32)
-      return uint32_t{};
-    else if constexpr (bits <= 64)
-      return uint64_t{};
-    else
-      throw std::logic_error("Invalid number of bytes!");
-  }());
+  using value_type = get_smallest_unsigned_int_t<bits>;
   using offset_type =
       std::conditional_t<is_byte_aligned, std::monostate, uint8_t>;
 
@@ -216,8 +205,7 @@ class PackedBitsIteratorImpl {
 
  public:
   using value_type =
-      std::conditional_t<is_const_iterator,
-                         typename PackedBitsReference<bits>::value_type,
+      std::conditional_t<is_const_iterator, get_smallest_unsigned_int_t<bits>,
                          PackedBitsReference<bits>>;
   using difference_type = long long;
 
@@ -332,9 +320,8 @@ class PackedBitsIterator : public PackedBitsIteratorImpl<bits, false> {
 
 template <uint8_t bits>
 class PackedBitsConstIterator : public PackedBitsIteratorImpl<bits, true> {
-  constexpr auto operator*() const {
-    return static_cast<typename PackedBitsReference<bits>::value_type>(
-        PackedBitsReference<bits>{this->data, this->offset});
+  constexpr get_smallest_unsigned_int_t<bits> operator*() const {
+    return PackedBitsReference<bits>{this->data, this->offset};
   }
 };
 
@@ -352,7 +339,7 @@ class PackedBitsArray {
  public:
   using size_type = size_t;
   using reference = PackedBitsReference<bits>;
-  using const_reference = typename PackedBitsReference<bits>::value_type;
+  using const_reference = get_smallest_unsigned_int_t<bits>;
   using iterator = PackedBitsIteratorImpl<bits>;
   using const_iterator = PackedBitsConstIterator<bits>;
   using reverse_iterator = std::reverse_iterator<iterator>;
