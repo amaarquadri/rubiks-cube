@@ -29,6 +29,8 @@ class Permutation : public std::array<uint8_t, n> {
     return factorials;
   }();
 
+  static constexpr size_t n_factorial = n * FactorialCoefficients[0];
+
  public:
   constexpr bool isValid() const {
     std::array<bool, n> found{};
@@ -63,7 +65,7 @@ class Permutation : public std::array<uint8_t, n> {
   }
 
   static constexpr Permutation<n> parseRank(size_t rank) {
-    assert(rank < n * FactorialCoefficients[0]);  // check that rank < n!
+    assert(rank < n_factorial);
     Permutation<n> permutation;
     std::array<bool, n>
         used_elements{};  // used_elements[i] is true if i is in permutation
@@ -81,6 +83,7 @@ class Permutation : public std::array<uint8_t, n> {
       permutation[i] = d;
       used_elements[d] = true;
     }
+    assert(permutation.isValid());
     return permutation;
   }
 
