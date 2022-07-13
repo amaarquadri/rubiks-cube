@@ -15,8 +15,7 @@
 template <size_t n>
 class Permutation : public std::array<uint8_t, n> {
   static_assert(n >= 2);
-  static_assert(n <= (1 << 8));
-  // TODO: check that n! fits in a size_t
+  static_assert(n <= 20);  // 21! does not fit into a 64-bit unsigned integer
 
  private:
   /**
