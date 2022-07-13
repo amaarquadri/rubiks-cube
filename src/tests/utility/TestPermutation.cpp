@@ -1,6 +1,10 @@
 #include "TestPermutation.h"
 #include "Permutation.h"
+#include <algorithm>
+#include <array>
+#include <cstddef>
 #include <iostream>
+#include <numeric>
 
 template <size_t n>
 static constexpr bool testRankConsistency() {
