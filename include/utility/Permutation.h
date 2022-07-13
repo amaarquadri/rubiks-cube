@@ -107,6 +107,22 @@ class Permutation : public std::array<uint8_t, n> {
 
   constexpr void flipParity() { std::swap(this->front(), (*this)[1]); }
 
+  /**
+   * @return False if and only if the permutation overflowed.
+   */
+  constexpr bool nextPermutation() {
+    assert(isValid());
+    return std::next_permutation(this->begin(), this->end());
+  }
+
+  /**
+   * @return False if and only if the permutation underflowed.
+   */
+  constexpr bool prevPermutation() {
+    assert(isValid());
+    return std::prev_permutation(this->begin(), this->end());
+  }
+
   template <typename T>
   constexpr std::array<T, n> apply(const std::array<T, n>& items) const {
     assert(isValid());
