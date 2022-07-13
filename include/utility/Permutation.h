@@ -123,6 +123,32 @@ class Permutation : public std::array<uint8_t, n> {
     return std::prev_permutation(this->begin(), this->end());
   }
 
+  /**
+   * Computes the relative rank of this permutation amongst all permutations
+   * with the same parity. The result is in the range [0, n! / 2).
+   */
+  constexpr size_t getParityRank() { return getRank() / 2; }
+
+  /**
+   * Computes the permutation with the specified parity_rank and parity.
+   */
+  static constexpr Permutation<n> parseParityRank(const size_t& parity_rank,
+                                                  const bool& is_odd) {
+    assert(parity_rank < n_factorial / 2);
+    /**
+     * We don't know if 2 * parity_rank or 2 * parity_rank + 1 is the rank with
+     * the desired parity, but we know that it must be one of them. Thus, we can
+     * simply compute the permutation for 2 * parity_rank and take the next
+     * permutation if the parity is incorrect.
+     */
+    Permutation<n> permutation = parseRank(2 * parity_rank);
+    if (permutation.isOdd() != is_odd) {
+      [[maybe_unused]] const bool overflowed = permutation.nextPermutation();
+      assert(!overflowed);
+    }
+    return permutation;
+  }
+
   template <typename T>
   constexpr std::array<T, n> apply(const std::array<T, n>& items) const {
     assert(isValid());
