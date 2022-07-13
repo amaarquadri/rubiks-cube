@@ -89,35 +89,6 @@ static constexpr uint16_t applyTurn(const uint16_t& edge_orientation,
   return new_edge_orientation;
 }
 
-static constexpr std::array<uint16_t, DescriptorCount> CompressedOptimalMoves =
-    []() {
-      static_assert(PossibleTurns.size() * DescriptorCount < (1 << 16));
-
-      /** static **/ constexpr std::array<std::pair<Turn, uint16_t>,
-                                          DescriptorCount>
-          optimal_moves = getOptimalMoves<uint16_t, DescriptorCount>(
-              PossibleTurns, applyTurn);
-      std::array<uint16_t, DescriptorCount> compressed_optimal_moves;
-
-      /**
-       * This value should never be accessed, so it is given an invalid value to
-       * hopefully cause immediate failure if used.
-       */
-      compressed_optimal_moves[SolvedDescriptor] =
-          PossibleTurns.size() * DescriptorCount;
-
-      for (uint16_t i = 1; i < DescriptorCount; ++i) {  // skip SolvedDescriptor
-        const size_t possible_turns_index =
-            std::find(PossibleTurns.begin(), PossibleTurns.end(),
-                      optimal_moves[i].first) -
-            PossibleTurns.begin();
-        assert(possible_turns_index != PossibleTurns.size());
-        compressed_optimal_moves[i] =
-            DescriptorCount * possible_turns_index + optimal_moves[i].second;
-      }
-      return compressed_optimal_moves;
-    }();
-
 /**
  * Computes an uint16_t whose lower 11 bits represent whether or not the
  * corresponding edges of the given cube are flipped or not. The edge piece at
@@ -146,16 +117,9 @@ bool areEdgesOriented(const Cube& cube) {
 }
 
 Algorithm solveEdgeOrientation(const Cube& cube) {
-  Algorithm alg;
-  uint16_t edge_orientation = getEdgeOrientation(cube);
-  while (edge_orientation != SolvedDescriptor) {
-    const uint16_t& compressed_optimal_move =
-        CompressedOptimalMoves[edge_orientation];
-    alg.push_back(
-        Move{PossibleTurns[compressed_optimal_move / DescriptorCount]});
-    edge_orientation = compressed_optimal_move % DescriptorCount;
-  }
-  return alg;
+  static constexpr auto solver =
+      getSolver<DescriptorCount, PossibleTurns, applyTurn, SolvedDescriptor>();
+  return solver(getEdgeOrientation(cube));
 }
 
 // Test functions

@@ -1,6 +1,9 @@
 #pragma once
 
+#include "Algorithm.h"
 #include "Face.h"
+#include "MathUtils.h"
+#include "PackedBitsArray.h"
 #include "StaticVector.h"
 #include "Turn.h"
 #include <algorithm>
@@ -59,44 +62,101 @@ constexpr std::array<uint8_t, 4> getCornerCycle(const Face& face) {
   }
 }
 
-template <std::unsigned_integral Uint, Uint DescriptorCount, size_t n>
-constexpr std::array<std::pair<Turn, Uint>, DescriptorCount> getOptimalMoves(
-    const std::array<Turn, n>& possible_turns,
-    Uint (*apply_turn)(const Uint&, const Turn&),
-    const Uint& solved_descriptor = 0) {
-  constexpr Uint UnknownSentinel = DescriptorCount;
+template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
+          auto SolvedDescriptor = 0>
+consteval auto getSolver() {
+  using Uint = decltype(DescriptorCount);
+  static_assert(std::unsigned_integral<Uint>);
+  static_assert(DescriptorCount > 0);
+  static_assert(std::is_same_v<const std::array<Turn, PossibleTurns.size()>,
+                               decltype(PossibleTurns)>);
+  static_assert(PossibleTurns.size() > 0);
+  static_assert(
+      std::is_same_v<Uint (*)(const Uint&, const Turn&), decltype(applyTurn)> ||
+      std::is_same_v<Uint (*)(Uint, const Turn&), decltype(applyTurn)>);
+  static_assert(std::is_same_v<Uint, decltype(SolvedDescriptor)>);
+  static_assert(SolvedDescriptor < DescriptorCount);
 
-  std::array<std::pair<Turn, Uint>, DescriptorCount> optimal_moves{};
-  for (size_t i = 0; i < DescriptorCount; ++i)
-    optimal_moves[i].second = UnknownSentinel;
+  return [](Uint descriptor) {
+    static constexpr auto OptimalMoves = []() consteval {
+      /** static **/ constexpr Uint UnknownSentinel = DescriptorCount;
 
-  utility::StaticVector<Uint, DescriptorCount> current{};
-  current.push_back(solved_descriptor);
-  utility::StaticVector<Uint, DescriptorCount> next{};
+      std::array<std::pair<Turn, Uint>, DescriptorCount> optimal_moves{};
+      for (size_t i = 0; i < DescriptorCount; ++i)
+        optimal_moves[i].second = UnknownSentinel;
 
-  while (!current.isEmpty()) {
-    for (const Uint& idx : current) {
-      for (const Turn& turn : possible_turns) {
-        const Uint next_idx = apply_turn(idx, turn);
-        if (next_idx != solved_descriptor &&
-            optimal_moves[next_idx].second == UnknownSentinel) {
-          optimal_moves[next_idx].first = turn.inv();
-          optimal_moves[next_idx].second = idx;
-          next.push_back(next_idx);
+      utility::StaticVector<Uint, DescriptorCount> current{};
+      current.push_back(SolvedDescriptor);
+      utility::StaticVector<Uint, DescriptorCount> next{};
+
+      //  for (size_t i = 0; !current.isEmpty() && i < 1; ++i) {
+      while (!current.isEmpty()) {
+        for (const Uint& idx : current) {
+          for (const Turn& turn : PossibleTurns) {
+            const Uint next_idx = applyTurn(idx, turn);
+            if (next_idx != SolvedDescriptor &&
+                optimal_moves[next_idx].second == UnknownSentinel) {
+              optimal_moves[next_idx].first = turn.inv();
+              optimal_moves[next_idx].second = idx;
+              next.push_back(next_idx);
+            }
+          }
         }
+        current = next;
+        next.clear();
       }
+      assert(optimal_moves[SolvedDescriptor].second == UnknownSentinel);
+      assert([&]() {
+        for (size_t i = 0; i < optimal_moves.size(); ++i) {
+          if (i == SolvedDescriptor) continue;
+          if (optimal_moves[i].second == UnknownSentinel) return false;
+        }
+        return true;
+      }());
+      return optimal_moves;
     }
-    current = next;
-    next.clear();
-  }
-  assert(optimal_moves[solved_descriptor].second == UnknownSentinel);
-  assert([&]() {
-    for (size_t i = 0; i < optimal_moves.size(); ++i) {
-      if (i == solved_descriptor) continue;
-      if (optimal_moves[i].second == UnknownSentinel) return false;
+    ();
+    static constexpr uint8_t DescriptorBits =
+        utility::requiredBits(DescriptorCount);
+    static constexpr auto CompressedOptimalMoves = []() consteval {
+      /** static **/ constexpr uint8_t TurnBits =
+          utility::requiredBits(PossibleTurns.size());
+      /** static **/ constexpr uint8_t CompressedBits =
+          DescriptorBits + TurnBits;
+
+      utility::PackedBitsArray<CompressedBits, DescriptorCount>
+          compressed_optimal_moves;
+      /**
+       * CompressedOptimalMoves[SolvedDescriptor] should never be accessed,
+       * so is assigned the maximum allowable value to hopefully cause immediate
+       * failure if used.
+       */
+      // TODO: handle case where CompressedBits == 64
+      static_assert(CompressedBits < 64);
+      compressed_optimal_moves[SolvedDescriptor] = (1ull << CompressedBits) - 1;
+
+      for (Uint i = 0; i < DescriptorCount; ++i) {
+        if (i == SolvedDescriptor) continue;
+        const size_t possible_turns_index =
+            std::find(PossibleTurns.begin(), PossibleTurns.end(),
+                      OptimalMoves[i].first) -
+            PossibleTurns.begin();
+        assert(possible_turns_index != PossibleTurns.size());
+        compressed_optimal_moves[i] =
+            (possible_turns_index << DescriptorBits) + OptimalMoves[i].second;
+      }
+      return compressed_optimal_moves;
     }
-    return true;
-  }());
-  return optimal_moves;
+    ();
+
+    Algorithm alg;
+    while (descriptor != SolvedDescriptor) {
+      const auto compressed_optimal_move = CompressedOptimalMoves[descriptor];
+      alg.push_back(
+          Move{PossibleTurns[compressed_optimal_move >> DescriptorBits]});
+      descriptor = compressed_optimal_move % (1 << DescriptorBits);
+    }
+    return alg;
+  };
 }
 }  // namespace solvers
