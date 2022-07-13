@@ -1,4 +1,5 @@
 #include "TestPermutation.h"
+#include "MathUtils.h"
 #include "Permutation.h"
 #include <algorithm>
 #include <array>
@@ -9,7 +10,7 @@
 template <size_t n>
 static constexpr bool testRankConsistency() {
   static_assert(n <= (1 << 8));
-  std::array<size_t, n> tests;
+  std::array<size_t, utility::factorial(n)> tests;
   std::iota(tests.begin(), tests.end(), 0);
   return std::all_of(tests.begin(), tests.end(), [](const size_t& size) {
     return Permutation<n>::parseRank(size).getRank() == size;
@@ -36,6 +37,7 @@ void testPermutation() {
   static_assert(Permutation<3>{2, 1, 0}.getRank() == 5);
   static_assert(Permutation<4>{3, 2, 1, 0}.getRank() == 23);
 
-  static_assert(testConsistencyRecursive<12>());
+  static_assert(testConsistencyRecursive<6>());
+
   std::cout << "Passed all tests for Permutation!\n";
 }
