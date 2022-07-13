@@ -155,7 +155,7 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
  * @return The EdgeLocation where the given EdgePiece belongs in a solved Cube.
  */
 EdgeLocation getLocation(const EdgePiece& edge_piece) {
-  EdgePiece flipped_piece = edge_piece.flip();
+  const EdgePiece flipped_piece = edge_piece.flip();
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
     if (edge_piece == Cube::STARTING_EDGE_PIECES[i]) {
       return Cube::EDGE_LOCATION_ORDER[i];
