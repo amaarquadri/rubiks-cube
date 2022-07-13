@@ -167,6 +167,10 @@ EdgeLocation getLocation(const EdgePiece& edge_piece) {
       "Could not find where the provided EdgePiece goes! It must be invalid.");
 }
 
+/**
+ * @return The CornerLocation where the given CornerPiece belongs in a solved
+ * Cube.
+ */
 CornerLocation getLocation(const CornerPiece& corner_piece) {
   const CornerPiece clockwise_piece = corner_piece.rotateClockwise();
   const CornerPiece counterclockwise_piece =
