@@ -2,6 +2,7 @@
 #include "Colour.h"
 #include "CornerRotationAmount.h"
 #include <stdexcept>
+#include <utility>
 
 CornerPiece::CornerPiece(const CornerPieceProxy& proxy)
     : first(proxy.first()), second(proxy.second()), third(proxy.third()) {}
@@ -19,13 +20,32 @@ CornerPiece CornerPiece::rotateCounterclockwise() const {
 
 CornerPiece CornerPiece::rotate(
     const CornerRotationAmount& rotation_amount) const {
+  using enum CornerRotationAmount;
   switch (rotation_amount) {
-    case CornerRotationAmount::None:
+    case None:
       return *this;
-    case CornerRotationAmount::Clockwise:
+    case Clockwise:
       return rotateClockwise();
-    case CornerRotationAmount::Counterclockwise:
+    case Counterclockwise:
       return rotateCounterclockwise();
+    default:
+      throw std::logic_error("Unknown enum value!");
+  }
+}
+
+void CornerPiece::rotateInPlace(const CornerRotationAmount& rotation_amount) {
+  using enum CornerRotationAmount;
+  switch (rotation_amount) {
+    case None:
+      break;
+    case Clockwise:
+      // first, second, third = second, third, first
+      first = std::exchange(second, std::exchange(third, first));
+      break;
+    case Counterclockwise:
+      // first, second, third = third, first, second
+      first = std::exchange(third, std::exchange(second, first));
+      break;
     default:
       throw std::logic_error("Unknown enum value!");
   }

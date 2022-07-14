@@ -33,6 +33,8 @@ struct CornerPiece {
 
   [[nodiscard]] CornerPiece rotate(
       const CornerRotationAmount& rotation_amount) const;
+
+  void rotateInPlace(const CornerRotationAmount& rotation_amount);
 };
 
 class CornerPieceProxy {
