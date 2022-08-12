@@ -3,9 +3,8 @@
 #include "Colour.h"
 #include "CornerRotationAmount.h"
 #include <cstddef>
-
-class CornerPieceProxy;
-class ConstCornerPieceProxy;
+#include <stdexcept>
+#include <utility>
 
 struct CornerPiece {
   // must be defined in clockwise order
@@ -19,22 +18,58 @@ struct CornerPiece {
                         const Colour& third)
       : first(first), second(second), third(third) {}
 
-  CornerPiece(const CornerPieceProxy& proxy);
-
-  CornerPiece(const ConstCornerPieceProxy& proxy);
-
   constexpr bool operator==(const CornerPiece& other) const = default;
 
   constexpr bool operator!=(const CornerPiece& other) const = default;
 
-  [[nodiscard]] CornerPiece rotateClockwise() const;
+  [[nodiscard]] constexpr CornerPiece rotateClockwise() const {
+    return {second, third, first};
+  }
 
-  [[nodiscard]] CornerPiece rotateCounterclockwise() const;
+  [[nodiscard]] constexpr CornerPiece rotateCounterclockwise() const {
+    return {third, first, second};
+  }
 
-  [[nodiscard]] CornerPiece rotate(
-      const CornerRotationAmount& rotation_amount) const;
+  [[nodiscard]] constexpr CornerPiece rotate(
+      const CornerRotationAmount& rotation_amount) const {
+    using enum CornerRotationAmount;
+    switch (rotation_amount) {
+      case None:
+        return *this;
+      case Clockwise:
+        return rotateClockwise();
+      case Counterclockwise:
+        return rotateCounterclockwise();
+      default:
+        throw std::logic_error("Unknown enum value!");
+    }
+  }
 
-  void rotateInPlace(const CornerRotationAmount& rotation_amount);
+  constexpr void rotateClockwiseInPlace() {
+    // first, second, third = second, third, first
+    first = std::exchange(second, std::exchange(third, first));
+  }
+
+  constexpr void rotateCounterclockwiseInPlace() {
+    // first, second, third = third, first, second
+    first = std::exchange(third, std::exchange(second, first));
+  }
+
+  constexpr void rotateInPlace(const CornerRotationAmount& rotation_amount) {
+    using enum CornerRotationAmount;
+    switch (rotation_amount) {
+      case None:
+        break;
+      case Clockwise:
+        rotateClockwiseInPlace();
+        break;
+      case Counterclockwise:
+        rotateCounterclockwiseInPlace();
+        break;
+      default:
+        throw std::logic_error("Unknown enum value!");
+    }
+  }
 };
 
 class CornerPieceProxy {
@@ -47,18 +82,58 @@ class CornerPieceProxy {
    * Represents a proxy for the corner_piece with the given applied rotation
    * (i.e. corner_piece.rotate(rotation_amount)).
    */
-  CornerPieceProxy(CornerPiece& corner_piece,
-                   const CornerRotationAmount& rotationAmount);
+  constexpr CornerPieceProxy(CornerPiece& corner_piece,
+                             const CornerRotationAmount& rotation_amount)
+      : corner_piece(corner_piece), rotation_amount(rotation_amount) {}
 
-  [[nodiscard]] CornerPiece value() const;
+  constexpr operator CornerPiece()  // NOLINT(google-explicit-constructor)
+      const {
+    return corner_piece.rotate(rotation_amount);
+  }
 
-  [[nodiscard]] Colour first() const;
+  [[nodiscard]] constexpr Colour first() const {
+    return static_cast<CornerPiece>(*this).first;
+  }
 
-  [[nodiscard]] Colour second() const;
+  [[nodiscard]] constexpr Colour second() const {
+    return static_cast<CornerPiece>(*this).second;
+  }
 
-  [[nodiscard]] Colour third() const;
+  [[nodiscard]] constexpr Colour third() const {
+    return static_cast<CornerPiece>(*this).third;
+  }
 
-  CornerPieceProxy& operator=(const CornerPiece& other);
+  constexpr CornerPieceProxy& operator=(const CornerPiece& other) {
+    // instead of rotating this piece, rotate the other piece in the opposite
+    // direction
+    corner_piece = other.rotate(-rotation_amount);
+    return *this;
+  }
+
+  [[nodiscard]] constexpr CornerPiece rotateClockwise() const {
+    return static_cast<CornerPiece>(*this).rotateClockwise();
+  }
+
+  [[nodiscard]] constexpr CornerPiece rotateCounterclockwise() const {
+    return static_cast<CornerPiece>(*this).rotateCounterclockwise();
+  }
+
+  [[nodiscard]] constexpr CornerPiece rotate(
+      const CornerRotationAmount& amount) const {
+    return static_cast<CornerPiece>(*this).rotate(amount);
+  }
+
+  constexpr void rotateClockwiseInPlace() {
+    corner_piece.rotateClockwiseInPlace();
+  }
+
+  constexpr void rotateCounterclockwiseInPlace() {
+    corner_piece.rotateCounterclockwiseInPlace();
+  }
+
+  constexpr void rotateInPlace(const CornerRotationAmount& amount) {
+    corner_piece.rotateInPlace(amount);
+  }
 };
 
 class ConstCornerPieceProxy {
@@ -67,16 +142,39 @@ class ConstCornerPieceProxy {
   const CornerRotationAmount rotation_amount;
 
  public:
-  ConstCornerPieceProxy(const CornerPiece& corner_piece,
-                        const CornerRotationAmount& rotationAmount);
+  constexpr ConstCornerPieceProxy(const CornerPiece& corner_piece,
+                                  const CornerRotationAmount& rotation_amount)
+      : corner_piece(corner_piece), rotation_amount(rotation_amount) {}
 
-  [[nodiscard]] CornerPiece value() const;
+  constexpr operator CornerPiece()  // NOLINT(google-explicit-constructor)
+      const {
+    return corner_piece.rotate(rotation_amount);
+  }
 
-  [[nodiscard]] Colour first() const;
+  [[nodiscard]] constexpr Colour first() const {
+    return static_cast<CornerPiece>(*this).first;
+  }
 
-  [[nodiscard]] Colour second() const;
+  [[nodiscard]] constexpr Colour second() const {
+    return static_cast<CornerPiece>(*this).second;
+  }
 
-  [[nodiscard]] Colour third() const;
+  [[nodiscard]] constexpr Colour third() const {
+    return static_cast<CornerPiece>(*this).third;
+  }
+
+  [[nodiscard]] constexpr CornerPiece rotateClockwise() const {
+    return static_cast<CornerPiece>(*this).rotateClockwise();
+  }
+
+  [[nodiscard]] constexpr CornerPiece rotateCounterclockwise() const {
+    return static_cast<CornerPiece>(*this).rotateCounterclockwise();
+  }
+
+  [[nodiscard]] constexpr CornerPiece rotate(
+      const CornerRotationAmount& amount) const {
+    return static_cast<CornerPiece>(*this).rotate(amount);
+  }
 };
 
 namespace std {
