@@ -173,22 +173,19 @@ void Cube::scramble() {
   }
   if (edge_flip_parity) edges.back().flipInPlace();
 
-  uint8_t corner_rotation_parity = 0;
+  CornerRotationAmount net_rotation = CornerRotationAmount::None;
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; i++) {
     const uint8_t rotation = utility::randomInt<3>();
-    if (rotation == 1)
+    if (rotation == 1) {
       corners[i] = corners[i].rotateClockwise();
-    else if (rotation == 2)
+      net_rotation += CornerRotationAmount::Clockwise;
+    }
+    else if (rotation == 2) {
       corners[i] = corners[i].rotateCounterclockwise();
-    corner_rotation_parity += rotation;
+      net_rotation += CornerRotationAmount::Counterclockwise;
+    }
   }
-  const uint8_t last_rotation = corner_rotation_parity % 3;
-  if (last_rotation == 2)
-    corners.back() =
-        corners.back().rotateClockwise();  // need another 1 to get to 3
-  else if (last_rotation == 1)
-    corners.back() =
-        corners.back().rotateCounterclockwise();  // need another 2 to get to 3
+  corners.back() = corners.back().rotate(-net_rotation);
 }
 
 void Cube::setSolved() {
