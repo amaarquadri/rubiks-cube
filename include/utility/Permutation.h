@@ -12,7 +12,8 @@
 #include <stdexcept>
 #include <utility>
 
-template <size_t n>
+// TODO: allow Permutation<1>
+template <uint8_t n>
 class Permutation : public std::array<uint8_t, n> {
   static_assert(n >= 2);
   static_assert(n <= 20);  // 21! does not fit into a 64-bit unsigned integer
@@ -32,7 +33,7 @@ class Permutation : public std::array<uint8_t, n> {
   static constexpr size_t n_factorial = n * FactorialCoefficients[0];
 
  public:
-  constexpr bool isValid() const {
+  [[nodiscard]] constexpr bool isValid() const {
     std::array<bool, n> found{};
     for (const uint8_t& value : (*this)) {
       if (value >= n || found[value]) return false;
@@ -49,7 +50,7 @@ class Permutation : public std::array<uint8_t, n> {
     return permutation;
   }
 
-  constexpr size_t getRank() const {
+  [[nodiscard]] constexpr size_t getRank() const {
     assert(isValid());
     size_t rank = 0;
     for (size_t i = 0; i < n; ++i) {
@@ -87,7 +88,7 @@ class Permutation : public std::array<uint8_t, n> {
     return permutation;
   }
 
-  constexpr bool isOdd() const {
+  [[nodiscard]] constexpr bool isOdd() const {
     assert(isValid());
     std::array<bool, n> visited{};
     bool parity = false;
