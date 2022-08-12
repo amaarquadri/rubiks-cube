@@ -23,12 +23,10 @@ add_executable(rubiks_cube
         src/core/Algorithm.cpp
         src/core/Colour.cpp
         src/core/CornerLocation.cpp
-        src/core/CornerPiece.cpp
         src/core/Cube.cpp
         src/core/CubeOrientation.cpp
         src/core/CubeRotation.cpp
         src/core/EdgeLocation.cpp
-        src/core/EdgePiece.cpp
         src/core/Face.cpp
         src/core/Move.cpp
         src/core/RotationAmount.cpp
