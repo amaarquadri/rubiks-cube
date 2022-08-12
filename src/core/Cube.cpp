@@ -9,7 +9,7 @@
 
 EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
   const EdgeLocation flipped_location = edge_location.flip();
-  for (size_t i = 0; i < EDGE_LOCATION_ORDER.size(); i++) {
+  for (size_t i = 0; i < EDGE_LOCATION_ORDER.size(); ++i) {
     if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
     if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
@@ -18,7 +18,7 @@ EdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) {
 
 ConstEdgePieceProxy Cube::operator[](const EdgeLocation& edge_location) const {
   const EdgeLocation flipped_location = edge_location.flip();
-  for (size_t i = 0; i < EDGE_LOCATION_ORDER.size(); i++) {
+  for (size_t i = 0; i < EDGE_LOCATION_ORDER.size(); ++i) {
     if (EDGE_LOCATION_ORDER[i] == edge_location) return {edges[i], false};
     if (EDGE_LOCATION_ORDER[i] == flipped_location) return {edges[i], true};
   }
@@ -29,7 +29,7 @@ CornerPieceProxy Cube::operator[](const CornerLocation& corner_location) {
   const CornerLocation clockwise_location = corner_location.rotateClockwise();
   const CornerLocation counterclockwise_location =
       corner_location.rotateCounterclockwise();
-  for (size_t i = 0; i < CORNER_LOCATION_ORDER.size(); i++) {
+  for (size_t i = 0; i < CORNER_LOCATION_ORDER.size(); ++i) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
       return {corners[i], CornerRotationAmount::None};
     // rotate the resulting CornerPieceProxy in the opposite direction
@@ -46,7 +46,7 @@ ConstCornerPieceProxy Cube::operator[](
   const CornerLocation clockwise_location = corner_location.rotateClockwise();
   const CornerLocation counterclockwise_location =
       corner_location.rotateCounterclockwise();
-  for (size_t i = 0; i < CORNER_LOCATION_ORDER.size(); i++) {
+  for (size_t i = 0; i < CORNER_LOCATION_ORDER.size(); ++i) {
     if (CORNER_LOCATION_ORDER[i] == corner_location)
       return {corners[i], CornerRotationAmount::None};
     // rotate the resulting ConstCornerPieceProxy in the opposite direction
@@ -165,16 +165,16 @@ void Cube::scramble() {
   corners = corner_permutation.apply(STARTING_CORNER_PIECES);
 
   bool edge_flip_parity = false;
-  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; i++) {
+  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; ++i) {
     if (utility::randomBool()) {
       edges[i].flipInPlace();
-      edge_flip_parity = !edge_flip_parity;
+      edge_flip_parity ^= true;
     }
   }
   if (edge_flip_parity) edges.back().flipInPlace();
 
   CornerRotationAmount net_rotation = CornerRotationAmount::None;
-  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; i++) {
+  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; ++i) {
     const uint8_t rotation = utility::randomInt<3>();
     if (rotation == 1) {
       corners[i] = corners[i].rotateClockwise();
