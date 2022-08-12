@@ -85,9 +85,9 @@ class ConstEdgePieceProxy {
 namespace std {
 template <>
 struct hash<EdgePiece> {
-  size_t operator()(const EdgePiece& edge_location) const {
+  size_t operator()(const EdgePiece& edge_piece) const {
     static constexpr std::hash<Colour> hasher{};
-    return 31 * hasher(edge_location.first) + hasher(edge_location.second);
+    return 31 * hasher(edge_piece.first) + hasher(edge_piece.second);
   }
 };
 }  // namespace std

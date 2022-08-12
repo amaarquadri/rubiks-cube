@@ -180,10 +180,10 @@ class ConstCornerPieceProxy {
 namespace std {
 template <>
 struct hash<CornerPiece> {
-  size_t operator()(const CornerPiece& corner_location) const {
+  size_t operator()(const CornerPiece& corner_piece) const {
     static constexpr std::hash<Colour> hasher{};
-    return 31 * 31 * hasher(corner_location.first) +
-           31 * hasher(corner_location.second) + hasher(corner_location.third);
+    return 31 * 31 * hasher(corner_piece.first) +
+           31 * hasher(corner_piece.second) + hasher(corner_piece.third);
   }
 };
 }  // namespace std
