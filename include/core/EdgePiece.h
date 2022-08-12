@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Colour.h"
+#include <algorithm>
 #include <cstddef>
-
-class EdgePieceProxy;
-class ConstEdgePieceProxy;
 
 struct EdgePiece {
   Colour first;
@@ -15,17 +13,13 @@ struct EdgePiece {
   constexpr EdgePiece(const Colour& first, const Colour& second)
       : first(first), second(second) {}
 
-  EdgePiece(const EdgePieceProxy& proxy);
-
-  EdgePiece(const ConstEdgePieceProxy& proxy);
-
   constexpr bool operator==(const EdgePiece& other) const = default;
 
   constexpr bool operator!=(const EdgePiece& other) const = default;
 
-  [[nodiscard]] EdgePiece flip() const;
+  [[nodiscard]] constexpr EdgePiece flip() const { return {second, first}; }
 
-  void flipInPlace();
+  constexpr void flipInPlace() { std::swap(first, second); }
 };
 
 class EdgePieceProxy {
@@ -34,19 +28,31 @@ class EdgePieceProxy {
   const bool is_flipped;
 
  public:
-  EdgePieceProxy(EdgePiece& edge_piece, const bool& is_flipped);
+  constexpr EdgePieceProxy(EdgePiece& edge_piece, const bool& is_flipped)
+      : edge_piece(edge_piece), is_flipped(is_flipped) {}
 
-  [[nodiscard]] EdgePiece value() const;
+  constexpr operator EdgePiece() const {  // NOLINT(google-explicit-constructor)
+    return is_flipped ? edge_piece.flip() : edge_piece;
+  }
 
-  [[nodiscard]] Colour first() const;
+  [[nodiscard]] constexpr Colour first() const {
+    return static_cast<EdgePiece>(*this).first;
+  }
 
-  [[nodiscard]] Colour second() const;
+  [[nodiscard]] constexpr Colour second() const {
+    return static_cast<EdgePiece>(*this).second;
+  }
 
-  EdgePieceProxy& operator=(const EdgePiece& other);
+  constexpr EdgePieceProxy& operator=(const EdgePiece& other) {
+    edge_piece = is_flipped ? other.flip() : other;
+    return *this;
+  }
 
-  [[nodiscard]] EdgePiece flip() const;
+  [[nodiscard]] constexpr EdgePiece flip() const {
+    return static_cast<EdgePiece>(*this).flip();
+  }
 
-  void flipInPlace();
+  constexpr void flipInPlace() { edge_piece.flipInPlace(); }
 };
 
 class ConstEdgePieceProxy {
@@ -55,15 +61,25 @@ class ConstEdgePieceProxy {
   const bool is_flipped;
 
  public:
-  ConstEdgePieceProxy(const EdgePiece& edge_piece, const bool& is_flipped);
+  constexpr ConstEdgePieceProxy(const EdgePiece& edge_piece,
+                                const bool& is_flipped)
+      : edge_piece(edge_piece), is_flipped(is_flipped) {}
 
-  [[nodiscard]] EdgePiece value() const;
+  constexpr operator EdgePiece() const {  // NOLINT(google-explicit-constructor)
+    return is_flipped ? edge_piece.flip() : edge_piece;
+  }
 
-  [[nodiscard]] Colour first() const;
+  [[nodiscard]] constexpr Colour first() const {
+    return static_cast<EdgePiece>(*this).first;
+  }
 
-  [[nodiscard]] Colour second() const;
+  [[nodiscard]] constexpr Colour second() const {
+    return static_cast<EdgePiece>(*this).second;
+  }
 
-  [[nodiscard]] EdgePiece flip() const;
+  [[nodiscard]] constexpr EdgePiece flip() const {
+    return static_cast<EdgePiece>(*this).flip();
+  }
 };
 
 namespace std {
