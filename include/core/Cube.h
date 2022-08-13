@@ -20,6 +20,9 @@ class Cube {
  public:
   friend struct std::hash<Cube>;
 
+  // TODO: flip the EdgeLocations at index 5 and 7 for easy correspondence with
+  //       edge orientation, and reorder so that m slices are at 3k, s slices
+  //       are at 3k+1, and e slices are at 3k+2
   static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
       {{Face::U, Face::B},
        {Face::U, Face::R},

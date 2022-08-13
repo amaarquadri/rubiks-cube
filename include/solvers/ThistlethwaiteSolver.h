@@ -5,4 +5,6 @@
 
 namespace solvers {
 Algorithm solveThistlethwaite(Cube cube);
+
+void runThistlethwaiteSolverTests();
 }  // namespace solvers

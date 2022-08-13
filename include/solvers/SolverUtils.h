@@ -62,6 +62,25 @@ constexpr std::array<uint8_t, 4> getCornerCycle(const Face& face) {
   }
 }
 
+/**
+ * Transforms the provided data so that any element in data that appears in
+ * cycle at index i will be replaced with the element of cycle at index (i +
+ * steps) % cycle.size(). Any elements in data that do not appear in cycle will
+ * remain unchanged.
+ */
+template <typename T, size_t n, size_t m>
+constexpr void cycleIndices(std::array<T, n>& data,
+                            const std::array<T, m>& cycle,
+                            const size_t& steps = 1) {
+  for (T& element : data) {
+    const size_t cycle_index =
+        std::find(cycle.begin(), cycle.end(), element) - cycle.begin();
+    if (cycle_index == cycle.size()) continue;
+    element = cycle[(cycle_index + steps) % cycle.size()];
+  }
+  std::sort(data.begin(), data.end());
+}
+
 template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
           auto SolvedDescriptor = 0>
 consteval auto getSolver() {
