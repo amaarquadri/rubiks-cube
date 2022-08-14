@@ -12,6 +12,7 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <stdexcept>
 #include <utility>
 
@@ -131,9 +132,12 @@ consteval auto getSolver() {
        * so is assigned the maximum allowable value to hopefully cause immediate
        * failure if used.
        */
-      // TODO: handle case where CompressedBits == 64
-      static_assert(CompressedBits < 64);
-      compressed_optimal_moves[SolvedDescriptor] = (1ull << CompressedBits) - 1;
+      if constexpr (CompressedBits == 64)
+        compressed_optimal_moves[SolvedDescriptor] =
+            std::numeric_limits<uint64_t>::max();
+      else
+        compressed_optimal_moves[SolvedDescriptor] =
+            (1ull << CompressedBits) - 1;
 
       for (Uint i = 0; i < DescriptorCount; ++i) {
         if (i == SolvedDescriptor) continue;
