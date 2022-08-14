@@ -86,7 +86,7 @@ template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
           auto SolvedDescriptor = 0>
 consteval auto getSolver() {
   using Uint = decltype(DescriptorCount);
-  static_assert(std::unsigned_integral<Uint>);
+  static_assert(std::unsigned_integral<Uint>);  // TODO: move to declaration
   static_assert(DescriptorCount > 0);
   static_assert(std::is_same_v<const std::array<Turn, PossibleTurns.size()>,
                                decltype(PossibleTurns)>);
