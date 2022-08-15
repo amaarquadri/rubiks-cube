@@ -30,9 +30,9 @@ struct PackedBitsReference {
   const offset_type offset{};
 
  public:
-  PackedBitsReference(uint8_t* const data) : data(data) {}
+  explicit constexpr PackedBitsReference(uint8_t* const data) : data(data) {}
 
-  PackedBitsReference(uint8_t* const data, const offset_type& offset)
+  constexpr PackedBitsReference(uint8_t* const data, const offset_type& offset)
       : data(data), offset(offset) {}
 
  private:
