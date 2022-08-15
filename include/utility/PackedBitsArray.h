@@ -346,11 +346,11 @@ class PackedBitsArray {
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
-  constexpr size_type size() const { return n; }
+  [[nodiscard]] constexpr size_type size() const { return n; }
 
-  constexpr size_type max_size() const { return n; }
+  [[nodiscard]] constexpr size_type max_size() const { return n; }
 
-  constexpr bool empty() const { return n == 0; }
+  [[nodiscard]] constexpr bool empty() const { return n == 0; }
 
   constexpr reference operator[](const size_type& i) {
     assert(i < n);
