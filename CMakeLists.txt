@@ -4,7 +4,8 @@ project(rubiks_cube)
 set(CMAKE_CXX_STANDARD 20)
 
 # increase allowed amount of work in compile time constexpr evaluations
-set(CMAKE_CXX_FLAGS "-fconstexpr-ops-limit=42000000 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-fconstexpr-ops-limit=20000000000 ${CMAKE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "-fconstexpr-loop-limit=2000000 ${CMAKE_CXX_FLAGS}")
 
 include_directories(./include)
 include_directories(./include/core)
@@ -44,6 +45,7 @@ add_executable(rubiks_cube
         src/blindsolving/Reconstruction.cpp
         src/blindsolving/ReconstructionIterator.cpp
         src/blindsolving/SolveData.cpp
+        src/solvers/DominoReductionSolver.cpp
         src/solvers/EdgeOrientationSolver.cpp
         src/tests/RunTests.cpp
         src/tests/core/TestAlgorithm.cpp
@@ -54,6 +56,7 @@ add_executable(rubiks_cube
         src/tests/blindsolving/TestEdgeCycleSequenceIterator.cpp
         src/tests/blindsolving/TestReconstructionIterator.cpp
         src/tests/solvers/TestEdgeOrientationSolver.cpp
+#        src/tests/solvers/TestDominoReductionSolver.cpp
         src/tests/utility/TestCombination.cpp
         src/tests/utility/TestPackedBitsArray.cpp
         src/tests/utility/TestPermutation.cpp
