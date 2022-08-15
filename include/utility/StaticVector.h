@@ -32,9 +32,9 @@ class StaticVector {
  public:
   constexpr size_type getSize() const { return size; }
 
-  constexpr bool isEmpty() const { return size == 0; }
+  [[nodiscard]] constexpr bool isEmpty() const { return size == 0; }
 
-  constexpr bool isFull() const { return size == capacity; }
+  [[nodiscard]] constexpr bool isFull() const { return size == capacity; }
 
   constexpr const T& operator[](const size_type& idx) const {
     assert(idx < size);
