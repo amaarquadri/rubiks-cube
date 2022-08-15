@@ -78,7 +78,8 @@ struct PackedBitsReference {
   }
 
   template <uint8_t offset_>
-  [[gnu::always_inline]] constexpr value_type read_data() const {
+  [[gnu::always_inline]] static constexpr value_type read_data(
+      const uint8_t* const data, const offset_type& offset) {
     static_assert(offset_ < 8);
     if constexpr (bits <= (8 - offset_))
       return ((*data) & trailingOnes(8 - offset_)) >> (8 - bits - offset_);
@@ -98,6 +99,46 @@ struct PackedBitsReference {
   }
 
  public:
+  static constexpr value_type parse(const uint8_t* const data,
+                                    const offset_type& offset) {
+    if constexpr (is_byte_aligned) {
+      value_type result = 0;
+      constexprFor<0, full_bytes>([&](auto i) {
+        result |= static_cast<value_type>(*(data + i)) << (bits - 8 * (i + 1));
+      });
+      return result;
+    } else {
+      assert(offset < 8);
+      switch (offset) {
+        case 0:
+          return read_data<0>(data, offset);
+        case 1:
+          assert(extra_bits % 2 != 0);
+          return read_data<1>(data, offset);
+        case 2:
+          assert(extra_bits % 4 != 0);
+          return read_data<2>(data, offset);
+        case 3:
+          assert(extra_bits % 2 != 0);
+          return read_data<3>(data, offset);
+        case 4:
+          assert(extra_bits != 0);
+          return read_data<4>(data, offset);
+        case 5:
+          assert(extra_bits % 2 != 0);
+          return read_data<5>(data, offset);
+        case 6:
+          assert(extra_bits % 4 != 0);
+          return read_data<6>(data, offset);
+        case 7:
+          assert(extra_bits % 2 != 0);
+          return read_data<7>(data, offset);
+        default:
+          throw std::logic_error("Invalid offset!");
+      }
+    }
+  }
+
   constexpr PackedBitsReference& operator=(const value_type& value) {
     // special case for 64 since left shift will fail
     assert(bits == 64 || value < (1ull << bits));
@@ -146,43 +187,9 @@ struct PackedBitsReference {
     return *this;
   }
 
-  constexpr operator value_type() const {
-    if constexpr (is_byte_aligned) {
-      value_type result = 0;
-      constexprFor<0, full_bytes>([&](auto i) {
-        result |= static_cast<value_type>(*(data + i)) << (bits - 8 * (i + 1));
-      });
-      return result;
-    } else {
-      assert(offset < 8);
-      switch (offset) {
-        case 0:
-          return read_data<0>();
-        case 1:
-          assert(extra_bits % 2 != 0);
-          return read_data<1>();
-        case 2:
-          assert(extra_bits % 4 != 0);
-          return read_data<2>();
-        case 3:
-          assert(extra_bits % 2 != 0);
-          return read_data<3>();
-        case 4:
-          assert(extra_bits != 0);
-          return read_data<4>();
-        case 5:
-          assert(extra_bits % 2 != 0);
-          return read_data<5>();
-        case 6:
-          assert(extra_bits % 4 != 0);
-          return read_data<6>();
-        case 7:
-          assert(extra_bits % 2 != 0);
-          return read_data<7>();
-        default:
-          throw std::logic_error("Invalid offset!");
-      }
-    }
+  constexpr operator value_type()  // NOLINT(google-explicit-constructor)
+      const {
+    return parse(data, offset);
   }
 };
 
@@ -369,8 +376,8 @@ class PackedBitsArray {
       return static_cast<const_reference>(reference{&data[i * full_bytes]});
     else {
       const size_t overflow_bits = i * extra_bits;
-      return static_cast<const_reference>(reference{
-          &data[i * full_bytes + (overflow_bits / 8)], overflow_bits % 8});
+      return reference::parse(&data[i * full_bytes + (overflow_bits / 8)],
+                              overflow_bits % 8);
     }
   }
 
