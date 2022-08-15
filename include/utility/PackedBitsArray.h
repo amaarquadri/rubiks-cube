@@ -63,7 +63,7 @@ struct PackedBitsReference {
     if constexpr (bits == (8 - offset_)) return;
 
     constexprFor<1, full_bytes + 1>([&](auto i) {
-      static constexpr uint8_t bits_seen = 8 * (i + 1) - offset_;
+      /** static **/ constexpr uint8_t bits_seen = 8 * (i + 1) - offset_;
       if constexpr (bits < bits_seen) {
         // erase the high bits and write the new high bits
         (*(data + i)) &= trailingOnes(bits_seen - bits);
