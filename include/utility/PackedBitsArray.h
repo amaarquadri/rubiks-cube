@@ -377,7 +377,7 @@ class PackedBitsArray {
     else {
       const size_t overflow_bits = i * extra_bits;
       return reference::parse(&data[i * full_bytes + (overflow_bits / 8)],
-                              overflow_bits % 8);
+                              static_cast<uint8_t>(overflow_bits % 8));
     }
   }
 
