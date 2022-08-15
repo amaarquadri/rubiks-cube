@@ -1,5 +1,6 @@
 #include "RunTests.h"
 #include "TestAlgorithm.h"
+#include "TestBidirectionalStaticVector.h"
 #include "TestBlindsolvingMoveHash.h"
 #include "TestCombination.h"
 #include "TestCornerCycleSequenceIterator.h"
@@ -14,6 +15,7 @@
 #include <iostream>
 
 void runTests() {
+  testBidirectionalStaticVector();
   testCombination();
   testPermutation();
   testPackedBitsArray();
