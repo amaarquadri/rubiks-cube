@@ -98,7 +98,7 @@ struct PackedBitsReference {
   }
 
  public:
-  constexpr void operator=(const value_type& value) {
+  constexpr PackedBitsReference& operator=(const value_type& value) {
     // special case for 64 since left shift will fail
     assert(bits == 64 || value < (1ull << bits));
     if constexpr (is_byte_aligned) {
@@ -143,6 +143,7 @@ struct PackedBitsReference {
           throw std::logic_error("Invalid offset!");
       }
     }
+    return *this;
   }
 
   constexpr operator value_type() const {
