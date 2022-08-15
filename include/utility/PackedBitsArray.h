@@ -210,7 +210,7 @@ class PackedBitsIteratorImpl {
                          PackedBitsReference<bits>>;
   using difference_type = long long;
 
-  constexpr PackedBitsIteratorImpl(const ptr_type data) : data(data) {}
+  explicit constexpr PackedBitsIteratorImpl(const ptr_type data) : data(data) {}
 
   constexpr PackedBitsIteratorImpl(const ptr_type data,
                                    const offset_type& offset)
