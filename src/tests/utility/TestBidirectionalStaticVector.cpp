@@ -2,6 +2,7 @@
 #include "BidirectionalStaticVector.h"
 #include <cstddef>
 #include <stdexcept>
+#include <iostream>
 
 void testBidirectionalStaticVector() {
   using namespace utility;
@@ -14,4 +15,6 @@ void testBidirectionalStaticVector() {
   if (forward.getSize() != 40 || backward.getSize() != 59 ||
       forward.isEmpty() || backward.isEmpty())
     throw std::logic_error("Incorrect sizes!");
+
+  std::cout << "Passed all tests for BidirectionalStaticVector!\n";
 }
