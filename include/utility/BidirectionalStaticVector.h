@@ -1,5 +1,6 @@
 #pragma once
 
+#include "MathUtils.h"
 #include <array>
 #include <cassert>
 #include <cstddef>
@@ -11,7 +12,7 @@ template <typename DataStore, typename T, size_t capacity>
 class ForwardStaticVector {
  public:
   friend DataStore;
-  using size_type = typename DataStore::size_type;
+  using size_type = get_size_type_t<capacity>;
   using iterator = typename std::array<T, capacity>::iterator;
   using const_iterator = typename std::array<T, capacity>::const_iterator;
   using reverse_iterator = typename std::array<T, capacity>::reverse_iterator;
@@ -114,7 +115,7 @@ template <typename DataStore, typename T, size_t capacity>
 class BackwardStaticVector {
  public:
   friend DataStore;
-  using size_type = typename DataStore::size_type;
+  using size_type = get_size_type_t<capacity>;
   using iterator = typename std::array<T, capacity>::reverse_iterator;
   using const_iterator =
       typename std::array<T, capacity>::const_reverse_iterator;
@@ -217,16 +218,7 @@ class BackwardStaticVector {
 template <typename T, size_t capacity>
 class BidirectionalStaticVector {
  public:
-  using size_type = decltype([]() {
-    if constexpr (capacity < (1 << 8))
-      return uint8_t{};
-    else if constexpr (capacity < (1 << 16))
-      return uint16_t{};
-    else if constexpr (capacity < (1ull << 32))
-      return uint32_t{};
-    else
-      return uint64_t{};
-  }());
+  using size_type = get_size_type_t<capacity>;
   using DataStore = BidirectionalStaticVector<T, capacity>;
   using ForwardVector = ForwardStaticVector<DataStore, T, capacity>;
   using BackwardVector = BackwardStaticVector<DataStore, T, capacity>;

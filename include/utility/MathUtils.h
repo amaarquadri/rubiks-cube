@@ -81,6 +81,23 @@ template <uint8_t bits>
 using get_smallest_unsigned_int_t =
     typename get_smallest_unsigned_int<bits>::type;
 
+template <size_t capacity>
+struct get_size_type {
+  using type = decltype([]() {
+    if constexpr (capacity < (1 << 8))
+      return uint8_t{};
+    else if constexpr (capacity < (1 << 16))
+      return uint16_t{};
+    else if constexpr (capacity < (1ull << 32))
+      return uint32_t{};
+    else
+      return uint64_t{};
+  }());
+};
+
+template <size_t capacity>
+using get_size_type_t = typename get_size_type<capacity>::type;
+
 // Test cases
 static_assert(factorial(5) == 120);
 static_assert(pow(3, 7) == 2187);
