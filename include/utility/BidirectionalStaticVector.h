@@ -244,5 +244,4 @@ class BidirectionalStaticVector {
     return {data, forward, backward};
   }
 };
-
 }  // namespace utility
