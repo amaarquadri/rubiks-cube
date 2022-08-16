@@ -30,9 +30,7 @@ class ForwardStaticVector {
     return data.forward_size == 0;
   }
 
-  [[nodiscard]] constexpr bool isFull() const {
-    return data.forward_size + data.backward_size == capacity;
-  }
+  [[nodiscard]] constexpr bool isFull() const { return data.isFull(); }
 
   constexpr const T& operator[](const size_type& idx) const {
     assert(idx < data.forward_size);
@@ -136,9 +134,7 @@ class BackwardStaticVector {
     return data.backward_size == 0;
   }
 
-  [[nodiscard]] constexpr bool isFull() const {
-    return data.forward_size + data.backward_size == capacity;
-  }
+  [[nodiscard]] constexpr bool isFull() const { return data.isFull(); }
 
   constexpr const T& operator[](const size_type& idx) const {
     assert(idx < data.backward_size);
@@ -243,6 +239,10 @@ class BidirectionalStaticVector {
   std::array<T, capacity> values{};
   size_type forward_size{0};
   size_type backward_size{0};
+
+  [[nodiscard]] constexpr bool isFull() const {
+    return forward_size + backward_size == capacity;
+  }
 
  public:
   static constexpr std::tuple<DataStore, ForwardVector, BackwardVector> make() {
