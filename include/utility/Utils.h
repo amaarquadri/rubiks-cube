@@ -11,7 +11,7 @@ namespace utility {
 struct Break {};
 
 /**
- * Loops while start != stop, calling start + step each time.
+ * Loops while start != stop, replacing start with start + step each time.
  * For each iteration, f is called with a parameter of type
  * std::integral_constant<decltype(start), start>.
  * If f's return type is utility::Break, then the constexprFor loop will break.
