@@ -110,7 +110,7 @@ class Cube {
   /**
    * @brief Compares the edges, corners, and orientation for equality
    */
-  [[nodiscard]] bool operator==(const Cube& other) const;
+  [[nodiscard]] bool operator==(const Cube& other) const = default;
 
   [[nodiscard]] std::string toNetString() const;
 

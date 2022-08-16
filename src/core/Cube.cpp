@@ -203,11 +203,6 @@ bool Cube::isStandardOrientation() const {
   return orientation == CubeOrientation::identity();
 }
 
-bool Cube::operator==(const Cube& other) const {
-  return edges == other.edges && corners == other.corners &&
-         orientation == other.orientation;
-}
-
 std::string Cube::toNetString() const {
   //  B
   // LURD
