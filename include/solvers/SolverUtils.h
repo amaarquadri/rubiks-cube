@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Algorithm.h"
+#include "BidirectionalStaticVector.h"
 #include "Face.h"
 #include "MathUtils.h"
 #include "PackedBitsArray.h"
-#include "StaticVector.h"
 #include "Turn.h"
 #include <algorithm>
 #include <array>
@@ -105,25 +105,41 @@ consteval auto getSolver() {
       for (size_t i = 0; i < DescriptorCount; ++i)
         optimal_moves[i].second = UnknownSentinel;
 
-      utility::StaticVector<Uint, DescriptorCount> current{};
-      current.push_back(SolvedDescriptor);
-      utility::StaticVector<Uint, DescriptorCount> next{};
+      auto [forward_vector, backward_vector] =
+          utility::BidirectionalStaticVector<Uint, DescriptorCount>::make();
+      forward_vector.push_back(SolvedDescriptor);
 
-      //  for (size_t i = 0; !current.isEmpty() && i < 1; ++i) {
-      while (!current.isEmpty()) {
-        for (const Uint& idx : current) {
+      //  for (size_t i = 0; !forward_vector.isEmpty() && i < 1; ++i) {
+      while (!forward_vector.isEmpty()) {
+        // iterate through forward_vector and queue next round in
+        // backward_vector
+        for (const Uint& idx : forward_vector) {
           for (const Turn& turn : PossibleTurns) {
             const Uint next_idx = applyTurn(idx, turn);
             if (next_idx != SolvedDescriptor &&
                 optimal_moves[next_idx].second == UnknownSentinel) {
               optimal_moves[next_idx].first = turn.inv();
               optimal_moves[next_idx].second = idx;
-              next.push_back(next_idx);
+              backward_vector.push_back(next_idx);
             }
           }
         }
-        current = next;
-        next.clear();
+        if (backward_vector.isEmpty()) break;
+        forward_vector.clear();
+        // iterate through backward_vector and queue next round in
+        // forward_vector
+        for (const Uint& idx : backward_vector) {
+          for (const Turn& turn : PossibleTurns) {
+            const Uint next_idx = applyTurn(idx, turn);
+            if (next_idx != SolvedDescriptor &&
+                optimal_moves[next_idx].second == UnknownSentinel) {
+              optimal_moves[next_idx].first = turn.inv();
+              optimal_moves[next_idx].second = idx;
+              forward_vector.push_back(next_idx);
+            }
+          }
+        }
+        backward_vector.clear();
       }
       assert(optimal_moves[SolvedDescriptor].second == UnknownSentinel);
       assert([&]() {
