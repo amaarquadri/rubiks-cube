@@ -90,7 +90,7 @@ consteval auto getSolver() {
   static_assert(DescriptorCount > 0);
   static_assert(std::is_same_v<const std::array<Turn, PossibleTurns.size()>,
                                decltype(PossibleTurns)>);
-  static_assert(PossibleTurns.size() > 0);
+  static_assert(!PossibleTurns.empty());
   static_assert(
       std::is_same_v<Uint (*)(const Uint&, const Turn&), decltype(applyTurn)> ||
       std::is_same_v<Uint (*)(Uint, const Turn&), decltype(applyTurn)>);
