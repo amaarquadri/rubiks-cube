@@ -115,12 +115,12 @@ class heap_array {
   constexpr void fill(const T& value) { std::fill_n(begin(), size(), value); }
 };
 
-template <typename T, size_t n, bool use_heap>
+template <typename T, size_t n, bool use_heap = false>
 struct pick_array {
   using type = std::conditional_t<use_heap, heap_array<T, n>, std::array<T, n>>;
 };
 
-template <typename T, size_t n, bool use_heap>
+template <typename T, size_t n, bool use_heap = false>
 using pick_array_t = typename pick_array<T, n, use_heap>::type;
 
 }  // namespace utility
