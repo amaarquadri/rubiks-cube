@@ -342,10 +342,17 @@ class PackedBitsArray {
   static constexpr bool is_byte_aligned = bits % 8 == 0;
   static constexpr uint8_t full_bytes = bits / 8;
   static constexpr uint8_t extra_bits = bits % 8;
+
+ public:
   static constexpr size_t required_bytes =
       (n * bits + 7) / 8;  // add 7 to round up
+  using array_type = pick_array_t<uint8_t, required_bytes, use_heap>;
 
-  pick_array_t<uint8_t, required_bytes, use_heap> data;
+ private:
+  array_type data;
+
+  explicit constexpr PackedBitsArray(const array_type& raw_data)
+      : data(raw_data) {}
 
  public:
   using size_type = size_t;
@@ -356,11 +363,21 @@ class PackedBitsArray {
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
+  constexpr PackedBitsArray() = default;
+
+  static constexpr auto fromRawData(const array_type& raw_data) {
+    return PackedBitsArray<bits, n, use_heap>{raw_data};
+  }
+
   [[nodiscard]] constexpr size_type size() const { return n; }
 
   [[nodiscard]] constexpr size_type max_size() const { return n; }
 
   [[nodiscard]] constexpr bool empty() const { return n == 0; }
+
+  constexpr array_type& rawData() { return data; }
+
+  constexpr const array_type& rawData() const { return data; }
 
   constexpr reference operator[](const size_type& i) {
     assert(i < n);
