@@ -2,6 +2,7 @@
 
 #include "MathUtils.h"
 #include "Utils.h"
+#include "heap_array.h"
 #include <array>
 #include <cassert>
 #include <cstddef>
@@ -333,7 +334,7 @@ class PackedBitsConstIterator : public PackedBitsIteratorImpl<bits, true> {
   }
 };
 
-template <uint8_t bits, size_t n>
+template <uint8_t bits, size_t n, bool use_heap = false>
 class PackedBitsArray {
   static_assert(bits > 0 && bits <= 64);
 
@@ -341,8 +342,13 @@ class PackedBitsArray {
   static constexpr bool is_byte_aligned = bits % 8 == 0;
   static constexpr uint8_t full_bytes = bits / 8;
   static constexpr uint8_t extra_bits = bits % 8;
+  static constexpr size_t required_bytes =
+      (n * bits + 7) / 8;  // add 7 to round up
+  using array_type =
+      std::conditional_t<use_heap, heap_array<uint8_t, required_bytes>,
+                         std::array<uint8_t, required_bytes>>;
 
-  std::array<uint8_t, (n * bits + 7) / 8> data;  // add 7 to round up
+  array_type data;
 
  public:
   using size_type = size_t;
