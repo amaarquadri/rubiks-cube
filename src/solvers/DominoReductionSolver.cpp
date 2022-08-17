@@ -16,7 +16,9 @@
 #include <array>
 #include <cassert>
 #include <stdexcept>
+#include <unordered_set>
 #include <utility>
+#include <vector>
 
 namespace solvers {
 /**
@@ -192,9 +194,36 @@ static void testSolveDominoReduction() {
   }
 }
 
+static void testStatistics() {
+  std::unordered_set<uint32_t> seen_descriptors{};
+  seen_descriptors.insert(SolvedDescriptor);
+
+  std::vector<size_t> sizes{};
+  std::vector<uint32_t> current{};
+  current.push_back(SolvedDescriptor);
+  std::vector<uint32_t> next{};
+
+  while (!current.empty()) {
+    sizes.push_back(current.size());
+    for (const uint32_t& idx : current) {
+      for (const Turn& turn : PossibleTurns) {
+        const uint32_t next_idx = applyTurn(idx, turn);
+        if (seen_descriptors.insert(next_idx).second) next.push_back(next_idx);
+      }
+    }
+    current = next;
+    next.clear();
+  }
+  if (std::accumulate(sizes.begin(), sizes.end(), 0ull) != DescriptorCount)
+    throw std::logic_error("Did not encounter every descriptor!");
+  if (sizes.size() != 11)
+    throw std::logic_error("Some descriptors required more than 10 moves!");
+}
+
 void runDominoReductionSolverTests() {
   testGetDescriptor();
   testApplyTurnForDominoReduction();
+  testStatistics();
   testSolveDominoReduction();
 }
 }  // namespace solvers
