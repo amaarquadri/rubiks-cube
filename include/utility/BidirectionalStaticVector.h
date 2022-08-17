@@ -234,7 +234,7 @@ class BidirectionalStaticVector {
   friend BackwardVector;
 
  private:
-  BidirectionalStaticVector() = default;
+  constexpr BidirectionalStaticVector() = default;
 
   pick_array_t<T, capacity, use_heap> values{};
   size_type forward_size{0};
