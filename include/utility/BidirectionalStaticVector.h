@@ -2,6 +2,7 @@
 
 #include "ConstexprSharedPtr.h"
 #include "MathUtils.h"
+#include "heap_array.h"
 #include <array>
 #include <cassert>
 #include <cstddef>
@@ -222,11 +223,11 @@ class BackwardStaticVector {
   constexpr void clear() { data->backward_size = 0; }
 };
 
-template <typename T, size_t capacity>
+template <typename T, size_t capacity, bool use_heap = false>
 class BidirectionalStaticVector {
  public:
   using size_type = get_size_type_t<capacity>;
-  using DataStore = BidirectionalStaticVector<T, capacity>;
+  using DataStore = BidirectionalStaticVector<T, capacity, use_heap>;
   using ForwardVector = ForwardStaticVector<DataStore, T, capacity>;
   using BackwardVector = BackwardStaticVector<DataStore, T, capacity>;
   friend ForwardVector;
@@ -235,7 +236,7 @@ class BidirectionalStaticVector {
  private:
   BidirectionalStaticVector() = default;
 
-  std::array<T, capacity> values{};
+  pick_array_t<T, capacity, use_heap> values{};
   size_type forward_size{0};
   size_type backward_size{0};
 

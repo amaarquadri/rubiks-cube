@@ -1,13 +1,14 @@
 #pragma once
 
 #include "MathUtils.h"
+#include "heap_array.h"
 #include <array>
 #include <cassert>
 #include <cstddef>
 #include <cstdint>
 
 namespace utility {
-template <typename T, size_t capacity>
+template <typename T, size_t capacity, bool use_heap = false>
 class StaticVector {
  public:
   using size_type = get_size_type_t<capacity>;
@@ -18,7 +19,7 @@ class StaticVector {
       typename std::array<T, capacity>::const_reverse_iterator;
 
  private:
-  std::array<T, capacity> values{};
+  pick_array_t<T, capacity, use_heap> values{};
   size_type size{0};
 
  public:
