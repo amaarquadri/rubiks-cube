@@ -330,7 +330,7 @@ class PackedBitsIterator : public PackedBitsIteratorImpl<bits, false> {
 template <uint8_t bits>
 class PackedBitsConstIterator : public PackedBitsIteratorImpl<bits, true> {
   constexpr get_smallest_unsigned_int_t<bits> operator*() const {
-    return PackedBitsReference<bits>{this->data, this->offset};
+    return PackedBitsReference<bits>::parse(this->data, this->offset);
   }
 };
 
