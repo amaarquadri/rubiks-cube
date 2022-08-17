@@ -100,17 +100,17 @@ class heap_array {
 
   constexpr const_iterator cend() const { return const_iterator{ptr + n}; }
 
-  constexpr reverse_iterator rbegin() { return end(); }
+  constexpr reverse_iterator rbegin() { return reverse_iterator{ptr + n}; }
 
-  constexpr const_reverse_iterator rbegin() const { return cend(); }
+  constexpr const_reverse_iterator rbegin() const { return const_reverse_iterator{ptr + n}; }
 
-  constexpr const_reverse_iterator crbegin() const { return cend(); }
+  constexpr const_reverse_iterator crbegin() const { return const_reverse_iterator{ptr + n}; }
 
-  constexpr reverse_iterator rend() { return begin(); }
+  constexpr reverse_iterator rend() { return reverse_iterator{ptr}; }
 
-  constexpr const_reverse_iterator rend() const { return cbegin(); }
+  constexpr const_reverse_iterator rend() const { return const_reverse_iterator{ptr}; }
 
-  constexpr const_reverse_iterator crend() const { return cbegin(); }
+  constexpr const_reverse_iterator crend() const { return const_reverse_iterator{ptr}; }
 
   constexpr void fill(const T& value) { std::fill_n(begin(), size(), value); }
 };
