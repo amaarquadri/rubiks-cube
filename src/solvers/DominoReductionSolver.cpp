@@ -188,7 +188,7 @@ static void testSolveDominoReduction() {
     const Algorithm solve = solveDominoReduction(cube);
     cube.apply(solve);
     if (!isDominoReduced(cube))
-      throw std::logic_error("Domino reduction was not acheived!");
+      throw std::logic_error("Domino reduction was not achieved!");
   }
 }
 
