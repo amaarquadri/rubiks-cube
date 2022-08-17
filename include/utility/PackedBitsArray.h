@@ -344,11 +344,8 @@ class PackedBitsArray {
   static constexpr uint8_t extra_bits = bits % 8;
   static constexpr size_t required_bytes =
       (n * bits + 7) / 8;  // add 7 to round up
-  using array_type =
-      std::conditional_t<use_heap, heap_array<uint8_t, required_bytes>,
-                         std::array<uint8_t, required_bytes>>;
 
-  array_type data;
+  pick_array_t<uint8_t, required_bytes, use_heap> data;
 
  public:
   using size_type = size_t;
