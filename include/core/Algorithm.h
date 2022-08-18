@@ -17,8 +17,9 @@ struct Algorithm : public std::vector<Move> {
    * Creates a random Algorithm with the given size consisting solely of the
    * specified Turns.
    * Defaults to allowing any possible Turn.
+   * TODO: is it necessary to specify the default in 2 places
    */
-  template <size_t n>
+  template <size_t n = AllPossibleTurns.size()>
   static Algorithm random(
       const size_t& size,
       const std::array<Turn, n>& possible_turns = AllPossibleTurns) {
