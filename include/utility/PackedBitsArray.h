@@ -194,7 +194,7 @@ struct PackedBitsReference {
   }
 };
 
-template <uint8_t bits, bool is_const_iterator = false>
+template <uint8_t bits, bool is_const_iterator>
 class PackedBitsIteratorImpl {
   static_assert(bits > 0 && bits <= 64);
 
