@@ -1,5 +1,6 @@
 #pragma once
 
+#include "constexpr_unique_ptr.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
@@ -20,99 +21,99 @@ namespace utility {
 template <typename T, size_t n>
 class heap_array {
  public:
-  using pointer = T*;
-  using const_pointer = const T*;
-  using reference = T&;
-  using const_reference = const T&;
-  using size_type = size_t;
-  using iterator = T*;
-  using const_iterator = const T*;
-  using reverse_iterator = std::reverse_iterator<iterator>;
-  using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+  using underlying_array = std::array<T, n>;
+  using pointer = typename underlying_array::pointer;
+  using const_pointer = typename underlying_array::const_pointer;
+  using reference = typename underlying_array::refernce;
+  using const_reference = typename underlying_array::const_reference;
+  using size_type = typename underlying_array::size_type;
+  using iterator = typename underlying_array::iterator;
+  using const_iterator = typename underlying_array::const_iterator;
+  using reverse_iterator = typename underlying_array::reverse_iterator;
+  using const_reverse_iterator =
+      typename underlying_array::const_reverse_iterator;
 
  private:
-  T* const ptr;
+  const constexpr_unique_ptr<underlying_array> ptr{new underlying_array()};
 
  public:
-  constexpr heap_array() : ptr(new T[n]) {}
+  constexpr heap_array() = default;
 
-  constexpr ~heap_array() { delete[] ptr; }
+  [[nodiscard]] constexpr size_type size() const { return ptr->size(); }
 
-  [[nodiscard]] constexpr size_type size() const { return n; }
+  [[nodiscard]] constexpr size_type max_size() const { return ptr->max_size(); }
 
-  [[nodiscard]] constexpr size_type max_size() const { return n; }
+  [[nodiscard]] constexpr bool empty() const { return ptr->empty(); }
 
-  [[nodiscard]] constexpr bool empty() const { return size() == 0; }
+  constexpr pointer data() { return ptr->data(); }
 
-  constexpr pointer data() { return ptr; }
-
-  constexpr const_pointer data() const { return ptr; }
+  constexpr const_pointer data() const { return ptr->data(); }
 
   constexpr reference operator[](const size_type& idx) {
     assert(idx < size());
-    return *(ptr + idx);
+    return (*ptr)[idx];
   }
 
   constexpr const_reference operator[](const size_type& idx) const {
     assert(idx < size());
-    return *(ptr + idx);
+    return *(ptr)[idx];
   }
 
   constexpr reference at(const size_type& idx) {
     if (idx >= size()) throw std::logic_error("Out of bounds!");
-    return *(ptr + idx);
+    return *(ptr)[idx];
   }
 
   constexpr const_reference at(const size_type& idx) const {
     if (idx >= size()) throw std::logic_error("Out of bounds!");
-    return *(ptr + idx);
+    return *(ptr)[idx];
   }
 
   constexpr reference front() {
-    assert(!empty());
-    return (*this)[0];
+    assert(!ptr->empty());
+    return ptr->front();
   }
 
   constexpr const_reference front() const {
-    assert(!empty());
-    return (*this)[0];
+    assert(!ptr->empty());
+    return ptr->front();
   }
 
   constexpr reference back() {
-    assert(!empty());
-    return (*this)[n - 1];
+    assert(!ptr->empty());
+    return ptr->back();
   }
 
   constexpr const_reference back() const {
-    assert(!empty());
-    return (*this)[n - 1];
+    assert(!ptr->empty());
+    return ptr->back();
   }
 
-  constexpr iterator begin() { return iterator{ptr}; }
+  constexpr iterator begin() { return ptr->begin(); }
 
-  constexpr const_iterator begin() const { return const_iterator{ptr}; }
+  constexpr const_iterator begin() const { return ptr->begin(); }
 
-  constexpr const_iterator cbegin() const { return const_iterator{ptr}; }
+  constexpr const_iterator cbegin() const { return ptr->cbegin(); }
 
-  constexpr iterator end() { return iterator{ptr + n}; }
+  constexpr iterator end() { return ptr->end(); }
 
-  constexpr const_iterator end() const { return const_iterator{ptr + n}; }
+  constexpr const_iterator end() const { return ptr->end(); }
 
-  constexpr const_iterator cend() const { return const_iterator{ptr + n}; }
+  constexpr const_iterator cend() const { return ptr->cend(); }
 
-  constexpr reverse_iterator rbegin() { return reverse_iterator{ptr + n}; }
+  constexpr reverse_iterator rbegin() { return ptr->rbegin(); }
 
-  constexpr const_reverse_iterator rbegin() const { return const_reverse_iterator{ptr + n}; }
+  constexpr const_reverse_iterator rbegin() const { return ptr->rbegin(); }
 
-  constexpr const_reverse_iterator crbegin() const { return const_reverse_iterator{ptr + n}; }
+  constexpr const_reverse_iterator crbegin() const { return ptr->crbegin(); }
 
-  constexpr reverse_iterator rend() { return reverse_iterator{ptr}; }
+  constexpr reverse_iterator rend() { return ptr->rend(); }
 
-  constexpr const_reverse_iterator rend() const { return const_reverse_iterator{ptr}; }
+  constexpr const_reverse_iterator rend() const { return ptr->rend(); }
 
-  constexpr const_reverse_iterator crend() const { return const_reverse_iterator{ptr}; }
+  constexpr const_reverse_iterator crend() const { return ptr->crend(); }
 
-  constexpr void fill(const T& value) { std::fill_n(begin(), size(), value); }
+  constexpr void fill(const T& value) { ptr->fill(value); }
 };
 
 template <typename T, size_t n, bool use_heap = false>
