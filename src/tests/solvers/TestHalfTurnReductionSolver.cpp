@@ -14,7 +14,7 @@ static void testMaintainHalfTurnReduction() {
   for (size_t i = 0; i < Count; ++i) {
     cube.apply(utility::pickRandom(HalfTurnReductionPreservingTurns));
     if (!isHalfTurnReduced(cube))
-      throw std::logic_error("Domino reduction was unduly broken!");
+      throw std::logic_error("Half turn reduction was unduly broken!");
   }
 }
 
@@ -27,7 +27,7 @@ static void testSolveHalfTurnReduction() {
     const Algorithm solve = solveHalfTurnReduction(cube);
     cube.apply(solve);
     if (!isHalfTurnReduced(cube))
-      throw std::logic_error("Edge orientation was not solved!");
+      throw std::logic_error("Half turn reduction was not solved!");
   }
 }
 
