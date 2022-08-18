@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <iostream>
 #include <stdexcept>
 #include <unordered_set>
 #include <utility>
@@ -239,12 +240,14 @@ static void testStatistics() {
 }
 
 void runDominoReductionSolverTests() {
+  std::cout << "Generating lookup table for Domino reduction...\n";
   generateLookupTable<DescriptorCount, PossibleTurns, applyTurn,
                       SolvedDescriptor>(
       "./include/solvers/DominoReductionLookupTable.h");
 
   testGetDescriptor();
   testApplyTurnForDominoReduction();
+  std::cout << "Testing Domino reduction statistics...\n";
   testStatistics();
   testSolveDominoReduction();
 }
