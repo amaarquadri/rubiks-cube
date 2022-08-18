@@ -26,8 +26,8 @@ void runTests() {
   testBlindsolvingMoveHash();
   testCornerCycleSequenceIterator();
   testEdgeCycleSequenceIterator();
-  testEdgeOrientationSolver();
   testDominoReductionSolver();
+  testEdgeOrientationSolver();
 
   static constexpr size_t Count = 10;
   for (size_t i = 0; i < Count; ++i) {
