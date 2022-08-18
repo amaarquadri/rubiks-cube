@@ -24,7 +24,7 @@ class heap_array {
   using underlying_array = std::array<T, n>;
   using pointer = typename underlying_array::pointer;
   using const_pointer = typename underlying_array::const_pointer;
-  using reference = typename underlying_array::refernce;
+  using reference = typename underlying_array::reference;
   using const_reference = typename underlying_array::const_reference;
   using size_type = typename underlying_array::size_type;
   using iterator = typename underlying_array::iterator;
