@@ -2,6 +2,7 @@
 #include "Algorithm.h"
 #include "Cube.h"
 #include "Move.h"
+#include "TurnSets.h"
 #include "SolverUtils.h"
 #include "StaticVector.h"
 #include "Turn.h"
@@ -12,19 +13,6 @@
 #include <utility>
 
 namespace solvers {
-static constexpr std::array<Turn, 18> PossibleTurns = []() {
-  using enum Face;
-  using enum RotationAmount;
-  std::array<Turn, 18> possible_turns;
-  uint8_t i = 0;
-  for (const Face& face : {U, F, R, B, L, D})
-    for (const RotationAmount& rotation_amount :
-         {Clockwise, HalfTurn, Counterclockwise})
-      possible_turns[i++] = Turn{face, rotation_amount};
-  assert(i == possible_turns.size());
-  return possible_turns;
-}();
-
 static constexpr uint16_t DescriptorCount = 2048;
 static constexpr uint16_t SolvedDescriptor = 0;
 
@@ -115,8 +103,8 @@ bool areEdgesOriented(const Cube& cube) {
 }
 
 Algorithm solveEdgeOrientation(const Cube& cube) {
-  static constexpr auto solver =
-      getSolver<DescriptorCount, PossibleTurns, applyTurn, SolvedDescriptor>();
+  static constexpr auto solver = getSolver<DescriptorCount, AllPossibleTurns,
+                                           applyTurn, SolvedDescriptor>();
   return solver(getEdgeOrientation(cube));
 }
 

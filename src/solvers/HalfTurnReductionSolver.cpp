@@ -7,31 +7,10 @@
 #include "Permutation.h"
 #include "SolverUtils.h"
 #include "Turn.h"
+#include "TurnSets.h"
 #include <cassert>
 
 namespace solvers {
-struct OptimalMove {
-  Turn turn;
-  uint16_t next_descriptor;
-};
-
-/**
- * All possible Turns that maintain domino reduction.
- */
-static constexpr std::array<Turn, 10> PossibleTurns = []() {
-  std::array<Turn, 10> possible_turns;
-  uint8_t i = 0;
-  for (const Face& face : {Face::U, Face::D})
-    for (const RotationAmount& rotation_amount :
-         {RotationAmount::Clockwise, RotationAmount::HalfTurn,
-          RotationAmount::Counterclockwise})
-      possible_turns[i++] = Turn{face, rotation_amount};
-  for (const Face& face : {Face::F, Face::B, Face::R, Face::L})
-    possible_turns[i++] = Turn{face, RotationAmount::HalfTurn};
-  assert(i == possible_turns.size());
-  return possible_turns;
-}();
-
 static constexpr uint16_t CornerCombinationCount = utility::nChooseK(8, 4);
 static constexpr uint16_t EdgeCombinationCount = utility::nChooseK(8, 4);
 static constexpr uint16_t PiecesCombinationCount =
@@ -138,7 +117,8 @@ bool isHalfTurnReduced(const Cube& cube) {
 
 Algorithm solveHalfTurnReduction(Cube cube) {
   static constexpr auto solver =
-      getSolver<DescriptorCount, PossibleTurns, applyTurn, SolvedDescriptor>();
+      getSolver<DescriptorCount, DominoReductionPreservingTurns, applyTurn,
+                SolvedDescriptor>();
 
   const Algorithm domino_reduction_solve = solveDominoReduction(cube);
   cube.apply(domino_reduction_solve);

@@ -7,25 +7,13 @@
 #include "Permutation.h"
 #include "RotationAmount.h"
 #include "SolverUtils.h"
+#include "TurnSets.h"
 #include <array>
 #include <cassert>
 #include <cstdint>
 #include <stdexcept>
 
 namespace solvers {
-/**
- * All possible Turns that maintain half turn reduction.
- */
-static constexpr std::array<Turn, 6> PossibleTurns = []() {
-  using enum Face;
-  std::array<Turn, 6> possible_turns;
-  uint8_t i = 0;
-  for (const Face& face : {U, F, R, B, L, D})
-    possible_turns[i++] = Turn{face, RotationAmount::HalfTurn};
-  assert(i == possible_turns.size());
-  return possible_turns;
-}();
-
 static constexpr uint32_t MSlicePermutationCount = utility::factorial(4);
 static constexpr uint32_t SSlicePermutationCount = utility::factorial(4);
 static constexpr uint32_t MSSlicePermutationCounts =
@@ -136,7 +124,8 @@ static uint32_t getDescriptor(const Cube& cube) {
 
 Algorithm solveThistlethwaite(Cube cube) {
   static constexpr auto solver =
-      getSolver<DescriptorCount, PossibleTurns, applyTurn, SolvedDescriptor>();
+      getSolver<DescriptorCount, HalfTurnReductionPreservingTurns, applyTurn,
+                SolvedDescriptor>();
 
   const Algorithm half_turn_reduction_solve = solveHalfTurnReduction(cube);
   cube.apply(half_turn_reduction_solve);

@@ -11,6 +11,7 @@
 #include "SolverUtils.h"
 #include "StaticVector.h"
 #include "Turn.h"
+#include "TurnSets.h"
 #include "Utils.h"
 #include <algorithm>
 #include <array>
@@ -22,23 +23,6 @@
 #include <vector>
 
 namespace solvers {
-/**
- * All possible Turns that maintain edge orientation.
- */
-static constexpr std::array<Turn, 14> PossibleTurns = []() {
-  std::array<Turn, 14> possible_turns;
-  uint8_t i = 0;
-  for (const Face& face : {Face::U, Face::R, Face::L, Face::D})
-    for (const RotationAmount& rotation_amount :
-         {RotationAmount::Clockwise, RotationAmount::HalfTurn,
-          RotationAmount::Counterclockwise})
-      possible_turns[i++] = Turn{face, rotation_amount};
-  for (const Face& face : {Face::F, Face::B})
-    possible_turns[i++] = Turn{face, RotationAmount::HalfTurn};
-  assert(i == possible_turns.size());
-  return possible_turns;
-}();
-
 static constexpr uint32_t CornerOrientationCount = utility::pow(3, 7);
 static constexpr uint32_t EdgeCombinationCount = utility::nChooseK(12, 4);
 static constexpr uint32_t DescriptorCount =
@@ -146,7 +130,7 @@ Algorithm solveDominoReduction(Cube cube) {
   static constexpr uint8_t DescriptorBits =
       utility::requiredBits(DescriptorCount);
   static constexpr uint8_t TurnBits =
-      utility::requiredBits(PossibleTurns.size());
+      utility::requiredBits(EdgeOrientationPreservingTurns.size());
   static constexpr uint8_t CompressedBits = DescriptorBits + TurnBits;
   static constexpr auto LookupTable =
       utility::PackedBitsArray<CompressedBits, DescriptorCount>::fromRawData({
@@ -159,7 +143,8 @@ Algorithm solveDominoReduction(Cube cube) {
     while (descriptor != SolvedDescriptor) {
       const auto compressed_optimal_move = LookupTable[descriptor];
       alg.push_back(
-          Move{PossibleTurns[compressed_optimal_move >> DescriptorBits]});
+          Move{EdgeOrientationPreservingTurns[compressed_optimal_move >>
+                                              DescriptorBits]});
       descriptor = compressed_optimal_move % (1 << DescriptorBits);
     }
     return alg;
@@ -182,7 +167,7 @@ static void testGetDescriptor() {
 }
 
 static void testApplyTurnForDominoReduction() {
-  for (const Turn& turn : PossibleTurns) {
+  for (const Turn& turn : EdgeOrientationPreservingTurns) {
     Algorithm alg;
     alg.push_back(Move{turn});
     if (applyTurn(SolvedDescriptor, turn) != getDescriptor(Cube{alg}))
@@ -226,7 +211,7 @@ static void testStatistics() {
   while (!current.empty()) {
     sizes.push_back(current.size());
     for (const uint32_t& idx : current) {
-      for (const Turn& turn : PossibleTurns) {
+      for (const Turn& turn : EdgeOrientationPreservingTurns) {
         const uint32_t next_idx = applyTurn(idx, turn);
         if (seen_descriptors.insert(next_idx).second) next.push_back(next_idx);
       }
@@ -242,8 +227,8 @@ static void testStatistics() {
 
 void runDominoReductionSolverTests() {
   std::cout << "Generating lookup table for Domino reduction...\n";
-  generateLookupTable<DescriptorCount, PossibleTurns, applyTurn,
-                      SolvedDescriptor>(
+  generateLookupTable<DescriptorCount, EdgeOrientationPreservingTurns,
+                      applyTurn, SolvedDescriptor>(
       "./include/solvers/DominoReductionLookupTable.h");
 
   testGetDescriptor();
