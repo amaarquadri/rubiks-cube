@@ -16,9 +16,11 @@ static constexpr uint16_t EdgeCombinationCount = utility::nChooseK(8, 4);
 static constexpr uint16_t PiecesCombinationCount =
     EdgeCombinationCount * CornerCombinationCount;
 static constexpr uint16_t ParityCount = 2;
-// TODO: factor of 3
-static constexpr uint16_t DescriptorCount =
+static constexpr uint16_t ParityAndPiecesCombinationCount =
     ParityCount * PiecesCombinationCount;
+static constexpr uint16_t CornerThreeParityCount = 3;
+static constexpr uint16_t DescriptorCount =
+    CornerThreeParityCount * ParityAndPiecesCombinationCount;
 static constexpr uint16_t SolvedDescriptor =
     (CornerCombinationCount + 1) * Combination<8, 4>({0, 2, 4, 6}).getRank();
 
