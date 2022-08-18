@@ -56,17 +56,17 @@ class heap_array {
 
   constexpr const_reference operator[](const size_type& idx) const {
     assert(idx < size());
-    return *(ptr)[idx];
+    return (*ptr)[idx];
   }
 
   constexpr reference at(const size_type& idx) {
     if (idx >= size()) throw std::logic_error("Out of bounds!");
-    return *(ptr)[idx];
+    return (*ptr)[idx];
   }
 
   constexpr const_reference at(const size_type& idx) const {
     if (idx >= size()) throw std::logic_error("Out of bounds!");
-    return *(ptr)[idx];
+    return (*ptr)[idx];
   }
 
   constexpr reference front() {
