@@ -29,9 +29,9 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
                                     const Turn& turn) {
   assert(turn.rotation_amount != RotationAmount::None);
 
-  std::array<uint8_t, 4> primary_tetrad_corner_locations =
+  Combination<8, 4> primary_tetrad_corner_locations =
       Combination<8, 4>::parseRank(descriptor % CornerCombinationCount);
-  std::array<uint8_t, 4> m_slice_edge_locations = Combination<8, 4>::parseRank(
+  Combination<8, 4> m_slice_edge_locations = Combination<8, 4>::parseRank(
       (descriptor / CornerCombinationCount) % EdgeCombinationCount);
   bool odd_parity = descriptor / PiecesCombinationCount;
 
