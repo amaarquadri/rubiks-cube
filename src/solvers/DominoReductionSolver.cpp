@@ -153,6 +153,7 @@ Algorithm solveDominoReduction(Cube cube) {
           // TODO: replace with #embed in c++23
           #include "DominoReductionLookupTable.h"
       });
+  // TODO: remove code duplication between this and getSolver in SolverUtils.h
   static constexpr auto solver = [](uint32_t descriptor) {
     Algorithm alg;
     while (descriptor != SolvedDescriptor) {
