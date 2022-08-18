@@ -27,7 +27,7 @@ struct Algorithm : public std::vector<Move> {
     alg.reserve(size);
     while (alg.size() < size) {
       for (size_t i = 0; i < size - alg.size(); i++)
-        alg.push_back(Move{possible_turns[utility::randomInt<n>()]});
+        alg.push_back(Move{utility::pickRandom(possible_turns)});
       alg.cancelMoves();
     }
     return alg;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <chrono>
 #include <cstddef>
 #include <random>
@@ -20,4 +21,9 @@ size_t randomInt() {
 }
 
 bool randomBool() { return randomInt<1>(); }
+
+template <typename T, size_t n>
+T pickRandom(const std::array<T, n>& values) {
+  return values[randomInt<n>()];
+}
 }  // namespace utility
