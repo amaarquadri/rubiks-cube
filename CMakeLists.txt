@@ -56,7 +56,7 @@ add_executable(rubiks_cube
         src/tests/blindsolving/TestEdgeCycleSequenceIterator.cpp
         src/tests/blindsolving/TestReconstructionIterator.cpp
         src/tests/solvers/TestEdgeOrientationSolver.cpp
-#        src/tests/solvers/TestDominoReductionSolver.cpp
+        src/tests/solvers/TestDominoReductionSolver.cpp
         src/tests/utility/TestBidirectionalStaticVector.cpp
         src/tests/utility/TestCombination.cpp
         src/tests/utility/TestPackedBitsArray.cpp

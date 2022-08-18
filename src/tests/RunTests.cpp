@@ -5,6 +5,7 @@
 #include "TestCombination.h"
 #include "TestCornerCycleSequenceIterator.h"
 #include "TestCubeOrientation.h"
+#include "TestDominoReductionSolver.h"
 #include "TestEdgeCycleSequenceIterator.h"
 #include "TestEdgeOrientationSolver.h"
 #include "TestPLLs.h"
@@ -26,6 +27,7 @@ void runTests() {
   testCornerCycleSequenceIterator();
   testEdgeCycleSequenceIterator();
   testEdgeOrientationSolver();
+  testDominoReductionSolver();
 
   static constexpr size_t Count = 10;
   for (size_t i = 0; i < Count; ++i) {
