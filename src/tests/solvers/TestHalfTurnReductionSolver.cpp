@@ -22,8 +22,8 @@ static void testSolveHalfTurnReduction() {
   static constexpr size_t Count = 1000;
 
   for (size_t i = 0; i < Count; ++i) {
-    const Algorithm scramble = Algorithm::random(20);
-    Cube cube{scramble};
+    Cube cube{};
+    cube.scramble();
     const Algorithm solve = solveHalfTurnReduction(cube);
     cube.apply(solve);
     if (!isHalfTurnReduced(cube))
