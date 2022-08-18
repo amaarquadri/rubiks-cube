@@ -56,6 +56,10 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
   return new_descriptor;
 }
 
+/**
+ * Returns true if and only if this CornerPiece would is positioned in an even
+ * index in the solved state.
+ */
 static constexpr bool isPrimaryTetradCorner(const CornerPiece& corner) {
   const std::array<Colour, 3> colours{corner.first, corner.second,
                                       corner.third};
@@ -67,6 +71,8 @@ static constexpr bool isPrimaryTetradCorner(const CornerPiece& corner) {
       colours.begin();
   assert(white_yellow_index != 3);  // ensure white or yellow was found
   const Colour& after_white_yellow = colours[(white_yellow_index + 1) % 3];
+  // return true if the colour after (clockwise of) white/yellow is red/orange
+  // return false if the colour after (clockwise of) white/yellow is green/blue
   return after_white_yellow == Colour::Red ||
          after_white_yellow == Colour::Orange;
 }
