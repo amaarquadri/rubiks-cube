@@ -226,6 +226,17 @@ static void testStatistics() {
     throw std::logic_error("Some descriptors required more than 10 moves!");
 }
 
+static void testMaintainDominoReduction() {
+  static constexpr size_t count = 1000;
+
+  Cube cube{};
+  for (size_t i = 0; i < count; ++i) {
+    cube.apply(utility::pickRandom(DominoReductionPreservingTurns));
+    if (getDescriptor(cube) != SolvedDescriptor)
+      throw std::logic_error("Domino reduction was unduly broken!");
+  }
+}
+
 void runDominoReductionSolverTests() {
   std::cout << "Generating lookup table for Domino reduction...\n";
   generateLookupTable<DescriptorCount, EdgeOrientationPreservingTurns,
@@ -237,5 +248,6 @@ void runDominoReductionSolverTests() {
   std::cout << "Testing Domino reduction statistics...\n";
   testStatistics();
   testSolveDominoReduction();
+  testMaintainDominoReduction();
 }
 }  // namespace solvers
