@@ -34,7 +34,7 @@ class constexpr_unique_ptr {
 
   constexpr T* operator->() const { return ptr; }
 
-  constexpr T& operator*() const { return ptr; }
+  constexpr T& operator*() const { return *ptr; }
 
   constexpr ~constexpr_unique_ptr() { delete ptr; }
 };

@@ -54,7 +54,7 @@ class ConstexprSharedPtr {
 
   constexpr T* operator->() const { return ptr; }
 
-  constexpr T& operator*() const { return ptr; }
+  constexpr T& operator*() const { return *ptr; }
 
   constexpr ~ConstexprSharedPtr() { cleanup(); }
 
