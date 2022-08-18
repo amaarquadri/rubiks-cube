@@ -3,10 +3,10 @@
 #include "Algorithm.h"
 #include "BidirectionalStaticVector.h"
 #include "Face.h"
+#include "HeapArray.h"
 #include "MathUtils.h"
 #include "PackedBitsArray.h"
 #include "Turn.h"
-#include "heap_array.h"
 #include <algorithm>
 #include <array>
 #include <cassert>

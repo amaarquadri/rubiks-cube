@@ -20,7 +20,7 @@ namespace utility {
  * TODO: is there a std implementation of this?
  */
 template <typename T, size_t n>
-class heap_array {
+class HeapArray {
  public:
   using underlying_array = std::array<T, n>;
   using pointer = typename underlying_array::pointer;
@@ -38,18 +38,18 @@ class heap_array {
   const ConstexprSharedPtr<underlying_array> ptr{new underlying_array()};
 
  public:
-  constexpr heap_array() = default;
+  constexpr HeapArray() = default;
 
-  constexpr heap_array(const heap_array<T, n>& other) : ptr(other.ptr) {}
+  constexpr HeapArray(const HeapArray<T, n>& other) : ptr(other.ptr) {}
 
-  constexpr heap_array<T, n>& operator=(const heap_array<T, n>& other) {
+  constexpr HeapArray<T, n>& operator=(const HeapArray<T, n>& other) {
     ptr = other.ptr;
   };
 
-  constexpr heap_array(heap_array<T, n>&& other) noexcept
+  constexpr HeapArray(HeapArray<T, n>&& other) noexcept
       : ptr(std::move(other.ptr)) {}
 
-  constexpr heap_array<T, n>& operator=(heap_array<T, n>&& other) noexcept {
+  constexpr HeapArray<T, n>& operator=(HeapArray<T, n>&& other) noexcept {
     ptr = std::move(other.ptr);
   }
 
@@ -132,7 +132,7 @@ class heap_array {
 
 template <typename T, size_t n, bool use_heap = false>
 struct pick_array {
-  using type = std::conditional_t<use_heap, heap_array<T, n>, std::array<T, n>>;
+  using type = std::conditional_t<use_heap, HeapArray<T, n>, std::array<T, n>>;
 };
 
 template <typename T, size_t n, bool use_heap = false>

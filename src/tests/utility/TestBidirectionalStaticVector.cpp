@@ -20,7 +20,7 @@ static void testForUseHeap() {
 void testBidirectionalStaticVector() {
   testForUseHeap<false>();
   testForUseHeap<true>();
-  // TODO: add tests to confirm that heap_array works in a consteval context
+  // TODO: add tests to confirm that HeapArray works in a consteval context
 
   std::cout << "Passed all tests for BidirectionalStaticVector!\n";
 }

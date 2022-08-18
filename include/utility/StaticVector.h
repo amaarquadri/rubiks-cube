@@ -1,7 +1,7 @@
 #pragma once
 
+#include "HeapArray.h"
 #include "MathUtils.h"
-#include "heap_array.h"
 #include <array>
 #include <cassert>
 #include <cstddef>
