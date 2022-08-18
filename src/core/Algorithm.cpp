@@ -9,17 +9,6 @@
 #include <cassert>
 #include <tuple>
 
-Algorithm Algorithm::random(const size_t& size) {
-  Algorithm alg{};
-  alg.reserve(size);
-  while (alg.size() < size) {
-    for (size_t i = 0; i < size - alg.size(); i++)
-      alg.push_back(Move{Turn::random()});
-    alg.cancelMoves();
-  }
-  return alg;
-}
-
 std::string Algorithm::toStr() const {
   std::string result;
   for (const auto& move : *this) result += move.toStr() + " ";

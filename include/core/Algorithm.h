@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Move.h"
+#include "RandomUtils.h"
+#include "TurnSets.h"
 #include <string>
 #include <utility>
 #include <vector>
@@ -12,9 +14,23 @@ struct Algorithm : public std::vector<Move> {
       : std::vector<Move>(size) {}
 
   /**
-   * Creates a random Algorithm with the given size consisting solely of Turns.
+   * Creates a random Algorithm with the given size consisting solely of the
+   * specified Turns.
+   * Defaults to allowing any possible Turn.
    */
-  static Algorithm random(const size_t& size);
+  template <size_t n>
+  static Algorithm random(
+      const size_t& size,
+      const std::array<Turn, n>& possible_turns = AllPossibleTurns) {
+    Algorithm alg{};
+    alg.reserve(size);
+    while (alg.size() < size) {
+      for (size_t i = 0; i < size - alg.size(); i++)
+        alg.push_back(Move{possible_turns[utility::randomInt<n>()]});
+      alg.cancelMoves();
+    }
+    return alg;
+  }
 
   [[nodiscard]] std::string toStr() const;
 
