@@ -158,7 +158,8 @@ Algorithm solveDominoReduction(Cube cube) {
 // Test functions
 
 static void testGetDescriptor() {
-  if (getDescriptor(Cube{Algorithm::parse("R2")}) != SolvedDescriptor ||
+  if (getDescriptor(Cube{}) != SolvedDescriptor ||
+      getDescriptor(Cube{Algorithm::parse("R2")}) != SolvedDescriptor ||
       getDescriptor(Cube{Algorithm::parse("F2")}) != SolvedDescriptor ||
       getDescriptor(Cube{Algorithm::parse("U D'")}) != SolvedDescriptor ||
       getDescriptor(Cube{Algorithm::parse("R")}) !=
