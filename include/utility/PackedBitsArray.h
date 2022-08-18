@@ -538,12 +538,4 @@ class PackedBitsArray {
   }
 };
 
-template <size_t n>
-class PackedBitsArray<8, n> : public std::array<uint8_t, n> {};
-template <size_t n>
-class PackedBitsArray<16, n> : public std::array<uint16_t, n> {};
-template <size_t n>
-class PackedBitsArray<32, n> : public std::array<uint32_t, n> {};
-template <size_t n>
-class PackedBitsArray<64, n> : public std::array<uint64_t, n> {};
 }  // namespace utility
