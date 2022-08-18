@@ -47,6 +47,8 @@ add_executable(rubiks_cube
         src/blindsolving/SolveData.cpp
         src/solvers/DominoReductionSolver.cpp
         src/solvers/EdgeOrientationSolver.cpp
+#        src/solvers/HalfTurnReductionSolver.cpp
+#        src/solvers/ThistlethwaiteSolver.cpp
         src/tests/RunTests.cpp
         src/tests/core/TestAlgorithm.cpp
         src/tests/core/TestCubeOrientation.cpp
