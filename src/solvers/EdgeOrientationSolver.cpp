@@ -2,10 +2,10 @@
 #include "Algorithm.h"
 #include "Cube.h"
 #include "Move.h"
-#include "TurnSets.h"
 #include "SolverUtils.h"
 #include "StaticVector.h"
 #include "Turn.h"
+#include "TurnSets.h"
 #include <array>
 #include <bit>
 #include <cstdint>
