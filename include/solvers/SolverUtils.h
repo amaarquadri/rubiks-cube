@@ -6,14 +6,17 @@
 #include "MathUtils.h"
 #include "PackedBitsArray.h"
 #include "Turn.h"
+#include "heap_array.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <fstream>
 #include <limits>
 #include <stdexcept>
+#include <string>
 #include <utility>
 
 namespace solvers {
@@ -82,111 +85,162 @@ constexpr void cycleValues(std::array<T, n>& data,
   std::sort(data.begin(), data.end());
 }
 
+namespace detail {
+/**
+ * Checks whether the provided template parameters form a syntactically valid
+ * (mathematical) group.
+ */
+template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
+          auto SolvedDescriptor>
+struct is_cubing_group {
+ private:
+  using Uint = decltype(DescriptorCount);
+  static constexpr bool are_descriptors_valid =
+      std::unsigned_integral<Uint> &&
+      std::is_same_v<Uint, decltype(SolvedDescriptor)> && DescriptorCount > 0 &&
+      SolvedDescriptor < DescriptorCount;
+  static constexpr bool is_possible_turns_valid =
+      !PossibleTurns.empty() &&
+      std::is_same_v<const std::array<Turn, PossibleTurns.size()>,
+                     decltype(PossibleTurns)>;
+  static constexpr bool is_apply_turn_valid =
+      std::is_same_v<Uint (*)(const Uint&, const Turn&), decltype(applyTurn)> ||
+      std::is_same_v<Uint (*)(Uint, const Turn&), decltype(applyTurn)>;
+
+ public:
+  static constexpr bool value =
+      are_descriptors_valid && is_possible_turns_valid && is_apply_turn_valid;
+};
+
+template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
+          auto SolvedDescriptor>
+static constexpr bool is_cubing_group_v =
+    is_cubing_group<DescriptorCount, PossibleTurns, applyTurn,
+                    SolvedDescriptor>::value;
+
+template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
+          auto SolvedDescriptor, bool use_heap>
+  requires is_cubing_group_v<DescriptorCount, PossibleTurns, applyTurn,
+                             SolvedDescriptor>
+static constexpr auto getOptimalMoves() {
+  using Uint = decltype(DescriptorCount);
+
+  /** static **/ constexpr Uint UnknownSentinel = DescriptorCount;
+
+  utility::pick_array_t<std::pair<Turn, Uint>, DescriptorCount, use_heap>
+      optimal_moves{};
+  for (size_t i = 0; i < DescriptorCount; ++i)
+    optimal_moves[i].second = UnknownSentinel;
+
+  auto [forward_vector, backward_vector] =
+      utility::BidirectionalStaticVector<Uint, DescriptorCount,
+                                         use_heap>::make();
+  forward_vector.push_back(SolvedDescriptor);
+
+  //  for (size_t i = 0; !forward_vector.isEmpty() && i < 1; ++i) {
+  while (!forward_vector.isEmpty()) {
+    // iterate through forward_vector and queue next round in
+    // backward_vector
+    for (const Uint& idx : forward_vector) {
+      for (const Turn& turn : PossibleTurns) {
+        const Uint next_idx = applyTurn(idx, turn);
+        if (next_idx != SolvedDescriptor &&
+            optimal_moves[next_idx].second == UnknownSentinel) {
+          optimal_moves[next_idx].first = turn.inv();
+          optimal_moves[next_idx].second = idx;
+          backward_vector.push_back(next_idx);
+        }
+      }
+    }
+    if (backward_vector.isEmpty()) break;
+    forward_vector.clear();
+    // iterate through backward_vector and queue next round in
+    // forward_vector
+    for (const Uint& idx : backward_vector) {
+      for (const Turn& turn : PossibleTurns) {
+        const Uint next_idx = applyTurn(idx, turn);
+        if (next_idx != SolvedDescriptor &&
+            optimal_moves[next_idx].second == UnknownSentinel) {
+          optimal_moves[next_idx].first = turn.inv();
+          optimal_moves[next_idx].second = idx;
+          forward_vector.push_back(next_idx);
+        }
+      }
+    }
+    backward_vector.clear();
+  }
+  assert(optimal_moves[SolvedDescriptor].second == UnknownSentinel);
+  assert([&]() {
+    for (size_t i = 0; i < optimal_moves.size(); ++i) {
+      if (i == SolvedDescriptor) continue;
+      if (optimal_moves[i].second == UnknownSentinel) return false;
+    }
+    return true;
+  }());
+  return optimal_moves;
+}
+
+template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
+          auto SolvedDescriptor, bool use_heap>
+  requires is_cubing_group_v<DescriptorCount, PossibleTurns, applyTurn,
+                             SolvedDescriptor>
+constexpr auto getCompressedOptimalMoves() {
+  using Uint = decltype(DescriptorCount);
+  /** static **/ constexpr uint8_t DescriptorBits =
+      utility::requiredBits(DescriptorCount);
+  /** static **/ constexpr uint8_t TurnBits =
+      utility::requiredBits(PossibleTurns.size());
+  /** static **/ constexpr uint8_t CompressedBits = DescriptorBits + TurnBits;
+
+  const auto optimal_moves =
+      detail::getOptimalMoves<DescriptorCount, PossibleTurns, applyTurn,
+                              SolvedDescriptor, use_heap>();
+
+  utility::PackedBitsArray<CompressedBits, DescriptorCount, use_heap>
+      compressed_optimal_moves;
+  /**
+   * CompressedOptimalMoves[SolvedDescriptor] should never be accessed,
+   * so is assigned the maximum allowable value to hopefully cause immediate
+   * failure if used.
+   */
+  if constexpr (CompressedBits == 64)
+    compressed_optimal_moves[SolvedDescriptor] =
+        std::numeric_limits<uint64_t>::max();
+  else
+    compressed_optimal_moves[SolvedDescriptor] = (1ull << CompressedBits) - 1;
+
+  for (Uint i = 0; i < DescriptorCount; ++i) {
+    if (i == SolvedDescriptor) continue;
+    const size_t possible_turns_index =
+        std::find(PossibleTurns.begin(), PossibleTurns.end(),
+                  optimal_moves[i].first) -
+        PossibleTurns.begin();
+    assert(possible_turns_index != PossibleTurns.size());
+    compressed_optimal_moves[i] =
+        (possible_turns_index << DescriptorBits) + optimal_moves[i].second;
+  }
+
+  return compressed_optimal_moves;
+}
+}  // namespace detail
+
+/**
+ * If this crashes during compilation due to a lack of memory, use
+ * generateLookupTable and embed the generated header file in the code
+ * instead.
+ */
 template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
           auto SolvedDescriptor = 0>
+  requires detail::is_cubing_group_v<DescriptorCount, PossibleTurns, applyTurn,
+                                     SolvedDescriptor>
 consteval auto getSolver() {
   using Uint = decltype(DescriptorCount);
-  static_assert(std::unsigned_integral<Uint>);  // TODO: move to declaration
-  static_assert(DescriptorCount > 0);
-  static_assert(std::is_same_v<const std::array<Turn, PossibleTurns.size()>,
-                               decltype(PossibleTurns)>);
-  static_assert(!PossibleTurns.empty());
-  static_assert(
-      std::is_same_v<Uint (*)(const Uint&, const Turn&), decltype(applyTurn)> ||
-      std::is_same_v<Uint (*)(Uint, const Turn&), decltype(applyTurn)>);
-  static_assert(std::is_same_v<Uint, decltype(SolvedDescriptor)>);
-  static_assert(SolvedDescriptor < DescriptorCount);
-
   return [](Uint descriptor) {
-    static constexpr auto OptimalMoves = []() consteval {
-      /** static **/ constexpr Uint UnknownSentinel = DescriptorCount;
-
-      std::array<std::pair<Turn, Uint>, DescriptorCount> optimal_moves{};
-      for (size_t i = 0; i < DescriptorCount; ++i)
-        optimal_moves[i].second = UnknownSentinel;
-
-      auto [forward_vector, backward_vector] =
-          utility::BidirectionalStaticVector<Uint, DescriptorCount>::make();
-      forward_vector.push_back(SolvedDescriptor);
-
-      //  for (size_t i = 0; !forward_vector.isEmpty() && i < 1; ++i) {
-      while (!forward_vector.isEmpty()) {
-        // iterate through forward_vector and queue next round in
-        // backward_vector
-        for (const Uint& idx : forward_vector) {
-          for (const Turn& turn : PossibleTurns) {
-            const Uint next_idx = applyTurn(idx, turn);
-            if (next_idx != SolvedDescriptor &&
-                optimal_moves[next_idx].second == UnknownSentinel) {
-              optimal_moves[next_idx].first = turn.inv();
-              optimal_moves[next_idx].second = idx;
-              backward_vector.push_back(next_idx);
-            }
-          }
-        }
-        if (backward_vector.isEmpty()) break;
-        forward_vector.clear();
-        // iterate through backward_vector and queue next round in
-        // forward_vector
-        for (const Uint& idx : backward_vector) {
-          for (const Turn& turn : PossibleTurns) {
-            const Uint next_idx = applyTurn(idx, turn);
-            if (next_idx != SolvedDescriptor &&
-                optimal_moves[next_idx].second == UnknownSentinel) {
-              optimal_moves[next_idx].first = turn.inv();
-              optimal_moves[next_idx].second = idx;
-              forward_vector.push_back(next_idx);
-            }
-          }
-        }
-        backward_vector.clear();
-      }
-      assert(optimal_moves[SolvedDescriptor].second == UnknownSentinel);
-      assert([&]() {
-        for (size_t i = 0; i < optimal_moves.size(); ++i) {
-          if (i == SolvedDescriptor) continue;
-          if (optimal_moves[i].second == UnknownSentinel) return false;
-        }
-        return true;
-      }());
-      return optimal_moves;
-    }
-    ();
     static constexpr uint8_t DescriptorBits =
         utility::requiredBits(DescriptorCount);
-    static constexpr auto CompressedOptimalMoves = []() consteval {
-      /** static **/ constexpr uint8_t TurnBits =
-          utility::requiredBits(PossibleTurns.size());
-      /** static **/ constexpr uint8_t CompressedBits =
-          DescriptorBits + TurnBits;
-
-      utility::PackedBitsArray<CompressedBits, DescriptorCount>
-          compressed_optimal_moves;
-      /**
-       * CompressedOptimalMoves[SolvedDescriptor] should never be accessed,
-       * so is assigned the maximum allowable value to hopefully cause immediate
-       * failure if used.
-       */
-      if constexpr (CompressedBits == 64)
-        compressed_optimal_moves[SolvedDescriptor] =
-            std::numeric_limits<uint64_t>::max();
-      else
-        compressed_optimal_moves[SolvedDescriptor] =
-            (1ull << CompressedBits) - 1;
-
-      for (Uint i = 0; i < DescriptorCount; ++i) {
-        if (i == SolvedDescriptor) continue;
-        const size_t possible_turns_index =
-            std::find(PossibleTurns.begin(), PossibleTurns.end(),
-                      OptimalMoves[i].first) -
-            PossibleTurns.begin();
-        assert(possible_turns_index != PossibleTurns.size());
-        compressed_optimal_moves[i] =
-            (possible_turns_index << DescriptorBits) + OptimalMoves[i].second;
-      }
-      return compressed_optimal_moves;
-    }
-    ();
+    static constexpr auto CompressedOptimalMoves =
+        detail::getCompressedOptimalMoves<DescriptorCount, PossibleTurns,
+                                          applyTurn, SolvedDescriptor, false>();
 
     Algorithm alg;
     while (descriptor != SolvedDescriptor) {
@@ -197,5 +251,19 @@ consteval auto getSolver() {
     }
     return alg;
   };
+}
+
+template <auto DescriptorCount, auto PossibleTurns, auto applyTurn,
+          auto SolvedDescriptor = 0>
+  requires detail::is_cubing_group_v<DescriptorCount, PossibleTurns, applyTurn,
+                                     SolvedDescriptor>
+auto generateLookupTable(const std::string& file_name) {
+  const auto compressed_optimal_moves =
+      detail::getCompressedOptimalMoves<DescriptorCount, PossibleTurns,
+                                        applyTurn, SolvedDescriptor, true>();
+
+  std::ofstream data_table_file{file_name};
+  for (const uint8_t& element : compressed_optimal_moves.rawData())
+    data_table_file << std::to_string(element) << ',';
 }
 }  // namespace solvers

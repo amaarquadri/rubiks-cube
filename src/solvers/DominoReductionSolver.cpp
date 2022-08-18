@@ -142,8 +142,26 @@ bool isDominoReduced(const Cube& cube) {
 }
 
 Algorithm solveDominoReduction(Cube cube) {
-  static constexpr auto solver =
-      getSolver<DescriptorCount, PossibleTurns, applyTurn, SolvedDescriptor>();
+  static constexpr uint8_t DescriptorBits =
+      utility::requiredBits(DescriptorCount);
+  static constexpr uint8_t TurnBits =
+      utility::requiredBits(PossibleTurns.size());
+  static constexpr uint8_t CompressedBits = DescriptorBits + TurnBits;
+  static constexpr auto LookupTable =
+      utility::PackedBitsArray<CompressedBits, DescriptorCount>::fromRawData({
+          // TODO: replace with #embed in c++23
+          #include "DominoReductionLookupTable.h"
+      });
+  static constexpr auto solver = [](uint32_t descriptor) {
+    Algorithm alg;
+    while (descriptor != SolvedDescriptor) {
+      const auto compressed_optimal_move = LookupTable[descriptor];
+      alg.push_back(
+          Move{PossibleTurns[compressed_optimal_move >> DescriptorBits]});
+      descriptor = compressed_optimal_move % (1 << DescriptorBits);
+    }
+    return alg;
+  };
 
   const Algorithm edge_orientation_solve = solveEdgeOrientation(cube);
   cube.apply(edge_orientation_solve);
