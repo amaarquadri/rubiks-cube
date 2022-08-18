@@ -78,8 +78,6 @@ static constexpr bool isPrimaryTetradCorner(const CornerPiece& corner) {
 }
 
 static uint16_t getDescriptor(const Cube& cube) {
-  static constexpr std::array<uint8_t, 8> Locations{0, 1, 2, 3, 8, 9, 10, 11};
-
   Combination<8, 4> primary_tetrad_corner_combination;
   uint8_t i = 0;
   for (uint8_t j = 0; j < Cube::CORNER_LOCATION_ORDER.size(); ++j)
@@ -88,6 +86,7 @@ static uint16_t getDescriptor(const Cube& cube) {
   // ensure number of primary tetrad corners is 4
   assert(i == primary_tetrad_corner_combination.size());
 
+  static constexpr std::array<uint8_t, 8> Locations{0, 1, 2, 3, 8, 9, 10, 11};
   Combination<8, 4> m_slice_edge_combination;
   i = 0;
   for (uint8_t j = 0; j < Locations.size(); ++j) {
