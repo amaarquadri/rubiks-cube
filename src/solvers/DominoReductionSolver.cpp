@@ -239,6 +239,10 @@ static void testStatistics() {
 }
 
 void runDominoReductionSolverTests() {
+  generateLookupTable<DescriptorCount, PossibleTurns, applyTurn,
+                      SolvedDescriptor>(
+      "./include/solvers/DominoReductionLookupTable.h");
+
   testGetDescriptor();
   testApplyTurnForDominoReduction();
   testStatistics();
