@@ -393,7 +393,7 @@ class PackedBitsArray {
   constexpr const_reference operator[](const size_type& i) const {
     assert(i < n);
     if constexpr (is_byte_aligned)
-      return static_cast<const_reference>(reference{&data[i * full_bytes]});
+      return reference::parse(&data[i * full_bytes], {});
     else {
       const size_t overflow_bits = i * extra_bits;
       return reference::parse(&data[i * full_bytes + (overflow_bits / 8)],
