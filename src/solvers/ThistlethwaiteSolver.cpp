@@ -79,12 +79,12 @@ static uint32_t getDescriptor(const Cube& cube) {
                                    : Cube::STARTING_EDGE_PIECES[i];
       if (edge_piece == target) return i;
     }
-    throw std::invalid_argument("EdgePiece was not oriented!")
+    throw std::invalid_argument("EdgePiece was not oriented!");
   };
   const auto get_corner_location_index = [](const CornerPiece& corner_piece) {
     for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); ++i)
       if (corner_piece == Cube::STARTING_CORNER_PIECES[i]) return i;
-    throw std::invalid_argument("CornerPiece was not oriented!")
+    throw std::invalid_argument("CornerPiece was not oriented!");
   };
 
   Permutation<4> m_slice_permutation;
