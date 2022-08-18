@@ -358,7 +358,7 @@ class PackedBitsArray {
   using size_type = size_t;
   using reference = PackedBitsReference<bits>;
   using const_reference = get_smallest_unsigned_int_t<bits>;
-  using iterator = PackedBitsIteratorImpl<bits>;
+  using iterator = PackedBitsIterator<bits>;
   using const_iterator = PackedBitsConstIterator<bits>;
   using reverse_iterator = std::reverse_iterator<iterator>;
   using const_reverse_iterator = std::reverse_iterator<const_iterator>;
