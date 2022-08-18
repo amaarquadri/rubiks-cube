@@ -47,8 +47,6 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
       descriptor / PrimaryTetradAndEdgesPermutationCount,
       primary_tetrad_permutation.isOdd());
 
-
-
   return m_slice_permutation.getRank() +
          MSlicePermutationCount * s_slice_permutation.getRank() +
          MSSlicePermutationCounts * e_slice_permutation.getParityRank() +
