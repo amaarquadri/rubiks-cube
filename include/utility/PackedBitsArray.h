@@ -262,7 +262,8 @@ class PackedBitsIteratorImpl {
 
   constexpr PackedBitsIteratorImpl operator+(const size_t& step) const {
     if constexpr (is_byte_aligned) {
-      return PackedBitsIteratorImpl<bits>{data + step * full_bytes};
+      return PackedBitsIteratorImpl<bits, is_const_iterator>{data +
+                                                             step * full_bytes};
     } else {
       const size_t overflow_bits = step * extra_bits;
       const uint8_t* new_data = data + step * full_bytes + (overflow_bits / 8);
@@ -277,7 +278,8 @@ class PackedBitsIteratorImpl {
 
   constexpr PackedBitsIteratorImpl operator-(const size_t& step) const {
     if constexpr (is_byte_aligned) {
-      return PackedBitsIteratorImpl<bits>{data - step * full_bytes};
+      return PackedBitsIteratorImpl<bits, is_const_iterator>{data -
+                                                             step * full_bytes};
     } else {
       const size_t underflow_bits = step * extra_bits;
       const uint8_t* new_data = data - step * full_bytes - (underflow_bits / 8);
