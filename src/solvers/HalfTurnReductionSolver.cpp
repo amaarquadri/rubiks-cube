@@ -111,12 +111,34 @@ static uint16_t getDescriptor(const Cube& cube) {
     assert(corner_permutation[j] != Cube::STARTING_CORNER_PIECES.size());
   }
 
-  // TODO: compute factor of 3
-  uint16_t descriptor =
-      primary_tetrad_corner_combination.getRank() +
-      m_slice_edge_combination.getRank() * CornerCombinationCount;
-  if (corner_permutation.isOdd()) descriptor += PiecesCombinationCount;
-  return descriptor;
+  // extract relative permutation of each tetrad
+  Permutation<4> primary_tetrad_permutation;
+  Permutation<4> secondary_tetrad_permutation;
+  i = 0;  // number of assigned elements of primary_tetrad_permutation
+  for (uint8_t j = 0; j < 8; ++j) {
+    if (primary_tetrad_corner_combination[i] == j) {
+      primary_tetrad_permutation[i] = j / 2;
+      ++i;
+    } else {
+      assert(j >= i);
+      secondary_tetrad_permutation[j - i] = j / 2;
+    }
+  }
+  assert(i == 4);
+  static constexpr std::array<uint8_t, 24> TetradThreeParity{
+      0, 2, 1, 1, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 1, 2, 0};
+  static_assert(std::equal(TetradThreeParity.begin(), TetradThreeParity.end(),
+                           TetradThreeParity.rbegin(),
+                           TetradThreeParity.rend()));
+  const uint16_t corner_three_parity =
+      (TetradThreeParity[primary_tetrad_permutation.getRank()] +
+       TetradThreeParity[secondary_tetrad_permutation.getRank()]) %
+      3;
+
+  return primary_tetrad_corner_combination.getRank() +
+         m_slice_edge_combination.getRank() * CornerCombinationCount +
+         (corner_permutation.isOdd() ? PiecesCombinationCount : 0) +
+         corner_three_parity * ParityAndPiecesCombinationCount;
 }
 
 bool isHalfTurnReduced(const Cube& cube) {
