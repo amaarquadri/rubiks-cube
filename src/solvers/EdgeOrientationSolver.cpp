@@ -131,34 +131,8 @@ static void testApplyTurn() {
   }
 }
 
-static void testSolveEdgeOrientation() {
-  static constexpr size_t count = 1000;
-
-  for (size_t i = 0; i < count; ++i) {
-    const Algorithm scramble = Algorithm::random(20);
-    Cube cube{scramble};
-    const Algorithm solve = solveEdgeOrientation(cube);
-    cube.apply(solve);
-    if (!areEdgesOriented(cube))
-      throw std::logic_error("Edge orientation was not solved!");
-  }
-}
-
-static void testMaintainDominoReduction() {
-  static constexpr size_t count = 1000;
-
-  Cube cube{};
-  for (size_t i = 0; i < count; ++i) {
-    cube.apply(utility::pickRandom(EdgeOrientationPreservingTurns));
-    if (getEdgeOrientation(cube) != SolvedDescriptor)
-      throw std::logic_error("Edge orientation was unduly broken!");
-  }
-}
-
 void runEdgeOrientationSolverTests() {
   testGetEdgeOrientation();
   testApplyTurn();
-  testSolveEdgeOrientation();
-  testMaintainDominoReduction();
 }
 }  // namespace solvers

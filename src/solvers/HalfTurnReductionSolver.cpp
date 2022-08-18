@@ -155,16 +155,5 @@ Algorithm solveHalfTurnReduction(Cube cube) {
   return domino_reduction_solve + solver(getDescriptor(cube));
 }
 
-static void testMaintainHalfTurnReduction() {
-  static constexpr size_t count = 1000;
-
-  Cube cube{};
-  for (size_t i = 0; i < count; ++i) {
-    cube.apply(utility::pickRandom(HalfTurnReductionPreservingTurns));
-    if (getDescriptor(cube) != SolvedDescriptor)
-      throw std::logic_error("Domino reduction was unduly broken!");
-  }
-}
-
-void runHalfTurnReductionSolverTests() { testMaintainHalfTurnReduction(); }
+void runHalfTurnReductionSolverTests() { }
 }  // namespace solvers
