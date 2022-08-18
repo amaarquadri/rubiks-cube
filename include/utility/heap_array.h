@@ -1,12 +1,13 @@
 #pragma once
 
-#include "constexpr_unique_ptr.h"
+#include "ConstexprSharedPtr.h"
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <cstddef>
 #include <stdexcept>
 #include <type_traits>
+#include <utility>
 
 namespace utility {
 
@@ -34,10 +35,23 @@ class heap_array {
       typename underlying_array::const_reverse_iterator;
 
  private:
-  const constexpr_unique_ptr<underlying_array> ptr{new underlying_array()};
+  const ConstexprSharedPtr<underlying_array> ptr{new underlying_array()};
 
  public:
   constexpr heap_array() = default;
+
+  constexpr heap_array(const heap_array<T, n>& other) : ptr(other.ptr) {}
+
+  constexpr heap_array<T, n>& operator=(const heap_array<T, n>& other) {
+    ptr = other.ptr;
+  };
+
+  constexpr heap_array(heap_array<T, n>&& other) noexcept
+      : ptr(std::move(other.ptr)) {}
+
+  constexpr heap_array<T, n>& operator=(heap_array<T, n>&& other) noexcept {
+    ptr = std::move(other.ptr);
+  }
 
   [[nodiscard]] constexpr size_type size() const { return ptr->size(); }
 
