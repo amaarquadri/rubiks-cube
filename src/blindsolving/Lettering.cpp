@@ -4,8 +4,8 @@
 namespace blindsolving {
 static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
   std::unordered_map<EdgeLocation, char> edge_lettering;
-  const std::string edge_labels = "ABCDFJNRUVWZ";
-  const std::string flipped_edge_labels = "MIEQLPTHGKOS";
+  const std::string edge_labels = "ABFCVPUZNWDH";
+  const std::string flipped_edge_labels = "MILEKJGSTOQR";
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
     const EdgeLocation location = Cube::EDGE_LOCATION_ORDER[i];
     edge_lettering.insert({location, edge_labels[i]});

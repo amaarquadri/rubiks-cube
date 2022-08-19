@@ -20,22 +20,19 @@ class Cube {
  public:
   friend struct std::hash<Cube>;
 
-  // TODO: flip the EdgeLocations at index 5 and 7 for easy correspondence with
-  //       edge orientation, and reorder so that m slices are at 3k, s slices
-  //       are at 3k+1, and e slices are at 3k+2
   static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
       {{Face::U, Face::B},
        {Face::U, Face::R},
-       {Face::U, Face::F},
-       {Face::U, Face::L},
        {Face::F, Face::R},
-       {Face::R, Face::B},
-       {Face::B, Face::L},
-       {Face::L, Face::F},
-       {Face::D, Face::F},
+       {Face::U, Face::F},
        {Face::D, Face::R},
+       {Face::B, Face::R},
+       {Face::D, Face::F},
+       {Face::D, Face::L},
+       {Face::B, Face::L},
        {Face::D, Face::B},
-       {Face::D, Face::L}}};
+       {Face::U, Face::L},
+       {Face::F, Face::L}}};
   static constexpr std::array<CornerLocation, 8> CORNER_LOCATION_ORDER{
       {{Face::U, Face::L, Face::B},
        {Face::U, Face::B, Face::R},
@@ -48,16 +45,16 @@ class Cube {
   static constexpr std::array<EdgePiece, 12> STARTING_EDGE_PIECES{
       {{Colour::White, Colour::Blue},
        {Colour::White, Colour::Red},
-       {Colour::White, Colour::Green},
-       {Colour::White, Colour::Orange},
        {Colour::Green, Colour::Red},
-       {Colour::Red, Colour::Blue},
-       {Colour::Blue, Colour::Orange},
-       {Colour::Orange, Colour::Green},
-       {Colour::Yellow, Colour::Green},
+       {Colour::White, Colour::Green},
        {Colour::Yellow, Colour::Red},
+       {Colour::Blue, Colour::Red},
+       {Colour::Yellow, Colour::Green},
+       {Colour::Yellow, Colour::Orange},
+       {Colour::Blue, Colour::Orange},
        {Colour::Yellow, Colour::Blue},
-       {Colour::Yellow, Colour::Orange}}};
+       {Colour::White, Colour::Orange},
+       {Colour::Green, Colour::Orange}}};
   static constexpr std::array<CornerPiece, 8> STARTING_CORNER_PIECES{
       {{Colour::White, Colour::Orange, Colour::Blue},
        {Colour::White, Colour::Blue, Colour::Red},
