@@ -23,11 +23,9 @@ add_executable(rubiks_cube
         src/utility/SolveAttemptParsingUtils.cpp
         src/core/Algorithm.cpp
         src/core/Colour.cpp
-        src/core/CornerLocation.cpp
         src/core/Cube.cpp
         src/core/CubeOrientation.cpp
         src/core/CubeRotation.cpp
-        src/core/EdgeLocation.cpp
         src/core/Face.cpp
         src/core/Move.cpp
         src/core/RotationAmount.cpp

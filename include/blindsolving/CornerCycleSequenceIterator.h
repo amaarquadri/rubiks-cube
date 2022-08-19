@@ -31,7 +31,7 @@ class CornerCycleSequenceIterator {
    */
   CornerCycleSequenceIterator(
       const std::vector<std::vector<char>>& cycles,
-      const std::vector<CornerRotationAmount>& rotation_amounts);
+      std::vector<CornerRotationAmount> rotation_amounts);
 
   /**
    * @return True if the iterator was successfully incremented, and false if the

@@ -1,6 +1,5 @@
 #include "CornerCycleSequenceIterator.h"
 #include "CornerRotationAmount.h"
-#include "Cube.h"
 #include "CycleSequenceIterator.h"
 #include "Lettering.h"
 #include "MathUtils.h"
@@ -8,14 +7,15 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <utility>
 #include <vector>
 
 namespace blindsolving {
 CornerCycleSequenceIterator::CornerCycleSequenceIterator(
     const std::vector<std::vector<char>>& cycles,
-    const std::vector<CornerRotationAmount>& rotation_amounts)
+    std::vector<CornerRotationAmount> rotation_amounts)
     : it(CycleSequenceIterator<char>{cycles}),
-      rotation_amounts(rotation_amounts),
+      rotation_amounts(std::move(rotation_amounts)),
       modifications(std::vector<CornerRotationAmount>{
           cycles.size(), CornerRotationAmount::None}) {}
 
