@@ -109,8 +109,8 @@ Algorithm solveEdgeOrientation(const Cube& cube) {
 
 static void testGetEdgeOrientation() {
   if (getEdgeOrientation(Cube{}) != SolvedDescriptor ||
-      getEdgeOrientation(Cube{Algorithm::parse("F")}) != 404 ||
-      getEdgeOrientation(Cube{Algorithm::parse("F R")}) != 390 ||
+      getEdgeOrientation(Cube{Algorithm::parse("F")}) != 76 ||
+      getEdgeOrientation(Cube{Algorithm::parse("F R")}) != 74 ||
       getEdgeOrientation(Cube{Algorithm::parse("F B L U D' B2 R2 F")}) !=
           (DescriptorCount - 1))
     throw std::logic_error("Incorrect edge orientation!");
