@@ -206,28 +206,27 @@ std::string Cube::toNetString() const {
   //  B
   // LURD
   //  F
-  return "    " + toStr(corners[7].second) + toStr(edges[10].second) +
-         toStr(corners[6].third) + "\n    " + toStr(edges[6].first) + "B" +
-         toStr(edges[5].second) + "\n    " + toStr(corners[0].third) +
-         toStr(edges[0].second) + toStr(corners[1].second) + "\n" +
-         toStr(corners[7].third) + toStr(edges[6].second) +
-         toStr(corners[0].second) + " " + toStr(corners[0].first) +
-         toStr(edges[0].first) + toStr(corners[1].first) + " " +
-         toStr(corners[1].third) + toStr(edges[5].first) +
-         toStr(corners[6].second) + " " + toStr(corners[6].first) +
-         toStr(edges[10].first) + toStr(corners[7].first) + "\n" +
-         toStr(edges[11].second) + "O" + toStr(edges[3].second) + " " +
-         toStr(edges[3].first) + "W" + toStr(edges[1].first) + " " +
-         toStr(edges[1].second) + "R" + toStr(edges[9].second) + " " +
-         toStr(edges[9].first) + "Y" + toStr(edges[11].first) + "\n" +
-         toStr(corners[4].second) + toStr(edges[7].first) +
-         toStr(corners[3].third) + " " + toStr(corners[3].first) +
-         toStr(edges[2].first) + toStr(corners[2].first) + " " +
-         toStr(corners[2].second) + toStr(edges[4].second) +
-         toStr(corners[5].third) + " " + toStr(corners[5].first) +
-         toStr(edges[8].first) + toStr(corners[4].first) + "\n    " +
-         toStr(corners[3].second) + toStr(edges[2].second) +
-         toStr(corners[2].third) + "\n    " + toStr(edges[7].second) + "G" +
-         toStr(edges[4].first) + "\n    " + toStr(corners[4].third) +
-         toStr(edges[8].second) + toStr(corners[5].second);
+  using enum Face;
+  const auto edge = [&](const Face& first, const Face& second) {
+    return toStr((*this)[EdgeLocation{first, second}].first());
+  };
+  const auto corner = [&](const Face& first, const Face& second,
+                          const Face& third) {
+    return toStr((*this)[CornerLocation{first, second, third}].first());
+  };
+  return "    " + corner(B, L, D) + edge(B, D) + corner(B, D, R) + "\n    " +
+         edge(B, L) + "B" + edge(B, R) + "\n    " + corner(B, U, L) +
+         edge(B, U) + corner(B, R, U) + "\n" + corner(L, D, B) + edge(L, B) +
+         corner(L, B, U) + " " + corner(U, L, B) + edge(U, B) +
+         corner(U, B, R) + " " + corner(R, U, B) + edge(R, B) +
+         corner(R, B, D) + " " + corner(D, R, B) + edge(D, B) +
+         corner(D, B, L) + "\n" + edge(L, D) + "O" + edge(L, U) + " " +
+         edge(U, L) + "W" + edge(U, R) + " " + edge(R, U) + "R" + edge(R, D) +
+         " " + edge(D, R) + "Y" + edge(D, L) + "\n" + corner(L, F, D) +
+         edge(L, F) + corner(L, U, F) + " " + corner(U, F, L) + edge(U, F) +
+         corner(U, R, F) + " " + corner(R, F, U) + edge(R, F) +
+         corner(R, D, F) + " " + corner(D, F, R) + edge(D, F) +
+         corner(D, L, F) + "\n    " + corner(F, L, U) + edge(F, U) +
+         corner(F, U, R) + "\n    " + edge(F, L) + "G" + edge(F, R) + "\n    " +
+         corner(F, D, L) + edge(F, D) + corner(F, R, D);
 }
