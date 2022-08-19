@@ -28,7 +28,11 @@ static constexpr uint32_t EdgeCombinationCount = utility::nChooseK(12, 4);
 static constexpr uint32_t DescriptorCount =
     EdgeCombinationCount * CornerOrientationCount;
 static constexpr uint32_t SolvedDescriptor =
-    CornerOrientationCount * Combination<12, 4>({4, 5, 6, 7}).getRank();
+    CornerOrientationCount *
+    Combination<12, 4>(
+        {getEdgeIndex(Face::F, Face::R), getEdgeIndex(Face::B, Face::R),
+         getEdgeIndex(Face::B, Face::L), getEdgeIndex(Face::F, Face::L)})
+        .getRank();
 
 static constexpr uint32_t applyTurn(const uint32_t& descriptor,
                                     const Turn& turn) {
