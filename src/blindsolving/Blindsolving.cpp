@@ -87,14 +87,21 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
     }
   }
 
-  // set up transformations
-  std::unordered_map<char, Cube> edge_alg_transformations;
-  for (const auto& [chr, alg] : EDGE_ALGS)
-    edge_alg_transformations.insert({chr, Cube{alg}});
-  std::unordered_map<char, Cube> corner_alg_transformations;
-  for (const auto& [chr, alg] : CORNER_ALGS)
-    corner_alg_transformations.insert({chr, Cube{alg}});
-  const Cube parity_alg_transformation{PARITY_ALG};
+  // set up transformations statically
+  // TODO: make this constexpr
+  static std::unordered_map<char, Cube> edge_alg_transformations = []() {
+    std::unordered_map<char, Cube> transformations;
+    for (const auto& [chr, alg] : EDGE_ALGS)
+      transformations.insert({chr, Cube{alg}});
+    return transformations;
+  }();
+  static std::unordered_map<char, Cube> corner_alg_transformations = []() {
+    std::unordered_map<char, Cube> transformations;
+    for (const auto& [chr, alg] : CORNER_ALGS)
+      transformations.insert({chr, Cube{alg}});
+    return transformations;
+  }();
+  static const Cube parity_alg_transformation{PARITY_ALG};
 
   Reconstruction reconstruction;
   while (consumed < moves.size()) {
