@@ -3,7 +3,6 @@
 #include "BlindsolvingReconstruction.h"
 #include "CornerCycleSequenceIterator.h"
 #include "CornerRotationAmount.h"
-#include "Cube.h"
 #include "CycleSequenceIterator.h"
 #include "EdgeCycleSequenceIterator.h"
 #include <vector>
