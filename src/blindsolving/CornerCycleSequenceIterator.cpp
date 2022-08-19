@@ -1,6 +1,5 @@
 #include "CornerCycleSequenceIterator.h"
 #include "CornerRotationAmount.h"
-#include "Cube.h"
 #include "CycleSequenceIterator.h"
 #include "Lettering.h"
 #include "MathUtils.h"
