@@ -22,34 +22,63 @@
 #include <utility>
 
 namespace solvers {
-constexpr std::array<uint8_t, 4> getEdgeCycle(const Face& face) {
-  const auto get_idx = [](const Face& first, const Face& second) consteval {
-    const EdgeLocation location{first, second};
-    uint8_t idx = std::find(Cube::EDGE_LOCATION_ORDER.begin(),
-                            Cube::EDGE_LOCATION_ORDER.end(), location) -
-                  Cube::EDGE_LOCATION_ORDER.begin();
-    if (idx != Cube::EDGE_LOCATION_ORDER.size()) return idx;
+consteval uint8_t getEdgeIndex(const Face& first, const Face& second) {
+  const EdgeLocation location{first, second};
+  uint8_t idx = std::find(Cube::EDGE_LOCATION_ORDER.begin(),
+                          Cube::EDGE_LOCATION_ORDER.end(), location) -
+                Cube::EDGE_LOCATION_ORDER.begin();
+  if (idx != Cube::EDGE_LOCATION_ORDER.size()) return idx;
 
-    idx = std::find(Cube::EDGE_LOCATION_ORDER.begin(),
-                    Cube::EDGE_LOCATION_ORDER.end(), location.flip()) -
-          Cube::EDGE_LOCATION_ORDER.begin();
-    assert(idx != Cube::EDGE_LOCATION_ORDER.size());
-    return idx;
-  };
+  idx = std::find(Cube::EDGE_LOCATION_ORDER.begin(),
+                  Cube::EDGE_LOCATION_ORDER.end(), location.flip()) -
+        Cube::EDGE_LOCATION_ORDER.begin();
+  assert(idx != Cube::EDGE_LOCATION_ORDER.size());
+  return idx;
+}
+
+consteval uint8_t getCornerIndex(const Face& first, const Face& second,
+                                 const Face& third) {
+  const CornerLocation location{first, second, third};
+  uint8_t idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
+                          Cube::CORNER_LOCATION_ORDER.end(), location) -
+                Cube::CORNER_LOCATION_ORDER.begin();
+  if (idx != Cube::CORNER_LOCATION_ORDER.size()) return idx;
+
+  idx =
+      std::find(Cube::CORNER_LOCATION_ORDER.begin(),
+                Cube::CORNER_LOCATION_ORDER.end(), location.rotateClockwise()) -
+      Cube::CORNER_LOCATION_ORDER.begin();
+  if (idx != Cube::CORNER_LOCATION_ORDER.size()) return idx;
+
+  idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
+                  Cube::CORNER_LOCATION_ORDER.end(),
+                  location.rotateCounterclockwise()) -
+        Cube::CORNER_LOCATION_ORDER.begin();
+  assert(idx != Cube::CORNER_LOCATION_ORDER.size());
+  return idx;
+}
+
+constexpr std::array<uint8_t, 4> getEdgeCycle(const Face& face) {
   using enum Face;
   switch (face) {
     case U:
-      return {get_idx(U, B), get_idx(U, R), get_idx(U, F), get_idx(U, L)};
+      return {getEdgeIndex(U, B), getEdgeIndex(U, R), getEdgeIndex(U, F),
+              getEdgeIndex(U, L)};
     case F:
-      return {get_idx(F, U), get_idx(F, R), get_idx(F, D), get_idx(F, L)};
+      return {getEdgeIndex(F, U), getEdgeIndex(F, R), getEdgeIndex(F, D),
+              getEdgeIndex(F, L)};
     case R:
-      return {get_idx(R, U), get_idx(R, B), get_idx(R, D), get_idx(R, F)};
+      return {getEdgeIndex(R, U), getEdgeIndex(R, B), getEdgeIndex(R, D),
+              getEdgeIndex(R, F)};
     case B:
-      return {get_idx(B, U), get_idx(B, L), get_idx(B, D), get_idx(B, R)};
+      return {getEdgeIndex(B, U), getEdgeIndex(B, L), getEdgeIndex(B, D),
+              getEdgeIndex(B, R)};
     case L:
-      return {get_idx(L, U), get_idx(L, F), get_idx(L, D), get_idx(L, B)};
+      return {getEdgeIndex(L, U), getEdgeIndex(L, F), getEdgeIndex(L, D),
+              getEdgeIndex(L, B)};
     case D:
-      return {get_idx(D, F), get_idx(D, R), get_idx(D, B), get_idx(D, L)};
+      return {getEdgeIndex(D, F), getEdgeIndex(D, R), getEdgeIndex(D, B),
+              getEdgeIndex(D, L)};
     default:
       throw std::logic_error("Unknown enum value!");
   }
@@ -62,47 +91,26 @@ constexpr std::array<uint8_t, 4> getEdgeCycle(const Face& face) {
  * and index 1 and 3 will be rotated Counterclockwise.
  */
 constexpr std::array<uint8_t, 4> getCornerCycle(const Face& face) {
-  const auto get_idx =
-      [](const Face& first, const Face& second, const Face& third) consteval {
-    const CornerLocation location{first, second, third};
-    uint8_t idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
-                            Cube::CORNER_LOCATION_ORDER.end(), location) -
-                  Cube::CORNER_LOCATION_ORDER.begin();
-    if (idx != Cube::CORNER_LOCATION_ORDER.size()) return idx;
-
-    idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
-                    Cube::CORNER_LOCATION_ORDER.end(),
-                    location.rotateClockwise()) -
-          Cube::CORNER_LOCATION_ORDER.begin();
-    if (idx != Cube::CORNER_LOCATION_ORDER.size()) return idx;
-
-    idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
-                    Cube::CORNER_LOCATION_ORDER.end(),
-                    location.rotateCounterclockwise()) -
-          Cube::CORNER_LOCATION_ORDER.begin();
-    assert(idx != Cube::CORNER_LOCATION_ORDER.size());
-    return idx;
-  };
   using enum Face;
   switch (face) {
     case U:
-      return {get_idx(U, L, B), get_idx(U, B, R), get_idx(U, R, F),
-              get_idx(U, F, L)};
+      return {getCornerIndex(U, L, B), getCornerIndex(U, B, R),
+              getCornerIndex(U, R, F), getCornerIndex(U, F, L)};
     case F:
-      return {get_idx(F, L, U), get_idx(F, U, R), get_idx(F, R, D),
-              get_idx(F, D, L)};
+      return {getCornerIndex(F, L, U), getCornerIndex(F, U, R),
+              getCornerIndex(F, R, D), getCornerIndex(F, D, L)};
     case R:
-      return {get_idx(R, F, U), get_idx(R, U, B), get_idx(R, B, D),
-              get_idx(R, D, F)};
+      return {getCornerIndex(R, F, U), getCornerIndex(R, U, B),
+              getCornerIndex(R, B, D), getCornerIndex(R, D, F)};
     case B:
-      return {get_idx(B, R, U), get_idx(B, U, L), get_idx(B, L, D),
-              get_idx(B, D, R)};
+      return {getCornerIndex(B, R, U), getCornerIndex(B, U, L),
+              getCornerIndex(B, L, D), getCornerIndex(B, D, R)};
     case L:
-      return {get_idx(L, B, U), get_idx(L, U, F), get_idx(L, F, D),
-              get_idx(L, D, B)};
+      return {getCornerIndex(L, B, U), getCornerIndex(L, U, F),
+              getCornerIndex(L, F, D), getCornerIndex(L, D, B)};
     case D:
-      return {get_idx(D, L, F), get_idx(D, F, R), get_idx(D, R, B),
-              get_idx(D, B, L)};
+      return {getCornerIndex(D, L, F), getCornerIndex(D, F, R),
+              getCornerIndex(D, R, B), getCornerIndex(D, B, L)};
     default:
       throw std::logic_error("Unknown enum value!");
   }
