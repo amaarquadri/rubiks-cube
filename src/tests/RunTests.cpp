@@ -4,6 +4,7 @@
 #include "TestBlindsolvingMoveHash.h"
 #include "TestCombination.h"
 #include "TestCornerCycleSequenceIterator.h"
+#include "TestCube.h"
 #include "TestCubeOrientation.h"
 #include "TestDominoReductionSolver.h"
 #include "TestEdgeCycleSequenceIterator.h"
@@ -23,6 +24,7 @@ void runTests() {
   testPermutation();
   testPackedBitsArray();
   testAlgorithm();
+  testCube();
   testSolveCubeOrientation();
   testPLLs();
   testBlindsolvingMoveHash();
