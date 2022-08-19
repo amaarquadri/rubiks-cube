@@ -29,13 +29,12 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
                                     const Turn& turn) {
   assert(turn.rotation_amount != RotationAmount::None);
 
-  Combination<8, 4> primary_tetrad_corner_locations =
+  Combination<8, 4> primary_tetrad_corner_combination =
       Combination<8, 4>::parseRank(descriptor % CornerCombinationCount);
-  Combination<8, 4> m_slice_edge_locations = Combination<8, 4>::parseRank(
+  Combination<8, 4> m_slice_edge_combination = Combination<8, 4>::parseRank(
       (descriptor / CornerCombinationCount) % EdgeCombinationCount);
-  bool odd_parity = descriptor / PiecesCombinationCount;
 
-  cycleValues(primary_tetrad_corner_locations, getCornerCycle(turn.face),
+  cycleValues(primary_tetrad_corner_combination, getCornerCycle(turn.face),
               static_cast<size_t>(turn.rotation_amount));
 
   // relabel 4, 5, 6, and 7 to 8, 9, 10, and 11 respectively
@@ -46,17 +45,16 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
     else if (location >= 4)
       location += 4;
   }
-  cycleValues(m_slice_edge_locations, edge_cycle,
+  cycleValues(m_slice_edge_combination, edge_cycle,
               static_cast<size_t>(turn.rotation_amount));
 
   // half turns flip the edge and corner parity
-  if (turn.rotation_amount != RotationAmount::None) odd_parity = !odd_parity;
+  bool odd_parity = descriptor / PiecesCombinationCount;
+  odd_parity ^= turn.rotation_amount != RotationAmount::HalfTurn;
 
-  uint16_t new_descriptor =
-      primary_tetrad_corner_combination.getRank() +
-      m_slice_edge_combination.getRank() * CornerCombinationCount;
-  if (odd_parity) new_descriptor += PiecesCombinationCount;
-  return new_descriptor;
+  return primary_tetrad_corner_combination.getRank() +
+         m_slice_edge_combination.getRank() * CornerCombinationCount +
+         (odd_parity ? PiecesCombinationCount : 0);
 }
 
 /**
@@ -155,5 +153,5 @@ Algorithm solveHalfTurnReduction(Cube cube) {
   return domino_reduction_solve + solver(getDescriptor(cube));
 }
 
-void runHalfTurnReductionSolverTests() { }
+void runHalfTurnReductionSolverTests() {}
 }  // namespace solvers
