@@ -131,8 +131,7 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
       if (test_transformation == parity_alg_transformation) {
         found_match = true;
         solve_data.moves = moves.subAlgorithm(consumed, i + 1);
-        // solve_data is initialized to parity anyways, so no need to update
-        // here
+        // solve_data is initialized to parity anyway, so no need to update here
       }
       if (found_match) {
         reconstruction.push_back(solve_data);
