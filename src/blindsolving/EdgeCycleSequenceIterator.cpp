@@ -2,14 +2,14 @@
 #include "Lettering.h"
 #include "Utils.h"
 #include <algorithm>
+#include <utility>
 #include <vector>
 
 namespace blindsolving {
 EdgeCycleSequenceIterator::EdgeCycleSequenceIterator(
-    const std::vector<std::vector<char>>& cycles,
-    const std::vector<bool>& are_even)
+    const std::vector<std::vector<char>>& cycles, std::vector<bool> are_even)
     : it(CycleSequenceIterator<char>{cycles}),
-      are_even(are_even),
+      are_even(std::move(are_even)),
       are_inverted(std::vector<bool>(cycles.size())) {}
 
 bool EdgeCycleSequenceIterator::operator++() {

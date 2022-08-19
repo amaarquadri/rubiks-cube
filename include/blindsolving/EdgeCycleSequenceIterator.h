@@ -19,7 +19,7 @@ class EdgeCycleSequenceIterator {
 
  public:
   EdgeCycleSequenceIterator(const std::vector<std::vector<char>>& cycles,
-                            const std::vector<bool>& are_even);
+                            std::vector<bool> are_even);
 
   bool operator++();
 
