@@ -177,15 +177,14 @@ void Cube::scramble() {
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; ++i) {
     const uint8_t rotation = utility::randomInt<3>();
     if (rotation == 1) {
-      corners[i] = corners[i].rotateClockwise();
+      corners[i].rotateClockwiseInPlace();
       net_rotation += CornerRotationAmount::Clockwise;
-    }
-    else if (rotation == 2) {
-      corners[i] = corners[i].rotateCounterclockwise();
+    } else if (rotation == 2) {
+      corners[i].rotateCounterclockwiseInPlace();
       net_rotation += CornerRotationAmount::Counterclockwise;
     }
   }
-  corners.back() = corners.back().rotate(-net_rotation);
+  corners.back().rotateInPlace(-net_rotation);
 }
 
 void Cube::setSolved() {
