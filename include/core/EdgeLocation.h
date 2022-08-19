@@ -13,7 +13,7 @@ struct EdgeLocation {
   [[nodiscard]] constexpr bool operator!=(const EdgeLocation& other) const =
       default;
 
-  [[nodiscard]] EdgeLocation flip() const;
+  [[nodiscard]] constexpr EdgeLocation flip() const { return {second, first}; }
 };
 
 namespace std {

@@ -3,6 +3,7 @@
 #include "CornerRotationAmount.h"
 #include "Face.h"
 #include <cstddef>
+#include <stdexcept>
 
 struct CornerLocation {
   // must be defined in clockwise order
@@ -20,16 +21,31 @@ struct CornerLocation {
    * @return The CornerLocation that is a clockwise rotation from this
    * CornerLocation. For example, {U, R, F} becomes {R, F, U}.
    */
-  [[nodiscard]] CornerLocation rotateClockwise() const;
+  [[nodiscard]] constexpr CornerLocation rotateClockwise() const {
+    return {second, third, first};
+  }
 
   /**
    * @return The CornerLocation that is a counterclockwise rotation from this
    * CornerLocation. For example, {U, R, F} becomes {F, U, R}.
    */
-  [[nodiscard]] CornerLocation rotateCounterclockwise() const;
+  [[nodiscard]] constexpr CornerLocation rotateCounterclockwise() const {
+    return {third, first, second};
+  }
 
-  [[nodiscard]] CornerLocation rotate(
-      const CornerRotationAmount& rotation_amount) const;
+  [[nodiscard]] constexpr CornerLocation rotate(
+      const CornerRotationAmount& rotation_amount) const {
+    switch (rotation_amount) {
+      case CornerRotationAmount::None:
+        return *this;
+      case CornerRotationAmount::Clockwise:
+        return rotateClockwise();
+      case CornerRotationAmount::Counterclockwise:
+        return rotateCounterclockwise();
+      default:
+        throw std::logic_error("Unknown enum value!");
+    }
+  }
 };
 
 namespace std {
