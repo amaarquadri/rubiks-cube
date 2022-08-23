@@ -41,7 +41,8 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
               static_cast<size_t>(turn.rotation_amount));
 
   // half turns flip the edge and corner parity
-  bool odd_parity = descriptor / PiecesCombinationCount;
+  bool odd_parity =
+      (descriptor % ParityAndPiecesCombinationCount) / PiecesCombinationCount;
   odd_parity ^= turn.rotation_amount != RotationAmount::HalfTurn;
 
   return primary_tetrad_corner_combination.getRank() +
