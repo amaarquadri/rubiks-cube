@@ -7,6 +7,7 @@
 #include "CubeRotation.h"
 #include "EdgeLocation.h"
 #include "EdgePiece.h"
+#include "Face.h"
 #include "Move.h"
 #include "SliceTurn.h"
 #include "Turn.h"
