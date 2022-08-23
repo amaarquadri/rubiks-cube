@@ -37,15 +37,7 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
   cycleValues(primary_tetrad_corner_combination, getCornerCycle(turn.face),
               static_cast<size_t>(turn.rotation_amount));
 
-  // relabel 4, 5, 6, and 7 to 8, 9, 10, and 11 respectively
-  std::array<uint8_t, 4> edge_cycle = getEdgeCycle(turn.face);
-  for (uint8_t& location : edge_cycle) {
-    if (location >= 8)
-      location -= 4;
-    else if (location >= 4)
-      location += 4;
-  }
-  cycleValues(m_slice_edge_combination, edge_cycle,
+  cycleValues(m_slice_edge_combination, getEdgeCycle(turn.face),
               static_cast<size_t>(turn.rotation_amount));
 
   // half turns flip the edge and corner parity
