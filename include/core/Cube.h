@@ -25,7 +25,7 @@ class Cube {
    * S slice edges are at indices: 1, 4, 7, 10.
    * E slice edges are at indices: 2, 5, 8, 11.
    */
-  static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
+  static constexpr std::array<EdgeLocation, 12> EdgeLocationOrder{
       {{Face::U, Face::B},
        {Face::U, Face::R},
        {Face::F, Face::R},
@@ -42,7 +42,7 @@ class Cube {
    * Primary tetrad corners are at even indices.
    * Secondary tetrad corners are at odd indices.
    */
-  static constexpr std::array<CornerLocation, 8> CORNER_LOCATION_ORDER{
+  static constexpr std::array<CornerLocation, 8> CornerLocationOrder{
       {{Face::U, Face::L, Face::B},
        {Face::U, Face::B, Face::R},
        {Face::U, Face::R, Face::F},
@@ -51,7 +51,7 @@ class Cube {
        {Face::D, Face::F, Face::R},
        {Face::D, Face::R, Face::B},
        {Face::D, Face::B, Face::L}}};
-  static constexpr std::array<EdgePiece, 12> STARTING_EDGE_PIECES{
+  static constexpr std::array<EdgePiece, 12> StartingEdgePieces{
       {{Colour::White, Colour::Blue},
        {Colour::White, Colour::Red},
        {Colour::Green, Colour::Red},
@@ -64,7 +64,7 @@ class Cube {
        {Colour::Yellow, Colour::Blue},
        {Colour::White, Colour::Orange},
        {Colour::Green, Colour::Orange}}};
-  static constexpr std::array<CornerPiece, 8> STARTING_CORNER_PIECES{
+  static constexpr std::array<CornerPiece, 8> StartingCornerPieces{
       {{Colour::White, Colour::Orange, Colour::Blue},
        {Colour::White, Colour::Blue, Colour::Red},
        {Colour::White, Colour::Red, Colour::Green},
@@ -73,8 +73,6 @@ class Cube {
        {Colour::Yellow, Colour::Green, Colour::Red},
        {Colour::Yellow, Colour::Red, Colour::Blue},
        {Colour::Yellow, Colour::Blue, Colour::Orange}}};
-  static constexpr CubeOrientation STARTING_ORIENTATION =
-      CubeOrientation::identity();
 
  private:
   std::array<EdgePiece, 12> edges;
@@ -83,9 +81,9 @@ class Cube {
 
  public:
   Cube()
-      : edges(STARTING_EDGE_PIECES),
-        corners(STARTING_CORNER_PIECES),
-        orientation(STARTING_ORIENTATION) {}
+      : edges(StartingEdgePieces),
+        corners(StartingCornerPieces),
+        orientation(CubeOrientation::identity()) {}
 
   explicit Cube(const Algorithm& scramble) : Cube() { apply(scramble); }
 

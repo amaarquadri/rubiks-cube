@@ -162,11 +162,11 @@ Reconstruction parseSolveAttempt(const Algorithm& moves) {
  */
 EdgeLocation getLocation(const EdgePiece& edge_piece) {
   const EdgePiece flipped_piece = edge_piece.flip();
-  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
-    if (edge_piece == Cube::STARTING_EDGE_PIECES[i]) {
-      return Cube::EDGE_LOCATION_ORDER[i];
-    } else if (flipped_piece == Cube::STARTING_EDGE_PIECES[i]) {
-      return Cube::EDGE_LOCATION_ORDER[i].flip();
+  for (size_t i = 0; i < Cube::EdgeLocationOrder.size(); i++) {
+    if (edge_piece == Cube::StartingEdgePieces[i]) {
+      return Cube::EdgeLocationOrder[i];
+    } else if (flipped_piece == Cube::StartingEdgePieces[i]) {
+      return Cube::EdgeLocationOrder[i].flip();
     }
   }
   throw std::invalid_argument(
@@ -181,15 +181,15 @@ CornerLocation getLocation(const CornerPiece& corner_piece) {
   const CornerPiece clockwise_piece = corner_piece.rotateClockwise();
   const CornerPiece counterclockwise_piece =
       corner_piece.rotateCounterclockwise();
-  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
-    if (corner_piece == Cube::STARTING_CORNER_PIECES[i]) {
-      return Cube::CORNER_LOCATION_ORDER[i];
+  for (size_t i = 0; i < Cube::CornerLocationOrder.size(); i++) {
+    if (corner_piece == Cube::StartingCornerPieces[i]) {
+      return Cube::CornerLocationOrder[i];
     }
     // rotate the resulting CornerLocation in the opposite direction
-    else if (clockwise_piece == Cube::STARTING_CORNER_PIECES[i]) {
-      return Cube::CORNER_LOCATION_ORDER[i].rotateCounterclockwise();
-    } else if (counterclockwise_piece == Cube::STARTING_CORNER_PIECES[i]) {
-      return Cube::CORNER_LOCATION_ORDER[i].rotateClockwise();
+    else if (clockwise_piece == Cube::StartingCornerPieces[i]) {
+      return Cube::CornerLocationOrder[i].rotateCounterclockwise();
+    } else if (counterclockwise_piece == Cube::StartingCornerPieces[i]) {
+      return Cube::CornerLocationOrder[i].rotateClockwise();
     }
   }
   throw std::invalid_argument(
@@ -219,13 +219,13 @@ ReconstructionIterator getReconstructionIterator(Cube cube) {
   while (true) {
     bool found_unsolved_edge = false;
     std::vector<char> edge_cycle;
-    for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
-      if (Cube::EDGE_LOCATION_ORDER[i] == EDGE_BUFFER)
+    for (size_t i = 0; i < Cube::EdgeLocationOrder.size(); i++) {
+      if (Cube::EdgeLocationOrder[i] == EDGE_BUFFER)
         continue;  // skip the buffer piece itself
-      if (cube.getEdgeByIndex(i) != Cube::STARTING_EDGE_PIECES[i]) {
+      if (cube.getEdgeByIndex(i) != Cube::StartingEdgePieces[i]) {
         found_unsolved_edge = true;
-        edge_cycle.push_back(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i]));
-        cube.cycleEdges<2>({EDGE_BUFFER, Cube::EDGE_LOCATION_ORDER[i]});
+        edge_cycle.push_back(EDGE_LETTERING.at(Cube::EdgeLocationOrder[i]));
+        cube.cycleEdges<2>({EDGE_BUFFER, Cube::EdgeLocationOrder[i]});
         break;
       }
     }
@@ -265,14 +265,14 @@ ReconstructionIterator getReconstructionIterator(Cube cube) {
   while (true) {
     bool found_unsolved_corner = false;
     std::vector<char> corner_cycle;
-    for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
-      if (Cube::CORNER_LOCATION_ORDER[i] == CORNER_BUFFER)
+    for (size_t i = 0; i < Cube::CornerLocationOrder.size(); i++) {
+      if (Cube::CornerLocationOrder[i] == CORNER_BUFFER)
         continue;  // skip the buffer piece itself
-      if (cube.getCornerByIndex(i) != Cube::STARTING_CORNER_PIECES[i]) {
+      if (cube.getCornerByIndex(i) != Cube::StartingCornerPieces[i]) {
         found_unsolved_corner = true;
         corner_cycle.push_back(
-            CORNER_LETTERING.at(Cube::CORNER_LOCATION_ORDER[i]));
-        cube.cycleCorners<2>({CORNER_BUFFER, Cube::CORNER_LOCATION_ORDER[i]});
+            CORNER_LETTERING.at(Cube::CornerLocationOrder[i]));
+        cube.cycleCorners<2>({CORNER_BUFFER, Cube::CornerLocationOrder[i]});
         break;
       }
     }

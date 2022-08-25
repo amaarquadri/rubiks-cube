@@ -100,7 +100,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
 
 static uint32_t getDescriptor(const Cube& cube) {
   uint32_t descriptor = 0;
-  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; ++i) {
+  for (size_t i = 0; i < Cube::CornerLocationOrder.size() - 1; ++i) {
     const CornerPiece& corner = cube.getCornerByIndex(i);
     if (corner.second == Colour::White || corner.second == Colour::Yellow)
       descriptor += utility::pow(3, i);
@@ -117,7 +117,7 @@ static uint32_t getDescriptor(const Cube& cube) {
   };
   Combination<12, 4> e_slice_edge_combination;
   uint8_t i = 0;
-  for (size_t j = 0; j < Cube::EDGE_LOCATION_ORDER.size(); ++j)
+  for (size_t j = 0; j < Cube::EdgeLocationOrder.size(); ++j)
     if (is_e_slice_edge(cube.getEdgeByIndex(j)))
       e_slice_edge_combination[i++] = j;
   // ensure number of E slice edges is 4

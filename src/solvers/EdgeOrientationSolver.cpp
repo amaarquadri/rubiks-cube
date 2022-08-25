@@ -78,14 +78,14 @@ static constexpr uint16_t applyTurn(uint16_t edge_orientation,
 /**
  * Computes an uint16_t whose lower 11 bits represent whether or not the
  * corresponding edges of the given cube are flipped or not. The edge piece at
- * Cube::EDGE_LOCATION_ORDER[i] corresponds to the (0-indexed) i-th lowest bit
+ * Cube::EdgeLocationOrder[i] corresponds to the (0-indexed) i-th lowest bit
  * of the result. The bit will be 1 if and only if the corresponding edge is
  * incorrectly oriented. The 12th bit can be inferred using the following
  * expression: std::popcount(edge_orientation) % 2 == 1.
  */
 static uint16_t getEdgeOrientation(const Cube& cube) {
   uint16_t edge_orientation = 0;
-  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; ++i) {
+  for (size_t i = 0; i < Cube::EdgeLocationOrder.size() - 1; ++i) {
     const EdgePiece& edge = cube.getEdgeByIndex(i);
     const bool is_flipped =
         edge.second == Colour::White || edge.second == Colour::Yellow ||

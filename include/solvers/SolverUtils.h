@@ -25,37 +25,37 @@
 namespace solvers {
 consteval uint8_t getEdgeIndex(const Face& first, const Face& second) {
   const EdgeLocation location{first, second};
-  uint8_t idx = std::find(Cube::EDGE_LOCATION_ORDER.begin(),
-                          Cube::EDGE_LOCATION_ORDER.end(), location) -
-                Cube::EDGE_LOCATION_ORDER.begin();
-  if (idx != Cube::EDGE_LOCATION_ORDER.size()) return idx;
+  uint8_t idx = std::find(Cube::EdgeLocationOrder.begin(),
+                          Cube::EdgeLocationOrder.end(), location) -
+                Cube::EdgeLocationOrder.begin();
+  if (idx != Cube::EdgeLocationOrder.size()) return idx;
 
-  idx = std::find(Cube::EDGE_LOCATION_ORDER.begin(),
-                  Cube::EDGE_LOCATION_ORDER.end(), location.flip()) -
-        Cube::EDGE_LOCATION_ORDER.begin();
-  assert(idx != Cube::EDGE_LOCATION_ORDER.size());
+  idx = std::find(Cube::EdgeLocationOrder.begin(),
+                  Cube::EdgeLocationOrder.end(), location.flip()) -
+        Cube::EdgeLocationOrder.begin();
+  assert(idx != Cube::EdgeLocationOrder.size());
   return idx;
 }
 
 consteval uint8_t getCornerIndex(const Face& first, const Face& second,
                                  const Face& third) {
   const CornerLocation location{first, second, third};
-  uint8_t idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
-                          Cube::CORNER_LOCATION_ORDER.end(), location) -
-                Cube::CORNER_LOCATION_ORDER.begin();
-  if (idx != Cube::CORNER_LOCATION_ORDER.size()) return idx;
+  uint8_t idx = std::find(Cube::CornerLocationOrder.begin(),
+                          Cube::CornerLocationOrder.end(), location) -
+                Cube::CornerLocationOrder.begin();
+  if (idx != Cube::CornerLocationOrder.size()) return idx;
 
   idx =
-      std::find(Cube::CORNER_LOCATION_ORDER.begin(),
-                Cube::CORNER_LOCATION_ORDER.end(), location.rotateClockwise()) -
-      Cube::CORNER_LOCATION_ORDER.begin();
-  if (idx != Cube::CORNER_LOCATION_ORDER.size()) return idx;
+      std::find(Cube::CornerLocationOrder.begin(),
+                Cube::CornerLocationOrder.end(), location.rotateClockwise()) -
+      Cube::CornerLocationOrder.begin();
+  if (idx != Cube::CornerLocationOrder.size()) return idx;
 
-  idx = std::find(Cube::CORNER_LOCATION_ORDER.begin(),
-                  Cube::CORNER_LOCATION_ORDER.end(),
+  idx = std::find(Cube::CornerLocationOrder.begin(),
+                  Cube::CornerLocationOrder.end(),
                   location.rotateCounterclockwise()) -
-        Cube::CORNER_LOCATION_ORDER.begin();
-  assert(idx != Cube::CORNER_LOCATION_ORDER.size());
+        Cube::CornerLocationOrder.begin();
+  assert(idx != Cube::CornerLocationOrder.size());
   return idx;
 }
 

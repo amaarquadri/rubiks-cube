@@ -24,7 +24,7 @@ Colour getOpposite(const Colour& colour) {
 }
 
 Colour getLeft(const Colour& top, const Colour& front) {
-  for (const CornerPiece& corner : Cube::STARTING_CORNER_PIECES) {
+  for (const CornerPiece& corner : Cube::StartingCornerPieces) {
     if (top == corner.first && front == corner.second) return corner.third;
     if (top == corner.second && front == corner.third) return corner.first;
     if (top == corner.third && front == corner.first) return corner.second;

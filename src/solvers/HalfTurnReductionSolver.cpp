@@ -79,7 +79,7 @@ static constexpr bool isPrimaryTetradCorner(const CornerPiece& corner) {
 static uint16_t getDescriptor(const Cube& cube) {
   Combination<8, 4> primary_tetrad_corner_combination;
   uint8_t i = 0;
-  for (uint8_t j = 0; j < Cube::CORNER_LOCATION_ORDER.size(); ++j)
+  for (uint8_t j = 0; j < Cube::CornerLocationOrder.size(); ++j)
     if (isPrimaryTetradCorner(cube.getCornerByIndex(j)))
       primary_tetrad_corner_combination[i++] = j;
   // ensure number of primary tetrad corners is 4
@@ -109,10 +109,10 @@ static uint16_t getDescriptor(const Cube& cube) {
   for (uint8_t j = 0; j < 8; ++j) {
     const CornerPiece& corner = cube.getCornerByIndex(j);
     corner_permutation[j] =
-        std::find(Cube::STARTING_CORNER_PIECES.begin(),
-                  Cube::STARTING_CORNER_PIECES.end(), corner) -
-        Cube::STARTING_CORNER_PIECES.begin();
-    assert(corner_permutation[j] != Cube::STARTING_CORNER_PIECES.size());
+        std::find(Cube::StartingCornerPieces.begin(),
+                  Cube::StartingCornerPieces.end(), corner) -
+        Cube::StartingCornerPieces.begin();
+    assert(corner_permutation[j] != Cube::StartingCornerPieces.size());
   }
   assert(corner_permutation.isValid());
 
