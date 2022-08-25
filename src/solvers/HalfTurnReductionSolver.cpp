@@ -129,7 +129,7 @@ static uint16_t getDescriptor(const Cube& cube) {
       secondary_tetrad_permutation[j - i] = j / 2;
     }
   }
-  assert(i == 4);
+  assert(i == primary_tetrad_permutation.size());
   assert(primary_tetrad_permutation.isValid());
   assert(secondary_tetrad_permutation.isValid());
   static constexpr std::array<uint8_t, 24> TetradThreeParity{
