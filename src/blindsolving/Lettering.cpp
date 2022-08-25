@@ -8,8 +8,8 @@
 namespace blindsolving {
 static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
   using enum Face;
-  static const auto make = [](const Face& first, const Face& second,
-                              const char& c) {
+  static constexpr auto make =
+      [](const Face& first, const Face& second, const char& c) consteval {
     return std::pair<const EdgeLocation, char>{EdgeLocation{first, second}, c};
   };
   return {make(U, B, 'A'), make(U, R, 'B'), make(U, F, 'C'), make(U, L, 'D'),
@@ -22,8 +22,8 @@ static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
 
 static std::unordered_map<CornerLocation, char> getCornerLettering() {
   using enum Face;
-  static const auto make = [](const Face& first, const Face& second,
-                              const Face& third, const char& c) {
+  static constexpr auto make = [](const Face& first, const Face& second,
+                                  const Face& third, const char& c) consteval {
     return std::pair<const CornerLocation, char>{
         CornerLocation{first, second, third}, c};
   };
