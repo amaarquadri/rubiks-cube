@@ -52,6 +52,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
   // update e_slice_edge_combination
   cycleValues(e_slice_edge_combination, getEdgeCycle(turn.face),
               static_cast<uint8_t>(turn.rotation_amount));
+  assert(e_slice_edge_combination.isValid());
 
   // update corner_orientations
   const std::array<uint8_t, 4> corner_cycle = getCornerCycle(turn.face);
@@ -121,6 +122,7 @@ static uint32_t getDescriptor(const Cube& cube) {
       e_slice_edge_combination[i++] = j;
   // ensure number of E slice edges is 4
   assert(i == e_slice_edge_combination.size());
+  assert(e_slice_edge_combination.isValid());
 
   descriptor += CornerOrientationCount * e_slice_edge_combination.getRank();
 

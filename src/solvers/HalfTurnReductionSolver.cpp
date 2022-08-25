@@ -36,9 +36,11 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
 
   cycleValues(primary_tetrad_corner_combination, getCornerCycle(turn.face),
               static_cast<uint8_t>(turn.rotation_amount));
+  assert(primary_tetrad_corner_combination.isValid());
 
   cycleValues(m_slice_edge_combination, getEdgeCycle(turn.face),
               static_cast<uint8_t>(turn.rotation_amount));
+  assert(m_slice_edge_combination.isValid());
 
   // half turns flip the edge and corner parity
   bool odd_parity =
@@ -79,6 +81,7 @@ static uint16_t getDescriptor(const Cube& cube) {
       primary_tetrad_corner_combination[i++] = j;
   // ensure number of primary tetrad corners is 4
   assert(i == primary_tetrad_corner_combination.size());
+  assert(primary_tetrad_corner_combination.isValid());
 
   static constexpr std::array<uint8_t, 8> Locations{0, 1, 2, 3, 8, 9, 10, 11};
   Combination<8, 4> m_slice_edge_combination;
@@ -91,6 +94,7 @@ static uint16_t getDescriptor(const Cube& cube) {
   }
   // ensure number of M slice edges is 4
   assert(i == m_slice_edge_combination.size());
+  assert(m_slice_edge_combination.isValid());
 
   Permutation<8> corner_permutation;
   for (uint8_t j = 0; j < 8; ++j) {
@@ -101,6 +105,7 @@ static uint16_t getDescriptor(const Cube& cube) {
         Cube::STARTING_CORNER_PIECES.begin();
     assert(corner_permutation[j] != Cube::STARTING_CORNER_PIECES.size());
   }
+  assert(corner_permutation.isValid());
 
   // extract relative permutation of each tetrad
   Permutation<4> primary_tetrad_permutation;
@@ -116,6 +121,8 @@ static uint16_t getDescriptor(const Cube& cube) {
     }
   }
   assert(i == 4);
+  assert(primary_tetrad_permutation.isValid());
+  assert(secondary_tetrad_permutation.isValid());
   static constexpr std::array<uint8_t, 24> TetradThreeParity{
       0, 2, 1, 1, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 1, 2, 0};
   static_assert(std::equal(TetradThreeParity.begin(), TetradThreeParity.end(),
