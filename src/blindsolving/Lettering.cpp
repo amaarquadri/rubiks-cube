@@ -1,5 +1,9 @@
 #include "Lettering.h"
+#include "CornerLocation.h"
 #include "Cube.h"
+#include "EdgeLocation.h"
+#include "Face.h"
+#include <unordered_map>
 
 namespace blindsolving {
 static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
