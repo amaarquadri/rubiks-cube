@@ -3,6 +3,7 @@
 #include "Algorithm.h"
 #include "BidirectionalStaticVector.h"
 #include "CornerLocation.h"
+#include "Cube.h"
 #include "EdgeLocation.h"
 #include "Face.h"
 #include "HeapArray.h"

@@ -51,7 +51,8 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
 
   // update e_slice_edge_combination
   cycleValues(e_slice_edge_combination, getEdgeCycle(turn.face),
-              static_cast<size_t>(turn.rotation_amount));
+              static_cast<uint8_t>(turn.rotation_amount));
+  assert(e_slice_edge_combination.isValid());
 
   // update corner_orientations
   const std::array<uint8_t, 4> corner_cycle = getCornerCycle(turn.face);
@@ -92,7 +93,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
   uint32_t new_descriptor = 0;
   for (size_t i = 0; i < 7; ++i)
     new_descriptor +=
-        static_cast<uint32_t>(corner_orientations[i]) * utility::PowersOf3[i];
+        static_cast<uint8_t>(corner_orientations[i]) * utility::PowersOf3[i];
   new_descriptor += CornerOrientationCount * e_slice_edge_combination.getRank();
   return new_descriptor;
 }
@@ -100,7 +101,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
 static uint32_t getDescriptor(const Cube& cube) {
   uint32_t descriptor = 0;
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; ++i) {
-    const CornerPiece corner = cube[Cube::CORNER_LOCATION_ORDER[i]];
+    const CornerPiece& corner = cube.getCornerByIndex(i);
     if (corner.second == Colour::White || corner.second == Colour::Yellow)
       descriptor += utility::pow(3, i);
     else if (corner.third == Colour::White || corner.third == Colour::Yellow)
@@ -110,16 +111,18 @@ static uint32_t getDescriptor(const Cube& cube) {
     // equivalent to doing nothing
   }
 
+  static constexpr auto is_e_slice_edge = [](const EdgePiece& edge) {
+    return edge.first != Colour::White && edge.first != Colour::Yellow &&
+           edge.second != Colour::White && edge.second != Colour::Yellow;
+  };
   Combination<12, 4> e_slice_edge_combination;
   uint8_t i = 0;
-  for (uint8_t j = 0; j < Cube::EDGE_LOCATION_ORDER.size(); ++j) {
-    const EdgePiece edge = cube[Cube::EDGE_LOCATION_ORDER[j]];
-    if (edge.first != Colour::White && edge.first != Colour::Yellow &&
-        edge.second != Colour::White && edge.second != Colour::Yellow)
+  for (size_t j = 0; j < Cube::EDGE_LOCATION_ORDER.size(); ++j)
+    if (is_e_slice_edge(cube.getEdgeByIndex(j)))
       e_slice_edge_combination[i++] = j;
-  }
   // ensure number of E slice edges is 4
   assert(i == e_slice_edge_combination.size());
+  assert(e_slice_edge_combination.isValid());
 
   descriptor += CornerOrientationCount * e_slice_edge_combination.getRank();
 

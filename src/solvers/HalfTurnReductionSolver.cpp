@@ -8,8 +8,11 @@
 #include "SolverUtils.h"
 #include "Turn.h"
 #include "TurnSets.h"
+#include <algorithm>
 #include <array>
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 
 namespace solvers {
 static constexpr uint16_t CornerCombinationCount = utility::nChooseK(8, 4);
@@ -23,7 +26,7 @@ static constexpr uint16_t CornerThreeParityCount = 3;
 static constexpr uint16_t DescriptorCount =
     CornerThreeParityCount * ParityAndPiecesCombinationCount;
 static constexpr uint16_t SolvedDescriptor =
-    (CornerCombinationCount + 1) * Combination<8, 4>({0, 2, 4, 6}).getRank();
+    Combination<8, 4>({0, 2, 4, 6}).getRank();
 
 static constexpr uint16_t applyTurn(const uint16_t& descriptor,
                                     const Turn& turn) {
@@ -35,21 +38,16 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
       (descriptor / CornerCombinationCount) % EdgeCombinationCount);
 
   cycleValues(primary_tetrad_corner_combination, getCornerCycle(turn.face),
-              static_cast<size_t>(turn.rotation_amount));
+              static_cast<uint8_t>(turn.rotation_amount));
+  assert(primary_tetrad_corner_combination.isValid());
 
-  // relabel 4, 5, 6, and 7 to 8, 9, 10, and 11 respectively
-  std::array<uint8_t, 4> edge_cycle = getEdgeCycle(turn.face);
-  for (uint8_t& location : edge_cycle) {
-    if (location >= 8)
-      location -= 4;
-    else if (location >= 4)
-      location += 4;
-  }
-  cycleValues(m_slice_edge_combination, edge_cycle,
-              static_cast<size_t>(turn.rotation_amount));
+  cycleValues(m_slice_edge_combination, getEdgeCycle(turn.face),
+              static_cast<uint8_t>(turn.rotation_amount));
+  assert(m_slice_edge_combination.isValid());
 
   // half turns flip the edge and corner parity
-  bool odd_parity = descriptor / PiecesCombinationCount;
+  bool odd_parity =
+      (descriptor % ParityAndPiecesCombinationCount) / PiecesCombinationCount;
   odd_parity ^= turn.rotation_amount != RotationAmount::HalfTurn;
 
   return primary_tetrad_corner_combination.getRank() +
@@ -82,39 +80,49 @@ static uint16_t getDescriptor(const Cube& cube) {
   Combination<8, 4> primary_tetrad_corner_combination;
   uint8_t i = 0;
   for (uint8_t j = 0; j < Cube::CORNER_LOCATION_ORDER.size(); ++j)
-    if (isPrimaryTetradCorner(cube[Cube::CORNER_LOCATION_ORDER[j]]))
+    if (isPrimaryTetradCorner(cube.getCornerByIndex(j)))
       primary_tetrad_corner_combination[i++] = j;
   // ensure number of primary tetrad corners is 4
   assert(i == primary_tetrad_corner_combination.size());
+  assert(primary_tetrad_corner_combination.isValid());
 
-  static constexpr std::array<uint8_t, 8> Locations{0, 1, 2, 3, 8, 9, 10, 11};
+  /**
+   * Restrict search area for M slice edges to the M and S slices since all the
+   * E slice edges are in the correct slice already.
+   */
+  static constexpr std::array<size_t, 8> MAndSSliceEdgeIndices{0, 3, 6, 9,
+                                                               1, 4, 7, 10};
+  static constexpr auto is_m_slice_edge = [](const EdgePiece& edge) {
+    return edge.first != Colour::Red && edge.first != Colour::Orange &&
+           edge.second != Colour::Red && edge.second != Colour::Orange;
+  };
   Combination<8, 4> m_slice_edge_combination;
   i = 0;
-  for (uint8_t j = 0; j < Locations.size(); ++j) {
-    const EdgePiece edge = cube[Cube::EDGE_LOCATION_ORDER[Locations[j]]];
-    if (edge.first != Colour::Red && edge.first != Colour::Orange &&
-        edge.second != Colour::Red && edge.second != Colour::Orange)
+  for (size_t j = 0; j < MAndSSliceEdgeIndices.size(); ++j)
+    if (is_m_slice_edge(cube.getEdgeByIndex(MAndSSliceEdgeIndices[j])))
       m_slice_edge_combination[i++] = j;
-  }
   // ensure number of M slice edges is 4
   assert(i == m_slice_edge_combination.size());
+  assert(m_slice_edge_combination.isValid());
 
   Permutation<8> corner_permutation;
   for (uint8_t j = 0; j < 8; ++j) {
-    const CornerPiece corner = cube[Cube::CORNER_LOCATION_ORDER[j]];
+    const CornerPiece& corner = cube.getCornerByIndex(j);
     corner_permutation[j] =
         std::find(Cube::STARTING_CORNER_PIECES.begin(),
                   Cube::STARTING_CORNER_PIECES.end(), corner) -
         Cube::STARTING_CORNER_PIECES.begin();
     assert(corner_permutation[j] != Cube::STARTING_CORNER_PIECES.size());
   }
+  assert(corner_permutation.isValid());
 
   // extract relative permutation of each tetrad
   Permutation<4> primary_tetrad_permutation;
   Permutation<4> secondary_tetrad_permutation;
   i = 0;  // number of assigned elements of primary_tetrad_permutation
   for (uint8_t j = 0; j < 8; ++j) {
-    if (primary_tetrad_corner_combination[i] == j) {
+    if (i < primary_tetrad_permutation.size() &&
+        primary_tetrad_corner_combination[i] == j) {
       primary_tetrad_permutation[i] = j / 2;
       ++i;
     } else {
@@ -122,7 +130,9 @@ static uint16_t getDescriptor(const Cube& cube) {
       secondary_tetrad_permutation[j - i] = j / 2;
     }
   }
-  assert(i == 4);
+  assert(i == primary_tetrad_permutation.size());
+  assert(primary_tetrad_permutation.isValid());
+  assert(secondary_tetrad_permutation.isValid());
   static constexpr std::array<uint8_t, 24> TetradThreeParity{
       0, 2, 1, 1, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 1, 2, 0};
   static_assert(std::equal(TetradThreeParity.begin(), TetradThreeParity.end(),

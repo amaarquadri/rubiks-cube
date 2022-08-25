@@ -7,6 +7,7 @@
 #include "CubeRotation.h"
 #include "EdgeLocation.h"
 #include "EdgePiece.h"
+#include "Face.h"
 #include "Move.h"
 #include "SliceTurn.h"
 #include "Turn.h"
@@ -14,28 +15,33 @@
 #include <array>
 #include <cstddef>
 #include <string>
-#include <vector>
 
 class Cube {
  public:
   friend struct std::hash<Cube>;
 
-  // TODO: flip the EdgeLocations at index 5 and 7 for easy correspondence with
-  //       edge orientation, and reorder so that m slices are at 3k, s slices
-  //       are at 3k+1, and e slices are at 3k+2
+  /**
+   * M slice edges are at indices: 0, 3, 6, 9.
+   * S slice edges are at indices: 1, 4, 7, 10.
+   * E slice edges are at indices: 2, 5, 8, 11.
+   */
   static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
       {{Face::U, Face::B},
        {Face::U, Face::R},
-       {Face::U, Face::F},
-       {Face::U, Face::L},
        {Face::F, Face::R},
-       {Face::R, Face::B},
-       {Face::B, Face::L},
-       {Face::L, Face::F},
-       {Face::D, Face::F},
+       {Face::U, Face::F},
        {Face::D, Face::R},
+       {Face::B, Face::R},
+       {Face::D, Face::F},
+       {Face::D, Face::L},
+       {Face::B, Face::L},
        {Face::D, Face::B},
-       {Face::D, Face::L}}};
+       {Face::U, Face::L},
+       {Face::F, Face::L}}};
+  /**
+   * Primary tetrad corners are at even indices.
+   * Secondary tetrad corners are at odd indices.
+   */
   static constexpr std::array<CornerLocation, 8> CORNER_LOCATION_ORDER{
       {{Face::U, Face::L, Face::B},
        {Face::U, Face::B, Face::R},
@@ -48,16 +54,16 @@ class Cube {
   static constexpr std::array<EdgePiece, 12> STARTING_EDGE_PIECES{
       {{Colour::White, Colour::Blue},
        {Colour::White, Colour::Red},
-       {Colour::White, Colour::Green},
-       {Colour::White, Colour::Orange},
        {Colour::Green, Colour::Red},
-       {Colour::Red, Colour::Blue},
-       {Colour::Blue, Colour::Orange},
-       {Colour::Orange, Colour::Green},
-       {Colour::Yellow, Colour::Green},
+       {Colour::White, Colour::Green},
        {Colour::Yellow, Colour::Red},
+       {Colour::Blue, Colour::Red},
+       {Colour::Yellow, Colour::Green},
+       {Colour::Yellow, Colour::Orange},
+       {Colour::Blue, Colour::Orange},
        {Colour::Yellow, Colour::Blue},
-       {Colour::Yellow, Colour::Orange}}};
+       {Colour::White, Colour::Orange},
+       {Colour::Green, Colour::Orange}}};
   static constexpr std::array<CornerPiece, 8> STARTING_CORNER_PIECES{
       {{Colour::White, Colour::Orange, Colour::Blue},
        {Colour::White, Colour::Blue, Colour::Red},
@@ -121,6 +127,28 @@ class Cube {
   CornerPieceProxy operator[](const CornerLocation& corner_location);
 
   ConstCornerPieceProxy operator[](const CornerLocation& corner_location) const;
+
+  [[nodiscard]] constexpr const EdgePiece& getEdgeByIndex(
+      const size_t& idx) const {
+    assert(idx < edges.size());
+    return edges[idx];
+  }
+
+  [[nodiscard]] constexpr EdgePiece& getEdgeByIndex(const size_t& idx) {
+    assert(idx < edges.size());
+    return edges[idx];
+  }
+
+  [[nodiscard]] constexpr const CornerPiece& getCornerByIndex(
+      const size_t& idx) const {
+    assert(idx < corners.size());
+    return corners[idx];
+  }
+
+  [[nodiscard]] constexpr CornerPiece& getCornerByIndex(const size_t& idx) {
+    assert(idx < corners.size());
+    return corners[idx];
+  }
 
   template <size_t n>
   void cycleEdges(const std::array<EdgeLocation, n>& edge_locations) {

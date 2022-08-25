@@ -32,7 +32,7 @@ static void testSolveDominoReduction() {
 }
 
 void testDominoReductionSolver() {
-  solvers::runDominoReductionSolverTests();
+  runDominoReductionSolverTests();
   testMaintainDominoReduction();
   testSolveDominoReduction();
 

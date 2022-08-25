@@ -59,12 +59,8 @@ static uint32_t getDescriptor(const Cube& cube) {
   static constexpr std::array<uint8_t, 12> Mapping{0, 0, 1, 1, 0, 1,
                                                    2, 3, 2, 3, 3, 2};
   const auto get_edge_location_index = [](const EdgePiece& edge_piece) {
-    for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); ++i) {
-      const EdgePiece target = (i == 5 || i == 7)
-                                   ? Cube::STARTING_EDGE_PIECES[i].flip()
-                                   : Cube::STARTING_EDGE_PIECES[i];
-      if (edge_piece == target) return i;
-    }
+    for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); ++i)
+      if (edge_piece == Cube::STARTING_EDGE_PIECES[i]) return i;
     throw std::invalid_argument("EdgePiece was not oriented!");
   };
   const auto get_corner_location_index = [](const CornerPiece& corner_piece) {

@@ -222,7 +222,7 @@ ReconstructionIterator getReconstructionIterator(Cube cube) {
     for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
       if (Cube::EDGE_LOCATION_ORDER[i] == EDGE_BUFFER)
         continue;  // skip the buffer piece itself
-      if (cube[Cube::EDGE_LOCATION_ORDER[i]] != Cube::STARTING_EDGE_PIECES[i]) {
+      if (cube.getEdgeByIndex(i) != Cube::STARTING_EDGE_PIECES[i]) {
         found_unsolved_edge = true;
         edge_cycle.push_back(EDGE_LETTERING.at(Cube::EDGE_LOCATION_ORDER[i]));
         cube.cycleEdges<2>({EDGE_BUFFER, Cube::EDGE_LOCATION_ORDER[i]});
@@ -268,8 +268,7 @@ ReconstructionIterator getReconstructionIterator(Cube cube) {
     for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
       if (Cube::CORNER_LOCATION_ORDER[i] == CORNER_BUFFER)
         continue;  // skip the buffer piece itself
-      if (cube[Cube::CORNER_LOCATION_ORDER[i]] !=
-          Cube::STARTING_CORNER_PIECES[i]) {
+      if (cube.getCornerByIndex(i) != Cube::STARTING_CORNER_PIECES[i]) {
         found_unsolved_corner = true;
         corner_cycle.push_back(
             CORNER_LETTERING.at(Cube::CORNER_LOCATION_ORDER[i]));
