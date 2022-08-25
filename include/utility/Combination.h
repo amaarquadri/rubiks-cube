@@ -10,7 +10,7 @@
 template <size_t n, size_t k>
 class Combination : public std::array<uint8_t, k> {
  public:
-  constexpr bool isValid() const {
+  [[nodiscard]] constexpr bool isValid() const {
     return std::all_of(this->begin(), this->end(),
                        [](const uint8_t& choice) { return choice < n; }) &&
            std::is_sorted(this->begin(), this->end()) &&
@@ -21,7 +21,7 @@ class Combination : public std::array<uint8_t, k> {
    * @return The lexicographical rank of this combination among all
    * possibilities.
    */
-  constexpr size_t getRank() const {
+  [[nodiscard]] constexpr size_t getRank() const {
     assert(isValid());
     size_t rank = 0;
     size_t last_choice_plus_one = 0;
