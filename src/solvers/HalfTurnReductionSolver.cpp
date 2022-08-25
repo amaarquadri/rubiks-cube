@@ -8,6 +8,7 @@
 #include "SolverUtils.h"
 #include "Turn.h"
 #include "TurnSets.h"
+#include <algorithm>
 #include <array>
 #include <cassert>
 
