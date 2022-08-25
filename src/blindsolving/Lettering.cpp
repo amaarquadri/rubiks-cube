@@ -17,7 +17,7 @@ static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
           make(R, U, 'I'), make(R, B, 'J'), make(R, D, 'K'), make(R, L, 'L'),
           make(B, U, 'M'), make(B, L, 'N'), make(B, D, 'O'), make(B, R, 'P'),
           make(L, U, 'Q'), make(L, F, 'R'), make(L, D, 'S'), make(L, B, 'T'),
-          make(D, F, 'U'), make(D, R, 'V'), make(D, B, 'W'), make(D, L, 'Y')};
+          make(D, F, 'U'), make(D, R, 'V'), make(D, B, 'W'), make(D, L, 'Z')};
 }
 
 static std::unordered_map<CornerLocation, char> getCornerLettering() {
