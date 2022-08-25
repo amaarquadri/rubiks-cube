@@ -121,7 +121,8 @@ static uint16_t getDescriptor(const Cube& cube) {
   Permutation<4> secondary_tetrad_permutation;
   i = 0;  // number of assigned elements of primary_tetrad_permutation
   for (uint8_t j = 0; j < 8; ++j) {
-    if (primary_tetrad_corner_combination[i] == j) {
+    if (i < primary_tetrad_permutation.size() &&
+        primary_tetrad_corner_combination[i] == j) {
       primary_tetrad_permutation[i] = j / 2;
       ++i;
     } else {
