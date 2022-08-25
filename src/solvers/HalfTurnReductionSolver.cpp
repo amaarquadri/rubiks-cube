@@ -75,7 +75,7 @@ static uint16_t getDescriptor(const Cube& cube) {
   Combination<8, 4> primary_tetrad_corner_combination;
   uint8_t i = 0;
   for (uint8_t j = 0; j < Cube::CORNER_LOCATION_ORDER.size(); ++j)
-    if (isPrimaryTetradCorner(cube[Cube::CORNER_LOCATION_ORDER[j]]))
+    if (isPrimaryTetradCorner(cube.getCornerByIndex(j)))
       primary_tetrad_corner_combination[i++] = j;
   // ensure number of primary tetrad corners is 4
   assert(i == primary_tetrad_corner_combination.size());
@@ -84,7 +84,7 @@ static uint16_t getDescriptor(const Cube& cube) {
   Combination<8, 4> m_slice_edge_combination;
   i = 0;
   for (uint8_t j = 0; j < Locations.size(); ++j) {
-    const EdgePiece edge = cube[Cube::EDGE_LOCATION_ORDER[Locations[j]]];
+    const EdgePiece& edge = cube.getEdgeByIndex(j);
     if (edge.first != Colour::Red && edge.first != Colour::Orange &&
         edge.second != Colour::Red && edge.second != Colour::Orange)
       m_slice_edge_combination[i++] = j;
@@ -94,7 +94,7 @@ static uint16_t getDescriptor(const Cube& cube) {
 
   Permutation<8> corner_permutation;
   for (uint8_t j = 0; j < 8; ++j) {
-    const CornerPiece corner = cube[Cube::CORNER_LOCATION_ORDER[j]];
+    const CornerPiece& corner = cube.getCornerByIndex(j);
     corner_permutation[j] =
         std::find(Cube::STARTING_CORNER_PIECES.begin(),
                   Cube::STARTING_CORNER_PIECES.end(), corner) -

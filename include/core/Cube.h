@@ -119,6 +119,28 @@ class Cube {
 
   ConstCornerPieceProxy operator[](const CornerLocation& corner_location) const;
 
+  [[nodiscard]] constexpr const EdgePiece& getEdgeByIndex(
+      const size_t& idx) const {
+    assert(idx < edges.size());
+    return edges[idx];
+  }
+
+  [[nodiscard]] constexpr EdgePiece& getEdgeByIndex(const size_t& idx) {
+    assert(idx < edges.size());
+    return edges[idx];
+  }
+
+  [[nodiscard]] constexpr const CornerPiece& getCornerByIndex(
+      const size_t& idx) const {
+    assert(idx < corners.size());
+    return corners[idx];
+  }
+
+  [[nodiscard]] constexpr CornerPiece& getCornerByIndex(const size_t& idx) {
+    assert(idx < corners.size());
+    return corners[idx];
+  }
+
   template <size_t n>
   void cycleEdges(const std::array<EdgeLocation, n>& edge_locations) {
     static_assert(n >= 2, "Must cycle at least 2 edges!");

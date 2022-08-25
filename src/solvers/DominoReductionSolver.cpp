@@ -100,7 +100,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
 static uint32_t getDescriptor(const Cube& cube) {
   uint32_t descriptor = 0;
   for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size() - 1; ++i) {
-    const CornerPiece corner = cube[Cube::CORNER_LOCATION_ORDER[i]];
+    const CornerPiece& corner = cube.getCornerByIndex(i);
     if (corner.second == Colour::White || corner.second == Colour::Yellow)
       descriptor += utility::pow(3, i);
     else if (corner.third == Colour::White || corner.third == Colour::Yellow)

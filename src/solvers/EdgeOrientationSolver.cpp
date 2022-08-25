@@ -86,7 +86,7 @@ static constexpr uint16_t applyTurn(uint16_t edge_orientation,
 static uint16_t getEdgeOrientation(const Cube& cube) {
   uint16_t edge_orientation = 0;
   for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size() - 1; ++i) {
-    const EdgePiece edge = cube[Cube::EDGE_LOCATION_ORDER[i]];
+    const EdgePiece& edge = cube.getEdgeByIndex(i);
     const bool is_flipped =
         edge.second == Colour::White || edge.second == Colour::Yellow ||
         edge.first == Colour::Red || edge.first == Colour::Orange;
