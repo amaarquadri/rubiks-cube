@@ -35,10 +35,10 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
       (descriptor / CornerCombinationCount) % EdgeCombinationCount);
 
   cycleValues(primary_tetrad_corner_combination, getCornerCycle(turn.face),
-              static_cast<size_t>(turn.rotation_amount));
+              static_cast<uint8_t>(turn.rotation_amount));
 
   cycleValues(m_slice_edge_combination, getEdgeCycle(turn.face),
-              static_cast<size_t>(turn.rotation_amount));
+              static_cast<uint8_t>(turn.rotation_amount));
 
   // half turns flip the edge and corner parity
   bool odd_parity =

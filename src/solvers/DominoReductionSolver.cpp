@@ -51,7 +51,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
 
   // update e_slice_edge_combination
   cycleValues(e_slice_edge_combination, getEdgeCycle(turn.face),
-              static_cast<size_t>(turn.rotation_amount));
+              static_cast<uint8_t>(turn.rotation_amount));
 
   // update corner_orientations
   const std::array<uint8_t, 4> corner_cycle = getCornerCycle(turn.face);
@@ -92,7 +92,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
   uint32_t new_descriptor = 0;
   for (size_t i = 0; i < 7; ++i)
     new_descriptor +=
-        static_cast<uint32_t>(corner_orientations[i]) * utility::PowersOf3[i];
+        static_cast<uint8_t>(corner_orientations[i]) * utility::PowersOf3[i];
   new_descriptor += CornerOrientationCount * e_slice_edge_combination.getRank();
   return new_descriptor;
 }
