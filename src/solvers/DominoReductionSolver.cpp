@@ -110,14 +110,15 @@ static uint32_t getDescriptor(const Cube& cube) {
     // equivalent to doing nothing
   }
 
+  static constexpr auto is_e_slice_edge = [](const EdgePiece& edge) {
+    return edge.first != Colour::White && edge.first != Colour::Yellow &&
+           edge.second != Colour::White && edge.second != Colour::Yellow;
+  };
   Combination<12, 4> e_slice_edge_combination;
   uint8_t i = 0;
-  for (uint8_t j = 0; j < Cube::EDGE_LOCATION_ORDER.size(); ++j) {
-    const EdgePiece edge = cube[Cube::EDGE_LOCATION_ORDER[j]];
-    if (edge.first != Colour::White && edge.first != Colour::Yellow &&
-        edge.second != Colour::White && edge.second != Colour::Yellow)
+  for (size_t j = 0; j < Cube::EDGE_LOCATION_ORDER.size(); ++j)
+    if (is_e_slice_edge(cube.getEdgeByIndex(j)))
       e_slice_edge_combination[i++] = j;
-  }
   // ensure number of E slice edges is 4
   assert(i == e_slice_edge_combination.size());
 
