@@ -11,6 +11,8 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <cstddef>
+#include <cstdint>
 
 namespace solvers {
 static constexpr uint16_t CornerCombinationCount = utility::nChooseK(8, 4);
