@@ -15,7 +15,6 @@
 #include <array>
 #include <cstddef>
 #include <string>
-#include <vector>
 
 class Cube {
  public:
