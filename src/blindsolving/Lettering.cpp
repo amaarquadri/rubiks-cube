@@ -1,37 +1,40 @@
 #include "Lettering.h"
 #include "CornerLocation.h"
-#include "Cube.h"
 #include "EdgeLocation.h"
 #include "Face.h"
 #include <unordered_map>
+#include <utility>
 
 namespace blindsolving {
 static std::unordered_map<EdgeLocation, char> getEdgeLettering() {
-  std::unordered_map<EdgeLocation, char> edge_lettering;
-  const std::string edge_labels = "ABFCVPUZNWDH";
-  const std::string flipped_edge_labels = "MILEKJGSTOQR";
-  for (size_t i = 0; i < Cube::EDGE_LOCATION_ORDER.size(); i++) {
-    const EdgeLocation location = Cube::EDGE_LOCATION_ORDER[i];
-    edge_lettering.insert({location, edge_labels[i]});
-    edge_lettering.insert({location.flip(), flipped_edge_labels[i]});
-  }
-  return edge_lettering;
+  using enum Face;
+  static const auto make = [](const Face& first, const Face& second,
+                              const char& c) {
+    return std::pair<const EdgeLocation, char>{EdgeLocation{first, second}, c};
+  };
+  return {make(U, B, 'A'), make(U, R, 'B'), make(U, F, 'C'), make(U, L, 'D'),
+          make(F, U, 'E'), make(F, R, 'F'), make(F, D, 'G'), make(F, L, 'H'),
+          make(R, U, 'I'), make(R, B, 'J'), make(R, D, 'K'), make(R, L, 'L'),
+          make(B, U, 'M'), make(B, L, 'N'), make(B, D, 'O'), make(B, R, 'P'),
+          make(L, U, 'Q'), make(L, F, 'R'), make(L, D, 'S'), make(L, B, 'T'),
+          make(D, F, 'U'), make(D, R, 'V'), make(D, B, 'W'), make(D, L, 'Y')};
 }
 
 static std::unordered_map<CornerLocation, char> getCornerLettering() {
-  std::unordered_map<CornerLocation, char> corner_lettering;
-  const std::string corner_labels = "ABCDUVWZ";
-  const std::string clockwise_corner_labels = "QMIESGKO";
-  const std::string counterclockwise_corner_labels = "NJFRHLPT";
-  for (size_t i = 0; i < Cube::CORNER_LOCATION_ORDER.size(); i++) {
-    const CornerLocation location = Cube::CORNER_LOCATION_ORDER[i];
-    corner_lettering.insert({location, corner_labels[i]});
-    corner_lettering.insert(
-        {location.rotateClockwise(), clockwise_corner_labels[i]});
-    corner_lettering.insert(
-        {location.rotateCounterclockwise(), counterclockwise_corner_labels[i]});
-  }
-  return corner_lettering;
+  using enum Face;
+  static const auto make = [](const Face& first, const Face& second,
+                              const Face& third, const char& c) {
+    return std::pair<const CornerLocation, char>{
+        CornerLocation{first, second, third}, c};
+  };
+  return {make(U, L, B, 'A'), make(U, B, R, 'B'), make(U, R, F, 'C'),
+          make(U, F, L, 'D'), make(F, L, U, 'E'), make(F, U, R, 'F'),
+          make(F, R, D, 'G'), make(F, D, L, 'H'), make(R, F, U, 'I'),
+          make(R, U, B, 'J'), make(R, B, D, 'K'), make(R, D, F, 'L'),
+          make(B, R, U, 'M'), make(B, U, L, 'N'), make(B, L, D, 'O'),
+          make(B, D, R, 'P'), make(L, B, U, 'Q'), make(L, U, F, 'R'),
+          make(L, F, D, 'S'), make(L, D, B, 'T'), make(D, L, F, 'U'),
+          make(D, F, R, 'V'), make(D, R, B, 'W'), make(D, B, L, 'Z')};
 }
 
 template <typename K, typename V>
