@@ -20,6 +20,11 @@ class Cube {
  public:
   friend struct std::hash<Cube>;
 
+  /**
+   * M slice edges are at indices: 0, 3, 6, 9.
+   * S slice edges are at indices: 1, 4, 7, 10.
+   * E slice edges are at indices: 2, 5, 8, 11.
+   */
   static constexpr std::array<EdgeLocation, 12> EDGE_LOCATION_ORDER{
       {{Face::U, Face::B},
        {Face::U, Face::R},
@@ -33,6 +38,10 @@ class Cube {
        {Face::D, Face::B},
        {Face::U, Face::L},
        {Face::F, Face::L}}};
+  /**
+   * Primary tetrad corners are at even indices.
+   * Secondary tetrad corners are at odd indices.
+   */
   static constexpr std::array<CornerLocation, 8> CORNER_LOCATION_ORDER{
       {{Face::U, Face::L, Face::B},
        {Face::U, Face::B, Face::R},
