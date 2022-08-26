@@ -175,6 +175,12 @@ static uint16_t getDescriptor(const Cube& cube) {
   assert(corner_permutation.isValid());
   const uint16_t corner_three_parity = getCornerThreeParity(corner_permutation);
 
+  // sanity check
+  assert(std::all_of(
+      primary_tetrad_corner_combination.begin(),
+      primary_tetrad_corner_combination.end(),
+      [&](const uint8_t& idx) { return corner_permutation[idx] % 2 == 0; }));
+
   return primary_tetrad_corner_combination.getRank() +
          m_slice_edge_combination.getRank() * CornerCombinationCount +
          (corner_permutation.isOdd() ? PiecesCombinationCount : 0) +
