@@ -65,28 +65,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
     corner_orientations[corner_cycle[3]] +=
         CornerRotationAmount::Counterclockwise;
   }
-  switch (turn.rotation_amount) {
-    case RotationAmount::Clockwise:
-      utility::cycleArray(corner_orientations, corner_cycle);
-      break;
-    case RotationAmount::HalfTurn:
-      utility::cycleArray(
-          corner_orientations,
-          std::array<uint8_t, 2>{corner_cycle[0], corner_cycle[2]});
-      utility::cycleArray(
-          corner_orientations,
-          std::array<uint8_t, 2>{corner_cycle[1], corner_cycle[3]});
-      break;
-    case RotationAmount::Counterclockwise:
-      utility::cycleArray(
-          corner_orientations,
-          std::array<uint8_t, 4>{corner_cycle[3], corner_cycle[2],
-                                 corner_cycle[1], corner_cycle[0]});
-      break;
-    default:
-      // RotationAmount::None was already checked for at the beginning
-      throw std::logic_error("Unknown enum value!");
-  }
+  cycleTurn(corner_orientations, corner_cycle, turn.rotation_amount);
 
   // re-encode e_slice_edge_combination and corner_orientations into a
   // descriptor

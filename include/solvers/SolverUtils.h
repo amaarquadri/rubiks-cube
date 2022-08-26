@@ -136,6 +136,35 @@ constexpr void cycleValues(std::array<T, n>& data,
   std::sort(data.begin(), data.end());
 }
 
+/**
+ * Equivalent to the following code:
+ * for (size_t i = 0; i < static_cast<uint8_t>(rotation_amount); ++i)
+ *   utility::cycleArray(data, cycle);
+ */
+template <typename T, size_t n>
+constexpr void cycleTurn(std::array<T, n>& data,
+                         const std::array<uint8_t, 4>& cycle,
+                         const RotationAmount& rotation_amount) {
+  using enum RotationAmount;
+  switch (rotation_amount) {
+    case None:
+      break;
+    case Clockwise:
+      utility::cycleArray(data, cycle);
+      break;
+    case HalfTurn:
+      utility::cycleArray(data, std::array<uint8_t, 2>{cycle[0], cycle[2]});
+      utility::cycleArray(data, std::array<uint8_t, 2>{cycle[1], cycle[3]});
+      break;
+    case Counterclockwise:
+      utility::cycleArray(
+          data, std::array<uint8_t, 4>{cycle[3], cycle[2], cycle[1], cycle[0]});
+      break;
+    default:
+      throw std::logic_error("Unknown enum value!");
+  }
+}
+
 namespace detail {
 /**
  * Checks whether the provided template parameters form a syntactically valid
