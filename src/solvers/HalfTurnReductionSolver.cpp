@@ -94,7 +94,9 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
               static_cast<uint8_t>(turn.rotation_amount));
   assert(primary_tetrad_corner_combination.isValid());
 
-  cycleValues(m_slice_edge_combination, getEdgeCycle(turn.face),
+  std::array<uint8_t, 4> edge_cycle = getEdgeCycle(turn.face);
+  for (auto& idx : edge_cycle) idx = (idx / 3) + 4 * (idx % 3);
+  cycleValues(m_slice_edge_combination, edge_cycle,
               static_cast<uint8_t>(turn.rotation_amount));
   assert(m_slice_edge_combination.isValid());
 
