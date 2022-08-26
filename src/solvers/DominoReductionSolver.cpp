@@ -153,7 +153,7 @@ static void testGetDescriptor() {
     throw std::logic_error("Incorrect descriptor!");
 }
 
-static void testApplyTurnForDominoReduction() {
+static void testApplyTurn() {
   for (const Turn& turn : EdgeOrientationPreservingTurns) {
     Algorithm alg;
     alg.push_back(Move{turn});
@@ -206,7 +206,7 @@ void runDominoReductionSolverTests() {
       "./include/solvers/DominoReductionLookupTable.h");
 
   testGetDescriptor();
-  testApplyTurnForDominoReduction();
+  testApplyTurn();
   std::cout << "Testing Domino reduction statistics...\n";
   testStatistics();
 }
