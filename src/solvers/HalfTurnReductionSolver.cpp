@@ -46,13 +46,15 @@ static constexpr uint16_t getCornerThreeParity(
   assert(primary_tetrad_permutation.isValid());
   assert(secondary_tetrad_permutation.isValid());
 
+  if (corner_permutation.isOdd()) primary_tetrad_permutation.flipParity();
+
   /** static **/ constexpr std::array<uint8_t, 24> TetradThreeParity{
       0, 2, 1, 1, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 1, 2, 0};
   static_assert(std::equal(TetradThreeParity.begin(), TetradThreeParity.end(),
                            TetradThreeParity.rbegin(),
                            TetradThreeParity.rend()));
-  return (TetradThreeParity[primary_tetrad_permutation.getRank()] +
-          TetradThreeParity[secondary_tetrad_permutation.getRank()]) %
+  return (TetradThreeParity[primary_tetrad_permutation.getRank()] -
+          TetradThreeParity[secondary_tetrad_permutation.getRank()] + 3) %
          3;
 }
 
