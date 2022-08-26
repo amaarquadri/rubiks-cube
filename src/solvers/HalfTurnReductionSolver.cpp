@@ -208,7 +208,7 @@ static void testGetDescriptor() {
       getDescriptor(Cube{Algorithm::parse("R2")}) != SolvedDescriptor ||
       getDescriptor(Cube{Algorithm::parse("F2")}) != SolvedDescriptor ||
       getDescriptor(Cube{Algorithm::parse("U2 D2")}) != SolvedDescriptor)
-    throw std::logic_error("Incorrect edge orientation!");
+    throw std::logic_error("Incorrect descriptor!");
 }
 
 static void testApplyTurn() {
