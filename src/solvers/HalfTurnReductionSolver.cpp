@@ -198,5 +198,31 @@ Algorithm solveHalfTurnReduction(Cube cube) {
   return domino_reduction_solve + solver(getDescriptor(cube));
 }
 
-void runHalfTurnReductionSolverTests() {}
+// Test functions
+
+static void testGetDescriptor() {
+  if (getDescriptor(Cube{}) != SolvedDescriptor ||
+      getDescriptor(Cube{Algorithm::parse("R2")}) != SolvedDescriptor ||
+      getDescriptor(Cube{Algorithm::parse("F2")}) != SolvedDescriptor ||
+      getDescriptor(Cube{Algorithm::parse("U2 D2")}) != SolvedDescriptor)
+    throw std::logic_error("Incorrect edge orientation!");
+}
+
+static void testApplyTurn() {
+  static constexpr size_t count = 1000;
+
+  for (size_t i = 0; i < count; ++i) {
+    const Algorithm alg = Algorithm::random(20);
+    uint16_t descriptor = SolvedDescriptor;
+    for (const Move& move : alg)
+      descriptor = applyTurn(descriptor, move.getTurn());
+    if (descriptor != getDescriptor(Cube{alg}))
+      throw std::logic_error("Descriptor mismatch!");
+  }
+}
+
+void runHalfTurnReductionSolverTests() {
+  testGetDescriptor();
+  testApplyTurn();
+}
 }  // namespace solvers
