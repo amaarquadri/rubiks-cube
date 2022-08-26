@@ -70,7 +70,7 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
       (descriptor % ParityAndPiecesCombinationCount) / PiecesCombinationCount;
   Permutation<8> corner_permutation = [&]() {
     const uint16_t corner_three_parity =
-        descriptor % ParityAndPiecesCombinationCount;
+        descriptor / ParityAndPiecesCombinationCount;
     // pick any primary and secondary tetrad permutations that are consistent
     // with corner_three_parity
     auto primary_tetrad_permutation =
