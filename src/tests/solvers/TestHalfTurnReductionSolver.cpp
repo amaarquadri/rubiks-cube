@@ -32,7 +32,7 @@ static void testSolveHalfTurnReduction() {
 }
 
 void testHalfTurnReductionSolver() {
-  solvers::runHalfTurnReductionSolverTests();
+  runHalfTurnReductionSolverTests();
   testMaintainHalfTurnReduction();
   testSolveHalfTurnReduction();
 
