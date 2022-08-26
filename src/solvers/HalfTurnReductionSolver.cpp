@@ -66,6 +66,31 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
       Combination<8, 4>::parseRank(descriptor % CornerCombinationCount);
   Combination<8, 4> m_slice_edge_combination = Combination<8, 4>::parseRank(
       (descriptor / CornerCombinationCount) % EdgeCombinationCount);
+  bool odd_parity =
+      (descriptor % ParityAndPiecesCombinationCount) / PiecesCombinationCount;
+  Permutation<8> corner_permutation = [&]() {
+    const uint16_t corner_three_parity =
+        descriptor % ParityAndPiecesCombinationCount;
+    // pick any primary and secondary tetrad permutations that are consistent
+    // with corner_three_parity
+    auto primary_tetrad_permutation =
+        Permutation<4>::parseRank(2 * corner_three_parity);
+    auto secondary_tetrad_permutation = Permutation<4>::parseRank(0);
+    Permutation<8> corner_perm;
+    uint8_t i = 0;
+    for (size_t j = 0; j < corner_perm.size(); ++j) {
+      if (i < primary_tetrad_permutation.size() &&
+          primary_tetrad_corner_combination[i] == j)
+        corner_perm[j] = 2 * primary_tetrad_permutation[i++];
+      else {
+        assert(j >= i);
+        corner_perm[j] = 2 * secondary_tetrad_permutation[j - i] + 1;
+      }
+    }
+    assert(i == primary_tetrad_permutation.size());
+    assert(corner_perm.isValid());
+    return corner_perm;
+  }();
 
   cycleValues(primary_tetrad_corner_combination, getCornerCycle(turn.face),
               static_cast<uint8_t>(turn.rotation_amount));
@@ -76,13 +101,18 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
   assert(m_slice_edge_combination.isValid());
 
   // half turns flip the edge and corner parity
-  bool odd_parity =
-      (descriptor % ParityAndPiecesCombinationCount) / PiecesCombinationCount;
   odd_parity ^= turn.rotation_amount != RotationAmount::HalfTurn;
+
+  cycleTurn(corner_permutation, getCornerCycle(turn.face),
+            turn.rotation_amount);
+  assert(corner_permutation.isValid());
+  const uint16_t new_corner_three_parity = getCornerThreeParity(
+      corner_permutation, primary_tetrad_corner_combination);
 
   return primary_tetrad_corner_combination.getRank() +
          m_slice_edge_combination.getRank() * CornerCombinationCount +
-         (odd_parity ? PiecesCombinationCount : 0);
+         (odd_parity ? PiecesCombinationCount : 0) +
+         new_corner_three_parity * ParityAndPiecesCombinationCount;
 }
 
 /**
