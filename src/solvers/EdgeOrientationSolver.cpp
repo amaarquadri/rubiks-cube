@@ -117,6 +117,13 @@ static void testGetEdgeOrientation() {
 }
 
 static void testApplyTurn() {
+  for (const Turn& turn : AllPossibleTurns) {
+    Algorithm alg;
+    alg.push_back(Move{turn});
+    if (applyTurn(SolvedDescriptor, turn) != getEdgeOrientation(Cube{alg}))
+      throw std::logic_error("Edge orientation mismatch!");
+  }
+
   static constexpr size_t count = 1000;
 
   for (size_t i = 0; i < count; ++i) {
