@@ -28,6 +28,36 @@ static constexpr uint16_t DescriptorCount =
 static constexpr uint16_t SolvedDescriptor =
     Combination<8, 4>({0, 2, 4, 6}).getRank();
 
+static constexpr uint16_t getCornerThreeParity(
+    const Permutation<8>& corner_permutation,
+    const Combination<8, 4>& primary_tetrad_corner_combination) {
+  // extract relative permutation of each tetrad
+  Permutation<4> primary_tetrad_permutation;
+  Permutation<4> secondary_tetrad_permutation;
+  uint8_t i = 0;  // number of assigned elements of primary_tetrad_permutation
+  for (uint8_t j = 0; j < 8; ++j) {
+    if (i < primary_tetrad_permutation.size() &&
+        primary_tetrad_corner_combination[i] == j)
+      primary_tetrad_permutation[i++] = j / 2;
+    else {
+      assert(j >= i);
+      secondary_tetrad_permutation[j - i] = j / 2;
+    }
+  }
+  assert(i == primary_tetrad_permutation.size());
+  assert(primary_tetrad_permutation.isValid());
+  assert(secondary_tetrad_permutation.isValid());
+
+  /** static **/ constexpr std::array<uint8_t, 24> TetradThreeParity{
+      0, 2, 1, 1, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 1, 2, 0};
+  static_assert(std::equal(TetradThreeParity.begin(), TetradThreeParity.end(),
+                           TetradThreeParity.rbegin(),
+                           TetradThreeParity.rend()));
+  return (TetradThreeParity[primary_tetrad_permutation.getRank()] +
+          TetradThreeParity[secondary_tetrad_permutation.getRank()]) %
+         3;
+}
+
 static constexpr uint16_t applyTurn(const uint16_t& descriptor,
                                     const Turn& turn) {
   assert(turn.rotation_amount != RotationAmount::None);
@@ -115,33 +145,8 @@ static uint16_t getDescriptor(const Cube& cube) {
     assert(corner_permutation[j] != Cube::StartingCornerPieces.size());
   }
   assert(corner_permutation.isValid());
-
-  // extract relative permutation of each tetrad
-  Permutation<4> primary_tetrad_permutation;
-  Permutation<4> secondary_tetrad_permutation;
-  i = 0;  // number of assigned elements of primary_tetrad_permutation
-  for (uint8_t j = 0; j < 8; ++j) {
-    if (i < primary_tetrad_permutation.size() &&
-        primary_tetrad_corner_combination[i] == j) {
-      primary_tetrad_permutation[i] = j / 2;
-      ++i;
-    } else {
-      assert(j >= i);
-      secondary_tetrad_permutation[j - i] = j / 2;
-    }
-  }
-  assert(i == primary_tetrad_permutation.size());
-  assert(primary_tetrad_permutation.isValid());
-  assert(secondary_tetrad_permutation.isValid());
-  static constexpr std::array<uint8_t, 24> TetradThreeParity{
-      0, 2, 1, 1, 2, 0, 2, 0, 2, 0, 1, 1, 1, 1, 0, 2, 0, 2, 0, 2, 1, 1, 2, 0};
-  static_assert(std::equal(TetradThreeParity.begin(), TetradThreeParity.end(),
-                           TetradThreeParity.rbegin(),
-                           TetradThreeParity.rend()));
-  const uint16_t corner_three_parity =
-      (TetradThreeParity[primary_tetrad_permutation.getRank()] +
-       TetradThreeParity[secondary_tetrad_permutation.getRank()]) %
-      3;
+  const uint16_t corner_three_parity = getCornerThreeParity(
+      corner_permutation, primary_tetrad_corner_combination);
 
   return primary_tetrad_corner_combination.getRank() +
          m_slice_edge_combination.getRank() * CornerCombinationCount +
