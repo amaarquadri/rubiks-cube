@@ -29,22 +29,20 @@ static constexpr uint16_t SolvedDescriptor =
     Combination<8, 4>({0, 2, 4, 6}).getRank();
 
 static constexpr uint16_t getCornerThreeParity(
-    const Permutation<8>& corner_permutation,
-    const Combination<8, 4>& primary_tetrad_corner_combination) {
+    const Permutation<8>& corner_permutation) {
   // extract relative permutation of each tetrad
   Permutation<4> primary_tetrad_permutation;
   Permutation<4> secondary_tetrad_permutation;
-  uint8_t i = 0;  // number of assigned elements of primary_tetrad_permutation
-  for (uint8_t j = 0; j < 8; ++j) {
-    if (i < primary_tetrad_permutation.size() &&
-        primary_tetrad_corner_combination[i] == j)
-      primary_tetrad_permutation[i++] = j / 2;
-    else {
-      assert(j >= i);
-      secondary_tetrad_permutation[j - i] = j / 2;
-    }
+  uint8_t primary_count = 0;
+  uint8_t secondary_count = 0;
+  for (const auto& value : corner_permutation) {
+    if (value % 2 == 0)
+      primary_tetrad_permutation[primary_count++] = value / 2;
+    else
+      secondary_tetrad_permutation[secondary_count++] = value / 2;
   }
-  assert(i == primary_tetrad_permutation.size());
+  assert(primary_count == primary_tetrad_permutation.size());
+  assert(secondary_count == secondary_tetrad_permutation.size());
   assert(primary_tetrad_permutation.isValid());
   assert(secondary_tetrad_permutation.isValid());
 
@@ -106,8 +104,8 @@ static constexpr uint16_t applyTurn(const uint16_t& descriptor,
   cycleTurn(corner_permutation, getCornerCycle(turn.face),
             turn.rotation_amount);
   assert(corner_permutation.isValid());
-  const uint16_t new_corner_three_parity = getCornerThreeParity(
-      corner_permutation, primary_tetrad_corner_combination);
+  const uint16_t new_corner_three_parity =
+      getCornerThreeParity(corner_permutation);
 
   return primary_tetrad_corner_combination.getRank() +
          m_slice_edge_combination.getRank() * CornerCombinationCount +
@@ -175,8 +173,7 @@ static uint16_t getDescriptor(const Cube& cube) {
     assert(corner_permutation[j] != Cube::StartingCornerPieces.size());
   }
   assert(corner_permutation.isValid());
-  const uint16_t corner_three_parity = getCornerThreeParity(
-      corner_permutation, primary_tetrad_corner_combination);
+  const uint16_t corner_three_parity = getCornerThreeParity(corner_permutation);
 
   return primary_tetrad_corner_combination.getRank() +
          m_slice_edge_combination.getRank() * CornerCombinationCount +
