@@ -45,10 +45,9 @@ consteval uint8_t getCornerIndex(const Face& first, const Face& second,
                 Cube::CornerLocationOrder.begin();
   if (idx != Cube::CornerLocationOrder.size()) return idx;
 
-  idx =
-      std::find(Cube::CornerLocationOrder.begin(),
-                Cube::CornerLocationOrder.end(), location.rotateClockwise()) -
-      Cube::CornerLocationOrder.begin();
+  idx = std::find(Cube::CornerLocationOrder.begin(),
+                  Cube::CornerLocationOrder.end(), location.rotateClockwise()) -
+        Cube::CornerLocationOrder.begin();
   if (idx != Cube::CornerLocationOrder.size()) return idx;
 
   idx = std::find(Cube::CornerLocationOrder.begin(),
