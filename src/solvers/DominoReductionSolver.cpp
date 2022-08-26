@@ -164,7 +164,7 @@ static void testApplyTurn() {
   static constexpr size_t Count = 1000;
 
   for (size_t i = 0; i < Count; ++i) {
-    const Algorithm alg = Algorithm::random(20);
+    const Algorithm alg = Algorithm::random(20, EdgeOrientationPreservingTurns);
     uint32_t descriptor = SolvedDescriptor;
     for (const Move& move : alg)
       descriptor = applyTurn(descriptor, move.getTurn());
