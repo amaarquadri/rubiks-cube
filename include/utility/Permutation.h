@@ -51,6 +51,8 @@ class Permutation : public std::array<uint8_t, n> {
   }
 
   [[nodiscard]] constexpr size_t getRank() const {
+    // getRank and parseRank are based on:
+    // https://www.aaai.org/Papers/Workshops/2008/WS-08-10/WS08-10-004.pdf
     assert(isValid());
     size_t rank = 0;
     for (size_t i = 0; i < n; ++i) {
