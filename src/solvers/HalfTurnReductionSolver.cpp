@@ -212,6 +212,13 @@ static void testGetDescriptor() {
 }
 
 static void testApplyTurn() {
+  for (const Turn& turn : DominoReductionPreservingTurns) {
+    Algorithm alg;
+    alg.push_back(Move{turn});
+    if (applyTurn(SolvedDescriptor, turn) != getDescriptor(Cube{alg}))
+      throw std::logic_error("Descriptor mismatch!");
+  }
+
   static constexpr size_t count = 1000;
 
   for (size_t i = 0; i < count; ++i) {
