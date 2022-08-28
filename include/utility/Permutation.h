@@ -43,8 +43,7 @@ class Permutation : public std::array<uint8_t, n> {
   }
 
   static Permutation<n> randomPermutation() {
-    Permutation<n> permutation;
-    std::iota(permutation.begin(), permutation.end(), 0);
+    auto permutation = Permutation<n>::identity();
     std::shuffle(permutation.begin(), permutation.end(),
                  utility::random_engine);
     return permutation;
@@ -88,6 +87,12 @@ class Permutation : public std::array<uint8_t, n> {
     }
     assert(permutation.isValid());
     return permutation;
+  }
+
+  static constexpr Permutation<n> identity() {
+    Permutation<n> id;
+    std::iota(id.begin(), id.end(), 0);
+    return id;
   }
 
   [[nodiscard]] constexpr bool isOdd() const {
