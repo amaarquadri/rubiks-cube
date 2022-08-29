@@ -1,8 +1,6 @@
 #include "CubeRotation.h"
-
-CubeRotation CubeRotation::inv() const {
-  return {rotation_axis, -rotation_amount};
-}
+#include "RotationAmount.h"
+#include "RotationAxis.h"
 
 std::string CubeRotation::toStr() const {
   return ::toStr(rotation_axis) + ::toStr(rotation_amount);

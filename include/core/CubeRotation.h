@@ -9,7 +9,9 @@ struct CubeRotation {
   RotationAxis rotation_axis;
   RotationAmount rotation_amount;
 
-  [[nodiscard]] CubeRotation inv() const;
+  [[nodiscard]] constexpr CubeRotation inv() const {
+    return {rotation_axis, -rotation_amount};
+  }
 
   [[nodiscard]] std::string toStr() const;
 
