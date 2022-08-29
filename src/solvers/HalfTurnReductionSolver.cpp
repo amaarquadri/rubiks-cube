@@ -226,7 +226,7 @@ static void testApplyTurn() {
   static constexpr size_t count = 1000;
 
   for (size_t i = 0; i < count; ++i) {
-    const Algorithm alg = Algorithm::random(20);
+    const Algorithm alg = Algorithm::random(20, DominoReductionPreservingTurns);
     uint16_t descriptor = SolvedDescriptor;
     for (const Move& move : alg)
       descriptor = applyTurn(descriptor, move.getTurn());
