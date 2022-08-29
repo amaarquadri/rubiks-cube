@@ -69,44 +69,6 @@ std::string toStrLower(const Face& face);
  * was not possible to parse a Face, then the number of characters consumed will
  * be zero.
  */
-constexpr std::pair<size_t, Face> parseFace(const std::string& str) {
-  using enum Face;
-  if (str.empty()) return {0, {}};
-  switch (str[0]) {
-    case 'U':
-      return {1, U};
-    case 'F':
-      return {1, F};
-    case 'R':
-      return {1, R};
-    case 'B':
-      return {1, B};
-    case 'L':
-      return {1, L};
-    case 'D':
-      return {1, D};
-    default:
-      return {0, {}};
-  }
-}
+std::pair<size_t, Face> parseFace(const std::string& str);
 
-constexpr std::pair<size_t, Face> parseWideFace(const std::string& str) {
-  using enum Face;
-  if (str.empty()) return {0, {}};
-  switch (str[0]) {
-    case 'u':
-      return {1, U};
-    case 'f':
-      return {1, F};
-    case 'r':
-      return {1, R};
-    case 'b':
-      return {1, B};
-    case 'l':
-      return {1, L};
-    case 'd':
-      return {1, D};
-    default:
-      return {0, {}};
-  }
-}
+std::pair<size_t, Face> parseWideFace(const std::string& str);
