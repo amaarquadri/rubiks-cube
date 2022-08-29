@@ -90,6 +90,8 @@ void Cube::apply(const Turn& turn) {
       edge_cycle = {{{D, F}, {D, R}, {D, B}, {D, L}}};
       corner_cycle = {{{D, L, F}, {D, F, R}, {D, R, B}, {D, B, L}}};
       break;
+    default:
+      throw std::logic_error("Unknown enum value!");
   }
   switch (turn.rotation_amount) {
     case RotationAmount::Clockwise:
