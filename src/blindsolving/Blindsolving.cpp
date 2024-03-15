@@ -320,14 +320,18 @@ getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
     return baseline;
   }();
 
-  std::vector<std::pair<BlindsolvingReconstruction, size_t>>
-      best_reconstructions;
-  for (size_t i = 0; i < std::min(period, max); ++i) {
+  const auto query_iterator = [&]() {
     std::pair<BlindsolvingReconstruction, size_t> reconstruction;
     reconstruction.first = *it;
     reconstruction.second =
         utility::levEditDistance(baseline, reconstruction.first);
-    best_reconstructions.push_back(reconstruction);
+    return reconstruction;
+  };
+
+  std::vector<std::pair<BlindsolvingReconstruction, size_t>>
+      best_reconstructions;
+  for (size_t i = 0; i < std::min(period, max); ++i) {
+    best_reconstructions.push_back(query_iterator());
     ++it;
   }
 
@@ -342,10 +346,8 @@ getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
   if (period == max) return best_reconstructions;
 
   do {
-    std::pair<BlindsolvingReconstruction, size_t> reconstruction;
-    reconstruction.first = *it;
-    reconstruction.second =
-        utility::levEditDistance(baseline, reconstruction.first);
+    std::pair<BlindsolvingReconstruction, size_t> reconstruction =
+        query_iterator();
     const size_t index = std::upper_bound(best_reconstructions.begin(),
                                           best_reconstructions.end(),
                                           reconstruction, comparator) -
