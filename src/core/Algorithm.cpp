@@ -70,7 +70,7 @@ void Algorithm::toStandardForm() {
   }
 
   CubeOrientation cube_orientation = CubeOrientation::identity();
-  for (size_t i = size(); i-- > 0;) {  // iterate from i - 1 to 0 inclusive
+  for (size_t i = size(); i-- > 0;) {  // iterate from size() - 1 to 0 inclusive
     Move& move = (*this)[i];
     if (move.isCubeRotation()) {
       cube_orientation *= move.getCubeRotation().inv();
