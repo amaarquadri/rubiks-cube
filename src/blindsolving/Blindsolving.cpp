@@ -309,13 +309,16 @@ getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
   const size_t period = it.getPeriod();
   it.reset();  // ensures that all possible reconstructions are checked
 
-  BlindsolvingReconstruction baseline;
-  for (const SolveData& solve_data : solve) {
-    if (solve_data.is_parsed)
-      baseline.push_back(solve_data.blindsolving_move);
-    else
-      baseline.push_back(UNPARSED_SENTINEL);
-  }
+  const BlindsolvingReconstruction baseline = [&]() {
+    BlindsolvingReconstruction baseline;
+    for (const SolveData& solve_data : solve) {
+      if (solve_data.is_parsed)
+        baseline.push_back(solve_data.blindsolving_move);
+      else
+        baseline.push_back(UNPARSED_SENTINEL);
+    }
+    return baseline;
+  }();
 
   std::vector<std::pair<BlindsolvingReconstruction, size_t>>
       best_reconstructions;
