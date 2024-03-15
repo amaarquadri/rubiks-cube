@@ -27,6 +27,8 @@ ReconstructionIterator getReconstructionIterator(Cube cube);
 /**
  * @param n The maximum number of BlindsolvingReconstructions to include in the
  * result.
+ * @return A vector of the best BlindsolvingReconstructions for the given solve
+ * and their corresponding Levenshtein distances.
  */
 std::vector<std::pair<BlindsolvingReconstruction, size_t>>
 getBestReconstructions(const Reconstruction& solve, ReconstructionIterator& it,
