@@ -11,7 +11,8 @@ constexpr CornerRotationAmount operator+(const CornerRotationAmount& first,
   return static_cast<CornerRotationAmount>(clockwise_turns);
 }
 
-constexpr void operator+=(CornerRotationAmount& first, const CornerRotationAmount& second) {
+constexpr void operator+=(CornerRotationAmount& first,
+                          const CornerRotationAmount& second) {
   first = first + second;
 }
 
@@ -23,7 +24,8 @@ constexpr CornerRotationAmount operator-(const CornerRotationAmount& first,
   return static_cast<CornerRotationAmount>(clockwise_turns);
 }
 
-constexpr void operator-=(CornerRotationAmount& first, const CornerRotationAmount& second) {
+constexpr void operator-=(CornerRotationAmount& first,
+                          const CornerRotationAmount& second) {
   first = first - second;
 }
 
