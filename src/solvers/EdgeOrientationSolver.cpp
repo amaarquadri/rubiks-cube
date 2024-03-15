@@ -13,7 +13,7 @@
 #include <utility>
 
 namespace solvers {
-static constexpr uint16_t DescriptorCount = 2048;
+static constexpr uint16_t DescriptorCount = 2048;  // 2^11
 static constexpr uint16_t SolvedDescriptor = 0;
 
 template <size_t n>
