@@ -82,12 +82,12 @@ static uint32_t getDescriptor(const Cube& cube) {
   for (size_t i = 0; i < Cube::CornerLocationOrder.size() - 1; ++i) {
     const CornerPiece& corner = cube.getCornerByIndex(i);
     if (corner.second == Colour::White || corner.second == Colour::Yellow)
-      descriptor += utility::pow(3, i);
+      descriptor += utility::PowersOf3[i];
     else if (corner.third == Colour::White || corner.third == Colour::Yellow)
-      descriptor += 2 * utility::pow(3, i);
+      descriptor += 2 * utility::PowersOf3[i];
     // in the remaining case where corner.first == Colour::White || corner.first
-    // == Colour::Yellow, we add 0 * utility::pow(3, i) to descriptor, which is
-    // equivalent to doing nothing
+    // == Colour::Yellow, we add 0 * utility::PowersOf3[i] to descriptor, which
+    // is equivalent to doing nothing
   }
 
   static constexpr auto is_e_slice_edge = [](const EdgePiece& edge) {
