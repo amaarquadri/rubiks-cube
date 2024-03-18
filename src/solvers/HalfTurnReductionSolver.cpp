@@ -196,9 +196,28 @@ bool isHalfTurnReduced(const Cube& cube) {
 }
 
 Algorithm solveHalfTurnReduction(Cube cube) {
-  static constexpr auto solver =
-      getSolver<DescriptorCount, DominoReductionPreservingTurns, applyTurn,
-                SolvedDescriptor>();
+  static constexpr uint8_t DescriptorBits =
+      utility::requiredBits(DescriptorCount);
+  static constexpr uint8_t TurnBits =
+      utility::requiredBits(DominoReductionPreservingTurns.size());
+  static constexpr uint8_t CompressedBits = DescriptorBits + TurnBits;
+  static constexpr auto LookupTable =
+      utility::PackedBitsArray<CompressedBits, DescriptorCount>::fromRawData({
+          // TODO: replace with #embed in c++23
+          #include "HalfTurnReductionLookupTable.h"
+      });
+  // TODO: remove code duplication between this and getSolver in SolverUtils.h
+  static constexpr auto solver = [](uint16_t descriptor) {
+    Algorithm alg;
+    while (descriptor != SolvedDescriptor) {
+      const auto compressed_optimal_move = LookupTable[descriptor];
+      alg.push_back(
+          Move{DominoReductionPreservingTurns[compressed_optimal_move >>
+                                              DescriptorBits]});
+      descriptor = compressed_optimal_move % (1 << DescriptorBits);
+    }
+    return alg;
+  };
 
   const Algorithm domino_reduction_solve = solveDominoReduction(cube);
   cube.apply(domino_reduction_solve);
@@ -238,6 +257,10 @@ static void testApplyTurn() {
 }
 
 void runHalfTurnReductionSolverTests() {
+  generateLookupTable<DescriptorCount, DominoReductionPreservingTurns,
+                      applyTurn, SolvedDescriptor>(
+      "./include/solvers/HalfTurnReductionLookupTable.h");
+
   testGetDescriptor();
   testApplyTurn();
 }
