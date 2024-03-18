@@ -8,9 +8,6 @@
 #include <type_traits>
 
 namespace utility {
-static constexpr std::array<size_t, 8> PowersOf3{1,  3,   9,   27,
-                                                 81, 243, 729, 2187};
-
 template <typename T>
 constexpr T factorial(const T& n) {
   T result = 1;
@@ -27,6 +24,11 @@ constexpr auto pow(const T1& base, const T2& exponent) {
   for (size_t i = 0; i < exponent; ++i) result *= base;
   return result;
 }
+
+// These are used a bunch, so we'll just precompute them
+static constexpr std::array<size_t, 8> PowersOf3{
+    pow(3, 0), pow(3, 1), pow(3, 2), pow(3, 3),
+    pow(3, 4), pow(3, 5), pow(3, 6), pow(3, 7)};
 
 /**
  * Returns zero if n < k and returns one if n == k.
