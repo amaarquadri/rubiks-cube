@@ -24,7 +24,7 @@
 #include <vector>
 
 namespace solvers {
-static constexpr uint32_t CornerOrientationCount = utility::pow(3, 7);
+static constexpr uint32_t CornerOrientationCount = utility::PowersOf3[7];
 static constexpr uint32_t EdgeCombinationCount = utility::nChooseK(12, 4);
 static constexpr uint32_t DescriptorCount =
     EdgeCombinationCount * CornerOrientationCount;
@@ -45,7 +45,7 @@ static constexpr uint32_t applyTurn(const uint32_t& descriptor,
   std::array<CornerRotationAmount, 8> corner_orientations;
   for (size_t i = 0; i < corner_orientations.size() - 1; ++i)
     corner_orientations[i] = static_cast<CornerRotationAmount>(
-        (descriptor / utility::pow(3, i)) % 3);
+        (descriptor / utility::PowersOf3[i]) % 3);
   corner_orientations.back() = -std::accumulate(corner_orientations.begin(),
                                                 corner_orientations.end() - 1,
                                                 CornerRotationAmount::None);
