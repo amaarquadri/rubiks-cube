@@ -130,7 +130,7 @@ static constexpr bool isPrimaryTetradCorner(const CornerPiece& corner) {
                      return colour == Colour::White || colour == Colour::Yellow;
                    }) -
       colours.begin();
-  assert(white_yellow_index != 3);  // ensure white or yellow was found
+  assert(white_yellow_index != colours.size());  // white/yellow must exist
   const Colour& after_white_yellow = colours[(white_yellow_index + 1) % 3];
   // return true if the colour after (clockwise of) white/yellow is red/orange
   // return false if the colour after (clockwise of) white/yellow is green/blue
