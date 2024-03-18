@@ -17,6 +17,7 @@
 #include <array>
 #include <cassert>
 #include <iostream>
+#include <numeric>
 #include <stdexcept>
 #include <unordered_set>
 #include <utility>
