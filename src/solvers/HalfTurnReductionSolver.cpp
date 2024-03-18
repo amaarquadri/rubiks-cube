@@ -150,7 +150,7 @@ static uint16_t getDescriptor(const Cube& cube) {
 
   /**
    * Restrict search area for M slice edges to the M and S slices since all the
-   * E slice edges are in the correct slice already.
+   * E slice edges are in the correct slice already from Domino Reduction.
    */
   static constexpr std::array<size_t, 8> MAndSSliceEdgeIndices{0, 3, 6, 9,
                                                                1, 4, 7, 10};
