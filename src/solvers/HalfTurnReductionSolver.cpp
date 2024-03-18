@@ -208,10 +208,12 @@ Algorithm solveHalfTurnReduction(Cube cube) {
 // Test functions
 
 static void testGetDescriptor() {
-  if (getDescriptor(Cube{}) != SolvedDescriptor ||
-      getDescriptor(Cube{Algorithm::parse("R2")}) != SolvedDescriptor ||
-      getDescriptor(Cube{Algorithm::parse("F2")}) != SolvedDescriptor ||
-      getDescriptor(Cube{Algorithm::parse("U2 D2")}) != SolvedDescriptor)
+  static constexpr auto get = [](const std::string& alg) {
+    return getDescriptor(Cube{Algorithm::parse(alg)});
+  };
+  if (get("") != SolvedDescriptor || get("R2") != SolvedDescriptor ||
+      get("F2") != SolvedDescriptor || get("U2 D2") != SolvedDescriptor ||
+      get("F2 U'") != get("U'"))
     throw std::logic_error("Incorrect descriptor!");
 }
 
