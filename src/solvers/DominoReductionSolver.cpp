@@ -121,8 +121,8 @@ Algorithm solveDominoReduction(Cube cube) {
   static constexpr uint8_t CompressedBits = DescriptorBits + TurnBits;
   static constexpr auto LookupTable =
       utility::PackedBitsArray<CompressedBits, DescriptorCount>::fromRawData({
-          // TODO: replace with #embed in c++23
-          #include "DominoReductionLookupTable.h"
+// TODO: replace with #embed in c++23
+#include "DominoReductionLookupTable.h"
       });
   // TODO: remove code duplication between this and getSolver in SolverUtils.h
   static constexpr auto solver = [](uint32_t descriptor) {

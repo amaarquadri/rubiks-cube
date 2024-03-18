@@ -203,8 +203,8 @@ Algorithm solveHalfTurnReduction(Cube cube) {
   static constexpr uint8_t CompressedBits = DescriptorBits + TurnBits;
   static constexpr auto LookupTable =
       utility::PackedBitsArray<CompressedBits, DescriptorCount>::fromRawData({
-          // TODO: replace with #embed in c++23
-          #include "HalfTurnReductionLookupTable.h"
+// TODO: replace with #embed in c++23
+#include "HalfTurnReductionLookupTable.h"
       });
   // TODO: remove code duplication between this and getSolver in SolverUtils.h
   static constexpr auto solver = [](uint16_t descriptor) {
